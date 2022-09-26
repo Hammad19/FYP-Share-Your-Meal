@@ -12,10 +12,10 @@ export default function App() {
     setCount(count+1)
   }
 
-  let decrement = () =>
-  {
-    setCount(count-1)
-  }
+  // let decrement = () =>
+  // {
+  //   setCount(count-1)
+  // }
 
   let reset = ()=>
   {
