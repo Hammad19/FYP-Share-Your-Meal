@@ -2,6 +2,7 @@
 import React from 'react';
 import { useState } from 'react';
 import { StyleSheet, Text, View , Button ,StatusBar, Image, TouchableOpacity} from 'react-native';
+import { Display } from '../utils';
 import {Colors,Images,Fonts} from '../content'
 import {
     useFonts,
@@ -80,8 +81,8 @@ const styles = StyleSheet.create({
     },
     image:
     {
-        height:150,
-        width:150
+        height:Display.setHeight(30),
+        width:Display.setWidth(60),
     },
     titletext:
     {
