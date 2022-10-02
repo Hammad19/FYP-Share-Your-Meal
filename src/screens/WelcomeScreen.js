@@ -10,31 +10,31 @@ import { Colors, General } from "../content";
 import { FlatList } from "react-native-gesture-handler";
 import { WelcomeCard, Separator } from "../components";
 import { Display } from "../utils";
-import { Poppins_700Bold ,Poppins_500Medium} from "@expo-google-fonts/poppins";
+import { Poppins_700Bold, Poppins_500Medium } from "@expo-google-fonts/poppins";
 
-const pageStyle = isActive =>
+const pageStyle = (isActive) =>
   isActive
     ? styles.page
-    : {...styles.page, backgroundColor: Colors.DEFAULT_GREY};
+    : { ...styles.page, backgroundColor: Colors.DEFAULT_GREY };
 
-
-    const Pagination = ({index}) => {
-      return (
-        <View style={styles.pageContainer}>
-          {[...Array(General.WELCOME_CONTENTS.length).keys()].map((_, i) =>
-            i === index ? (
-              <View style={pageStyle(true)} key={i} />
-            ) : (
-              <View style={pageStyle(false)} key={i} />
-            ),
-          )}
-        </View>
-      );
-    };
-const WelcomeScreen = () => {
+const Pagination = ({ index }) => {
+  return (
+    <View style={styles.pageContainer}>
+      {[...Array(General.WELCOME_CONTENTS.length).keys()].map((_, i) =>
+        i === index ? (
+          <View style={pageStyle(true)} key={i} />
+        ) : (
+          <View style={pageStyle(false)} key={i} />
+        )
+      )}
+    </View>
+  );
+};
+const WelcomeScreen = ({navigation}) => {
   const [welcomeListIndex, setWelcomeListIndex] = useState(0);
   const welcomeList = useRef();
   const onViewRef = useRef(({ changed }) => {
+    // console.log("changed", changed);
     setWelcomeListIndex(changed[0].index);
   });
   const viewConfigRef = useRef({ viewAreaCoveragePercentThreshold: 50 });
@@ -69,30 +69,35 @@ const WelcomeScreen = () => {
       <Separator height={Display.setHeight(8)} />
       <Pagination index={welcomeListIndex}></Pagination>
       <Separator height={Display.setHeight(8)} />
-      {welcomeListIndex === 2 ? (<TouchableOpacity activeOpacity={0.8} style={styles.gettingStartedButton}>
-        <Text style={styles.gettingStartedButtonText}>Get Started</Text>
-      </TouchableOpacity>): (
-      <View style={styles.ButtonContainer}>
+      {welcomeListIndex === 2 ? (
         <TouchableOpacity
           activeOpacity={0.8}
-          style={{ marginLeft: 10 }}
-          onPress={() => welcomeList.current.scrollToEnd()}
+          style={styles.gettingStartedButton}
+          onPress={()=>{navigation.navigate("SigninScreen")}}
         >
-          <Text style={styles.buttonText}>SKIP</Text>
+          <Text style={styles.gettingStartedButtonText}>Get Started</Text>
         </TouchableOpacity>
-        <TouchableOpacity
-          onPress={() => {
-            pageScroll();
-          }}
-          activeOpacity={0.8}
-          style={styles.button}
-        >
-          <Text style={styles.buttonText}>NEXT</Text>
-        </TouchableOpacity>
-      </View>
-       ) }
+      ) : (
+        <View style={styles.ButtonContainer}>
+          <TouchableOpacity
+            activeOpacity={0.8}
+            style={{ marginLeft: 10 }}
+            onPress={() => welcomeList.current.scrollToEnd()}
+          >
+            <Text style={styles.buttonText}>SKIP</Text>
+          </TouchableOpacity>
+          <TouchableOpacity
+            onPress={() => {
+              pageScroll();
+            }}
+            activeOpacity={0.8}
+            style={styles.button}
+          >
+            <Text style={styles.buttonText}>NEXT</Text>
+          </TouchableOpacity>
+        </View>
+      )}
     </View>
-    
   );
 };
 
@@ -125,7 +130,7 @@ const styles = StyleSheet.create({
   },
   buttonText: {
     fontSize: 16,
-    fontFamily: "Poppins_700Bold",
+    fontFamily: 'Poppins_700Bold',
     lineHeight: 16 * 1.4,
   },
   button: {
@@ -134,22 +139,19 @@ const styles = StyleSheet.create({
     paddingHorizontal: 11,
     borderRadius: 32,
   },
-  gettingStartedButton:
-  {
+  gettingStartedButton: {
     backgroundColor: Colors.DEFAULT_GREEN,
-    paddingVertical:5,
-    paddingHorizontal:40,
-    borderRadius:8,
-    justifyContent: 'center',
-    alignItems:'center',
-    elevation:2,
+    paddingVertical: 5,
+    paddingHorizontal: 40,
+    borderRadius: 8,
+    justifyContent: "center",
+    alignItems: "center",
+    elevation: 2,
   },
-  gettingStartedButtonText:
-  {
-    fontSize:20,
-    color:Colors.DEFAULT_WHITE,
-    lineHeight: 20 *1.4,
-    fontFamily:'Poppins_500Medium',
-
+  gettingStartedButtonText: {
+    fontSize: 20,
+    color: Colors.DEFAULT_WHITE,
+    lineHeight: 20 * 1.4,
+    fontFamily: 'Poppins_500Medium',
   },
 });

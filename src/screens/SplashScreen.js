@@ -5,7 +5,7 @@ import { StyleSheet, Text, View , Button ,StatusBar, Image, TouchableOpacity} fr
 import { NavigationContainer } from '@react-navigation/native';
 import { createNativeStackNavigator } from '@react-navigation/native-stack';
 import { Display } from '../utils';
-import {Colors,Images,Fonts} from '../content'
+import {Colors,Images} from '../content'
 import {
     useFonts,
     Poppins_100Thin,
@@ -40,9 +40,7 @@ const SplashScreen = ({navigation})=> {
     }, 2000);
   
   }, [])
-  
 
-  
   return (
     <View style={styles.container}>
         <StatusBar barStyle="light-content"
@@ -55,7 +53,7 @@ const SplashScreen = ({navigation})=> {
         style={styles.image}/>
         <Text style={
             styles.titletext
-        }>SHARE MEAL</Text>
+        }>SHARE YOUR MEAL</Text>
       </View>
   );
 }
@@ -76,7 +74,7 @@ const styles = StyleSheet.create({
     {
         color:Colors.DEFAULT_WHITE,
         fontSize:28,
-        fontFamily:'Poppins_600SemiBold'
+        fontFamily:'Poppins_600SemiBold',
     }
 
   });
