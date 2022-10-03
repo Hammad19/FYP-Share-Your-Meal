@@ -120,7 +120,7 @@ const SigninScreen = ({ navigation }) => {
         </TouchableOpacity>
         <View style={styles.signupContainer}>
           <Text style={styles.accountText}>Don't have an Account ?</Text>
-          <Text style={styles.signupText}>Sign Up</Text>
+          <Text onPress={()=>{navigation.navigate('SignupScreen')}} style={styles.signupText}>Sign Up</Text>
         </View>
         <Text style={styles.orText}>OR</Text>
         <TouchableOpacity style={styles.facebookButton}>
