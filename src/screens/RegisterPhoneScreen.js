@@ -25,6 +25,7 @@ const RegisterPhoneScreen = ({navigation}) => {
         />
         <Text style={styles.headertitle}>Login into Share Your Meal</Text>
       </View>
+      <Separator height={StatusBar.currentHeight} />
       <Text style={styles.content}>
           Enter Your Registered Phone Number to Log in
         </Text>
