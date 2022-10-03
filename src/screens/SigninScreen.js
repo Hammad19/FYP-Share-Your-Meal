@@ -12,6 +12,7 @@ import Feather from "react-native-vector-icons/Feather";
 import { TextInput } from "react-native-gesture-handler";
 import { Separator, ToggleButton } from "../components";
 import { Colors, Images } from "../content";
+
 import {
   useFonts,
   Poppins_100Thin,
@@ -113,14 +114,14 @@ const SigninScreen = ({ navigation }) => {
             <ToggleButton size={0.5}/>
             <Text style={styles.rememberMeText}>Remember Me</Text>
           </View>
-          <Text style={styles.forgotPasswordText}>Forgot Password</Text>
+          <Text onPress={()=>navigation.navigate('ForgotPasswordScreen')} style={styles.forgotPasswordText}>Forgot Password</Text>
         </View>
         <TouchableOpacity style={styles.signinButton}>
           <Text style={styles.signinButtonText}>Sign In</Text>
         </TouchableOpacity>
         <View style={styles.signupContainer}>
           <Text style={styles.accountText}>Don't have an Account ?</Text>
-          <Text onPress={()=>{navigation.navigate('SignupScreen')}} style={styles.signupText}>Sign Up</Text>
+          <Text onPress={()=>navigation.navigate('SignupScreen')} style={styles.signupText}>Sign Up</Text>
         </View>
         <Text style={styles.orText}>OR</Text>
         <TouchableOpacity style={styles.facebookButton}>
@@ -265,6 +266,7 @@ const styles = StyleSheet.create({
     fontFamily: "Poppins_500Medium",
     marginLeft: 5,
     alignSelf: "center",
+  
   },
   facebookButton: {
     backgroundColor: Colors.FABEBOOK_BLUE,

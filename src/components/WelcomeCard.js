@@ -11,7 +11,6 @@ import {
 const WelcomeCard = ({ title, content, image }) => {
   let [fontsLoaded] = useFonts({
     Poppins_300Light,
-
     Poppins_700Bold,
   });
   return (
