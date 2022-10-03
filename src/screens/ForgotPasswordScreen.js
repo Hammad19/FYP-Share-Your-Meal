@@ -135,6 +135,13 @@ const styles = StyleSheet.create({
     color: Colors.DEFAULT_WHITE,
     fontFamily: 'Poppins_500Medium',
   },
+  content: {
+    fontSize: 20,
+    fontFamily: "Poppins_500Medium",
+    marginTop: 15,
+    marginBottom: 20,
+    marginHorizontal: 20,
+  },
 });
 
 export default ForgotPasswordScreen;

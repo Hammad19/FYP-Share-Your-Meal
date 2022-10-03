@@ -1,7 +1,7 @@
 import { NavigationContainer, StackActions } from "@react-navigation/native";
 import { createStackNavigator, Header } from "@react-navigation/stack";
 import { ScreenStackHeaderLeftView } from "react-native-screens";
-import { SplashScreen,WelcomeScreen,SigninScreen, SignupScreen, ForgotPasswordScreen } from "../screens";
+import { SplashScreen,WelcomeScreen,SigninScreen, SignupScreen, ForgotPasswordScreen ,RegisterPhoneScreen} from "../screens";
 
 
 const Stack = createStackNavigator();
@@ -15,6 +15,7 @@ const Navigators = ()=>
                 <Stack.Screen name = "SigninScreen" component ={SigninScreen}></Stack.Screen>
                 <Stack.Screen name = "SignupScreen" component ={SignupScreen}></Stack.Screen>
                 <Stack.Screen name = "ForgotPasswordScreen" component ={ForgotPasswordScreen}></Stack.Screen>
+                <Stack.Screen name = "RegisterPhoneScreen" component ={RegisterPhoneScreen}></Stack.Screen>
             </Stack.Navigator> 
         </NavigationContainer>);
     
