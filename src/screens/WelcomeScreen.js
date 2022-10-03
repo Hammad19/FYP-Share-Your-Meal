@@ -10,7 +10,7 @@ import { Colors, General } from "../content";
 import { FlatList } from "react-native-gesture-handler";
 import { WelcomeCard, Separator } from "../components";
 import { Display } from "../utils";
-import { Poppins_700Bold, Poppins_500Medium } from "@expo-google-fonts/poppins";
+import {useFonts, Poppins_700Bold, Poppins_500Medium } from "@expo-google-fonts/poppins";
 
 const pageStyle = (isActive) =>
   isActive
@@ -31,6 +31,11 @@ const Pagination = ({ index }) => {
   );
 };
 const WelcomeScreen = ({navigation}) => {
+
+  let [fontsLoaded] = useFonts({
+    Poppins_500Medium,
+    Poppins_700Bold,
+  });
   const [welcomeListIndex, setWelcomeListIndex] = useState(0);
   const welcomeList = useRef();
   const onViewRef = useRef(({ changed }) => {
@@ -45,6 +50,7 @@ const WelcomeScreen = ({navigation}) => {
     });
   };
   return (
+    fontsLoaded&&
     <View style={styles.container}>
       <StatusBar
         barStyle={"dark-content"}
