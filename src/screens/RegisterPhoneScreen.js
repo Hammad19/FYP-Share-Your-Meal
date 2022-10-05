@@ -5,17 +5,42 @@ import {
   StatusBar,
   Image,
   TouchableOpacity,
-  TextInput
+  TextInput,
 } from "react-native";
-import React from "react";
-import { Colors } from "../content";
+import React, { useState } from "react";
+import { Colors, CountryCode, Images } from "../content";
 import { Separator } from "../components";
 import { Display } from "../utils";
 import IonIcons from "react-native-vector-icons/Ionicons";
 import MaterialIcons from "react-native-vector-icons/MaterialIcons";
 import { StaticImageService } from "../services";
-
+import CountryFlag from "react-native-country-flag";
+import {
+  useFonts,
+  Poppins_100Thin,
+  Poppins_100Thin_Italic,
+  Poppins_200ExtraLight,
+  Poppins_200ExtraLight_Italic,
+  Poppins_300Light,
+  Poppins_300Light_Italic,
+  Poppins_400Regular,
+  Poppins_400Regular_Italic,
+  Poppins_500Medium,
+  Poppins_500Medium_Italic,
+  Poppins_600SemiBold,
+  Poppins_600SemiBold_Italic,
+  Poppins_700Bold,
+  Poppins_700Bold_Italic,
+  Poppins_800ExtraBold,
+  Poppins_800ExtraBold_Italic,
+  Poppins_900Black,
+  Poppins_900Black_Italic,
+} from "@expo-google-fonts/poppins";
+//import {getFlagIcon} from "../services/StaticImageService"
 const RegisterPhoneScreen = ({ navigation }) => {
+  const [selectedCountry, setSelectedCountry] = useState(
+    CountryCode.find((country) => country.name === "Pakistan")
+  );
   return (
     <View style={styles.container}>
       <StatusBar
@@ -41,15 +66,15 @@ const RegisterPhoneScreen = ({ navigation }) => {
       </Text>
       <View style={styles.inputsContainer}>
         <TouchableOpacity style={styles.countryListContainer}>
-          <Image source={{uri: StaticImageService.getFlagIcon('CA')}} style={styles.flagIcon} />
-          <Text></Text>
-          <MaterialIcons/>
+          <CountryFlag isoCode={selectedCountry.code} size={16} style={styles.flagIcon} />
+          <Text>{selectedCountry.dial_code}</Text>
+          <MaterialIcons />
         </TouchableOpacity>
         <View style={styles.phoneInputContainer}>
-          <TextInput/>
+          <TextInput />
         </View>
       </View>
-    </View>  
+    </View>
   );
 };
 
@@ -80,36 +105,43 @@ const styles = StyleSheet.create({
     marginBottom: 20,
     marginHorizontal: 20,
   },
-  inputsContainer:{
-    flexDirection: 'row',
-    alignItems: 'center',
+  inputsContainer: {
+    flexDirection: "row",
+    alignItems: "center",
     marginHorizontal: 20,
     marginVertical: 50,
   },
-  countryListContainer:{
+  countryListContainer: {
     backgroundColor: Colors.LIGHT_GREY,
     width: Display.setWidth(22),
     marginRight: 10,
     borderRadius: 8,
     height: Display.setHeight(6),
-    justifyContent:'space-evenly',
-    alignItems:'center',
+    justifyContent: "space-evenly",
+    alignItems: "center",
     borderWidth: 0.5,
-    borderColor:Colors.LIGHT_GREY2,
-    flexDirection:"row",
+    borderColor: Colors.LIGHT_GREY2,
+    flexDirection: "row",
   },
-  phoneInputContainer:{
+  phoneInputContainer: {
     backgroundColor: Colors.LIGHT_GREY,
     height: Display.setHeight(6),
     paddingHorizontal: 10,
     borderRadius: 8,
-    justifyContent:'center',
+    justifyContent: "center",
     borderWidth: 0.5,
-    borderColor:Colors.LIGHT_GREY2,
+    borderColor: Colors.LIGHT_GREY2,
     flex: 1,
   },
-  flagIcon:{
+  flagIcon: {
     height: 20,
-    width: 20,
+    width: 30,
+  },
+  countryCodeText:{
+    fontSize: 14,
+    lineHeight: 14 * 1.4,
+    color: Colors.DEFAULT_BLACK,
+
+  fontFamily: "Poppins_500Medium"
   }
 });
