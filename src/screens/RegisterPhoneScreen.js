@@ -14,54 +14,20 @@ import { Display } from "../utils";
 import IonIcons from "react-native-vector-icons/Ionicons";
 import MaterialIcons from "react-native-vector-icons/MaterialIcons";
 import { StaticImageService } from "../services";
-<<<<<<< HEAD
 import CountryFlag from "react-native-country-flag";
-import {
-  useFonts,
-  Poppins_100Thin,
-  Poppins_100Thin_Italic,
-  Poppins_200ExtraLight,
-  Poppins_200ExtraLight_Italic,
-  Poppins_300Light,
-  Poppins_300Light_Italic,
-  Poppins_400Regular,
-  Poppins_400Regular_Italic,
-  Poppins_500Medium,
-  Poppins_500Medium_Italic,
-  Poppins_600SemiBold,
-  Poppins_600SemiBold_Italic,
-  Poppins_700Bold,
-  Poppins_700Bold_Italic,
-  Poppins_800ExtraBold,
-  Poppins_800ExtraBold_Italic,
-  Poppins_900Black,
-  Poppins_900Black_Italic,
-} from "@expo-google-fonts/poppins";
 //import {getFlagIcon} from "../services/StaticImageService"
 const RegisterPhoneScreen = ({ navigation }) => {
   const [selectedCountry, setSelectedCountry] = useState(
     CountryCode.find((country) => country.name === "Pakistan")
   );
-=======
-import {
-  useFonts, 
-  Poppins_500Medium,
-} from "@expo-google-fonts/poppins";
-
-const RegisterPhoneScreen = ({ navigation }) => {
-  let [fontsLoaded] = useFonts({
-    Poppins_500Medium,
-  });
->>>>>>> 5c08f68f770dd6acaa63660ff342bd44f1866d91
   return (
-    fontsLoaded && (
-      <View style={styles.container}>
-        <StatusBar
-          barStyle={"dark-content"}
-          backgroundColor={Colors.DEFAULT_WHITE}
-          translucent></StatusBar>
+    <View style={styles.container}>
+      <StatusBar
+        barStyle={"dark-content"}
+        backgroundColor={Colors.DEFAULT_WHITE}
+        translucent
+      ></StatusBar>
 
-<<<<<<< HEAD
       <Separator height={StatusBar.currentHeight} />
       <View style={styles.headerContainer}>
         <IonIcons
@@ -88,38 +54,6 @@ const RegisterPhoneScreen = ({ navigation }) => {
         </View>
       </View>
     </View>
-=======
-        <Separator height={StatusBar.currentHeight} />
-        <View style={styles.headerContainer}>
-          <IonIcons
-            name="chevron-back-outline"
-            size={30}
-            onPress={() => {
-              navigation.goBack();
-            }}
-          />
-          <Text style={styles.headertitle}>Login into Share Your Meal</Text>
-        </View>
-        <Separator height={StatusBar.currentHeight} />
-        <Text style={styles.content}>
-          Enter Your Registered Phone Number to Log in
-        </Text>
-        <View style={styles.inputsContainer}>
-          <TouchableOpacity style={styles.countryListContainer}>
-            <Image
-              source={{ uri: StaticImageService.getFlagIcon("CA") }}
-              style={styles.flagIcon}
-            />
-            <Text></Text>
-            <MaterialIcons />
-          </TouchableOpacity>
-          <View style={styles.phoneInputContainer}>
-            <TextInput />
-          </View>
-        </View>
-      </View>
-    )
->>>>>>> 5c08f68f770dd6acaa63660ff342bd44f1866d91
   );
 };
 
@@ -180,18 +114,12 @@ const styles = StyleSheet.create({
   },
   flagIcon: {
     height: 20,
-<<<<<<< HEAD
     width: 30,
   },
   countryCodeText:{
     fontSize: 14,
     lineHeight: 14 * 1.4,
     color: Colors.DEFAULT_BLACK,
-
   fontFamily: "Poppins_500Medium"
   }
-=======
-    width: 20,
-  },
->>>>>>> 5c08f68f770dd6acaa63660ff342bd44f1866d91
 });
