@@ -6,55 +6,122 @@ import {
   Image,
   TouchableOpacity,
   TextInput,
+  FlatList,
 } from "react-native";
 import React, { useState } from "react";
-import { Colors, CountryCode, Images } from "../content";
+import { Colors, CountryCode } from "../content";
 import { Separator } from "../components";
 import { Display } from "../utils";
 import IonIcons from "react-native-vector-icons/Ionicons";
 import MaterialIcons from "react-native-vector-icons/MaterialIcons";
 import { StaticImageService } from "../services";
 import CountryFlag from "react-native-country-flag";
-//import {getFlagIcon} from "../services/StaticImageService"
+import FlagItem from "../components";
+import {
+  useFonts,
+  Poppins_100Thin,
+  Poppins_100Thin_Italic,
+  Poppins_200ExtraLight,
+  Poppins_200ExtraLight_Italic,
+  Poppins_300Light,
+  Poppins_300Light_Italic,
+  Poppins_400Regular,
+  Poppins_400Regular_Italic,
+  Poppins_500Medium,
+  Poppins_500Medium_Italic,
+  Poppins_600SemiBold,
+  Poppins_600SemiBold_Italic,
+  Poppins_700Bold,
+  Poppins_700Bold_Italic,
+  Poppins_800ExtraBold,
+  Poppins_800ExtraBold_Italic,
+  Poppins_900Black,
+  Poppins_900Black_Italic,
+} from "@expo-google-fonts/poppins";
+
+const getDropdownStyle = (y) => ({ ...styles.countryDropdown, top: y + 60 });
+
 const RegisterPhoneScreen = ({ navigation }) => {
   const [selectedCountry, setSelectedCountry] = useState(
     CountryCode.find((country) => country.name === "Pakistan")
   );
-  return (
-    <View style={styles.container}>
-      <StatusBar
-        barStyle={"dark-content"}
-        backgroundColor={Colors.DEFAULT_WHITE}
-        translucent
-      ></StatusBar>
 
-      <Separator height={StatusBar.currentHeight} />
-      <View style={styles.headerContainer}>
-        <IonIcons
-          name="chevron-back-outline"
-          size={30}
-          onPress={() => {
-            navigation.goBack();
-          }}
-        />
-        <Text style={styles.headertitle}>Login into Share Your Meal</Text>
-      </View>
-      <Separator height={StatusBar.currentHeight} />
-      <Text style={styles.content}>
-        Enter Your Registered Phone Number to Log in
-      </Text>
-      <View style={styles.inputsContainer}>
-        <TouchableOpacity style={styles.countryListContainer}>
-          <CountryFlag isoCode={selectedCountry.code} size={16} style={styles.flagIcon} />
-          <Text>{selectedCountry.dial_code}</Text>
-          <MaterialIcons />
-        </TouchableOpacity>
-        <View style={styles.phoneInputContainer}>
-          <TextInput />
+  const [inputsContainerY, setInputsContainerY] = useState(0);
+  const [isDropdownOpen, setIsDropdownOpen] = useState(false);
+  let [fontsLoaded] = useFonts({
+    Poppins_500Medium,
+    Poppins_700Bold,
+  });
+  return (
+    fontsLoaded && (
+      <View style={styles.container}>
+        <StatusBar
+          barStyle={"dark-content"}
+          backgroundColor={Colors.DEFAULT_WHITE}
+          translucent
+        ></StatusBar>
+
+        <Separator height={StatusBar.currentHeight} />
+        <View style={styles.headerContainer}>
+          <IonIcons
+            name="chevron-back-outline"
+            size={30}
+            onPress={() => {
+              navigation.goBack();
+            }}
+          />
+          <Text style={styles.headertitle}>Login into Share Your Meal</Text>
         </View>
+        <Separator height={StatusBar.currentHeight} />
+        <Text style={styles.content}>
+          Enter Your Registered Phone Number to Log in
+        </Text>
+        <View
+          style={styles.inputsContainer}
+          onLayout={({
+            nativeEvent: {
+              layout: { y },
+            },
+          }) => setInputsContainerY(y)}
+        >
+          <TouchableOpacity
+            style={styles.countryListContainer}
+            onPress={() => setIsDropdownOpen(!isDropdownOpen)}
+          >
+            <CountryFlag
+              isoCode={selectedCountry.code}
+              size={16}
+              style={styles.flagIcon}
+            />
+            <Text style={styles.countryCodeText}>
+              {selectedCountry.dial_code}
+            </Text>
+            <MaterialIcons name="keyboard-arrow-down" size={18} />
+          </TouchableOpacity>
+          <View style={styles.phoneInputContainer}>
+            <TextInput
+              placeholder="Phone Number"
+              placeholderTextColor={Colors.DEFAULT_GREY}
+              selectionColor={Colors.DEFAULT_GREY}
+              keyboardType="number-pad"
+              style={styles.inputText}
+            />
+          </View>
+        </View>
+        {isDropdownOpen && (
+        <View
+          style={getDropdownStyle(inputsContainerY)}>
+          <FlatList
+            data={CountryCode}
+            keyExtractor={item => item.code}
+            renderItem={({item}) => 
+              <Text>{item.name}</Text>}
+          />
+        </View>
+      )}
       </View>
-    </View>
-  );
+    )
+  );   
 };
 
 export default RegisterPhoneScreen;
@@ -116,10 +183,28 @@ const styles = StyleSheet.create({
     height: 20,
     width: 30,
   },
-  countryCodeText:{
+  countryCodeText: {
     fontSize: 14,
     lineHeight: 14 * 1.4,
     color: Colors.DEFAULT_BLACK,
-  fontFamily: "Poppins_500Medium"
-  }
+    fontFamily: "Poppins_500Medium",
+  },
+  inputText: {
+    fontSize: 18,
+    textAlignVertical: "center",
+    padding: 0,
+    height: Display.setHeight(6),
+    color: Colors.DEFAULT_BLACK,
+  },
+  countryDropdown: {
+    backgroundColor: Colors.LIGHT_GREY,
+    position: "absolute",
+    width: Display.setWidth(80),
+    height: Display.setHeight(50),
+    marginLeft: 20,
+    borderRadius: 10,
+    borderWidth: 0.5,
+    borderColor: Colors.LIGHT_GREY2,
+    zIndex: 3,
+  },
 });
