@@ -42,7 +42,7 @@ const SignupScreen = ({ navigation }) => {
     Poppins_500Medium,
     Poppins_700Bold,
   });
-  return (fontsLoaded&&
+  return (fontsLoaded &&
     <View style={styles.container}>
       <StatusBar
         barStyle={"dark-content"}
