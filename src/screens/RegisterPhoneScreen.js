@@ -10,13 +10,12 @@ import {
 } from "react-native";
 import React, { useState } from "react";
 import { Colors, CountryCode } from "../content";
-import { Separator } from "../components";
+import { FlagItem  ,Separator } from "../components";
 import { Display } from "../utils";
 import IonIcons from "react-native-vector-icons/Ionicons";
 import MaterialIcons from "react-native-vector-icons/MaterialIcons";
 import { StaticImageService } from "../services";
 import CountryFlag from "react-native-country-flag";
-import FlagItem from "../components";
 import {
   useFonts,
   Poppins_100Thin,

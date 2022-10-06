@@ -1,6 +1,7 @@
 import React from "react";
 import { Text, StyleSheet, TouchableOpacity } from "react-native";
 import { Colors } from "../content";
+import CountryCode from "../content";
 import {
   useFonts,
   Poppins_100Thin,
@@ -22,6 +23,7 @@ import {
   Poppins_900Black,
   Poppins_900Black_Italic,
 } from "@expo-google-fonts/poppins";
+import { View } from "react-native-web";
 
 const FlagItem = ({ code, name, dial_code, onPress }) => {
   let [fontsLoaded] = useFonts({
@@ -29,18 +31,9 @@ const FlagItem = ({ code, name, dial_code, onPress }) => {
     Poppins_700Bold,
   });
   return (
-    <TouchableOpacity
-      style={styles.container}
-      onPress={() => onPress({ code, name, dial_code })}
-    >
-      <CountryFlag
-        isoCode={CountryCode.code}
-        size={16}
-        style={styles.flagImage}
-      />
-      <Text style={styles.flagText}>{dial_code}</Text>
-      <Text style={styles.flagText}>{name}</Text>
-    </TouchableOpacity>
+    <View style={styles.container}>
+      <Text>{name}</Text>
+    </View>
   );
 };
 
