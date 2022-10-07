@@ -10,11 +10,10 @@ import {
 } from "react-native";
 import React, { useState } from "react";
 import { Colors, CountryCode } from "../content";
-import { FlagItem  ,Separator } from "../components";
+import { FlagItem, Separator } from "../components";
 import { Display } from "../utils";
 import IonIcons from "react-native-vector-icons/Ionicons";
 import MaterialIcons from "react-native-vector-icons/MaterialIcons";
-import { StaticImageService } from "../services";
 import CountryFlag from "react-native-country-flag";
 import {
   useFonts,
@@ -47,13 +46,32 @@ const RegisterPhoneScreen = ({ navigation }) => {
 
   const [inputsContainerY, setInputsContainerY] = useState(0);
   const [isDropdownOpen, setIsDropdownOpen] = useState(false);
+  const [dropdownLayout, setDropdownLayout] = useState({});
+  const closeDropdown = (pageX, pageY) => {
+    if (isDropdownOpen) {
+      if (
+        pageX < dropdownLayout?.x ||
+        pageX > dropdownLayout?.x + dropdownLayout?.width ||
+        pageY < dropdownLayout?.y ||
+        pageY > dropdownLayout?.y + dropdownLayout?.height
+      ) {
+        setIsDropdownOpen(false);
+      }
+    }
+  };
   let [fontsLoaded] = useFonts({
     Poppins_500Medium,
     Poppins_700Bold,
   });
+
   return (
     fontsLoaded && (
-      <View style={styles.container}>
+      <View
+        style={styles.container}
+        onStartShouldSetResponder={({ nativeEvent: { pageX, pageY } }) =>
+          closeDropdown(pageX, pageY)
+        }
+      >
         <StatusBar
           barStyle={"dark-content"}
           backgroundColor={Colors.DEFAULT_WHITE}
@@ -89,7 +107,7 @@ const RegisterPhoneScreen = ({ navigation }) => {
           >
             <CountryFlag
               isoCode={selectedCountry.code}
-              size={16}
+              size={12}
               style={styles.flagIcon}
             />
             <Text style={styles.countryCodeText}>
@@ -103,24 +121,42 @@ const RegisterPhoneScreen = ({ navigation }) => {
               placeholderTextColor={Colors.DEFAULT_GREY}
               selectionColor={Colors.DEFAULT_GREY}
               keyboardType="number-pad"
+              onFocus={() => setIsDropdownOpen(false)}
               style={styles.inputText}
             />
           </View>
         </View>
+        <TouchableOpacity style={styles.signinButton} activeOpacity={0.8}>
+          <Text style={styles.signinButtonText}>Contiue</Text>
+        </TouchableOpacity>
         {isDropdownOpen && (
-        <View
-          style={getDropdownStyle(inputsContainerY)}>
-          <FlatList
-            data={CountryCode}
-            keyExtractor={item => item.code}
-            renderItem={({item}) => 
-              <Text>{item.name}</Text>}
-          />
-        </View>
-      )}
+          <View
+            style={getDropdownStyle(inputsContainerY)}
+            onLayout={({
+              nativeEvent: {
+                layout: { x, y, height, width },
+              },
+            }) => setDropdownLayout({ x, y, height, width })}
+          >
+            <FlatList
+              data={CountryCode}
+              keyExtractor={(item) => item.code}
+              renderItem={({ item }) => (
+                // <Text>{item.name}</Text>
+                <FlagItem
+                  {...item}
+                  onPress={(country) => {
+                    setSelectedCountry(country);
+                    setIsDropdownOpen(false);
+                  }}
+                />
+              )}
+            />
+          </View>
+        )}
       </View>
     )
-  );   
+  );
 };
 
 export default RegisterPhoneScreen;
@@ -179,12 +215,13 @@ const styles = StyleSheet.create({
     flex: 1,
   },
   flagIcon: {
-    height: 20,
-    width: 30,
+    height: 18,
+    width: 27,
+    marginLeft: 4,
   },
   countryCodeText: {
-    fontSize: 14,
-    lineHeight: 14 * 1.4,
+    fontSize: 13,
+    lineHeight: 13 * 1.3,
     color: Colors.DEFAULT_BLACK,
     fontFamily: "Poppins_500Medium",
   },
@@ -205,5 +242,19 @@ const styles = StyleSheet.create({
     borderWidth: 0.5,
     borderColor: Colors.LIGHT_GREY2,
     zIndex: 3,
+  },
+  signinButton: {
+    backgroundColor: Colors.DEFAULT_GREEN,
+    borderRadius: 8,
+    marginHorizontal: 20,
+    height: Display.setHeight(6),
+    justifyContent: "center",
+    alignItems: "center",
+  },
+  signinButtonText: {
+    fontSize: 18,
+    lineHeight: 18 * 1.4,
+    color: Colors.DEFAULT_WHITE,
+    fontFamily: "POPPINS_MEDIUM",
   },
 });
