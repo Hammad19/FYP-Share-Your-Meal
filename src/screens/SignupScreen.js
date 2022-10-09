@@ -36,117 +36,143 @@ import {
 } from "@expo-google-fonts/poppins";
 
 const SignupScreen = ({ navigation }) => {
+  const [email, setEmail] = useState("");
+  const [userName, setUserName] = useState("");
+  const [password, setPassword] = useState("");
+  const [accountType, setAccountType] = useState("");
+
+
+  const handleOnPress =()=>
+  {
+
+    console.log(email);
+    console.log(password);
+    console.log(userName)
+    navigation.navigate("RegisterPhoneScreen")
+  }
 
   const [isPasswordShown, setisPasswordShown] = useState(false);
   let [fontsLoaded] = useFonts({
     Poppins_500Medium,
     Poppins_700Bold,
   });
-  return (fontsLoaded &&
-    <View style={styles.container}>
-      <StatusBar
-        barStyle={"dark-content"}
-        backgroundColor={Colors.DEFAULT_WHITE}
-        translucent></StatusBar>
-      <Separator height={StatusBar.currentHeight} />
-      <View style={styles.headerContainer}>
-        <IonIcons
-          name="chevron-back-outline"
-          size={30}
-          onPress={() => {
-            navigation.goBack();
-          }}
-        />
-        <Text style={styles.headertitle}>Sign Up</Text>
-      </View>
-      <Text style={styles.title}>Create Account</Text>
-      <Text style={styles.content}>
-        Enter Your email, choose a username and password
-      </Text>
-      <View style={styles.inputContainer}>
-        <View style={styles.inputSubContainer}>
-          <Feather
-            name="user"
-            size={22}
-            color={Colors.DEFAULT_GREY}
-            style={{ marginRight: 10 }}
-          />
-          <TextInput
-            placeholder="Username"
-            placeholderTextColor={Colors.DEFAULT_GREY}
-            selectionColor={Colors.DEFAULT_GREY}
-            style={styles.inputText}
-          />
-        </View>
-      </View>
-      <Separator height={15} />
-      <View style={styles.inputContainer}>
-        <View style={styles.inputSubContainer}>
-          <Feather
-            name="mail"
-            size={22}
-            color={Colors.DEFAULT_GREY}
-            style={{ marginRight: 10 }}
-          />
-          <TextInput
-            placeholder="Email"
-            placeholderTextColor={Colors.DEFAULT_GREY}
-            selectionColor={Colors.DEFAULT_GREY}
-            style={styles.inputText}
-          />
-        </View>
-      </View>
-      <Separator height={15} />
-      <View style={styles.inputContainer}>
-        <View style={styles.inputSubContainer}>
-          <Feather
-            name="lock"
-            size={22}
-            color={Colors.DEFAULT_GREY}
-            style={{ marginRight: 10 }}
-          />
-          <TextInput
-            secureTextEntry={isPasswordShown ? false : true}
-            placeholder="Password"
-            placeholderTextColor={Colors.DEFAULT_GREY}
-            selectionColor={Colors.DEFAULT_GREY}
-            style={styles.inputText}
-          />
-          <Feather
+  return (
+    fontsLoaded && (
+      <View style={styles.container}>
+        <StatusBar
+          barStyle={"dark-content"}
+          backgroundColor={Colors.DEFAULT_WHITE}
+          translucent></StatusBar>
+        <Separator height={StatusBar.currentHeight} />
+        <View style={styles.headerContainer}>
+          <IonIcons
+            name="chevron-back-outline"
+            size={30}
             onPress={() => {
-              setisPasswordShown(!isPasswordShown);
+              navigation.goBack();
             }}
-            name={isPasswordShown ? "eye" : "eye-off"}
-            size={22}
-            color={Colors.DEFAULT_GREY}
-            style={{ marginRight: 10 }}
           />
+          <Text style={styles.headertitle}>Sign Up</Text>
         </View>
-      </View>
-      <TouchableOpacity onPress={()=>navigation.navigate('RegisterPhoneScreen')} style={styles.signinButton}>
-        <Text style={styles.signinButtonText}>Create Account</Text>
-      </TouchableOpacity>
+        <Text style={styles.title}>Create Account</Text>
+        <Text style={styles.content}>
+          Enter Your email, choose a username and password
+        </Text>
+        <View style={styles.inputContainer}>
+          <View style={styles.inputSubContainer}>
+            <Feather
+              name="user"
+              size={22}
+              color={Colors.DEFAULT_GREY}
+              style={{ marginRight: 10 }}
+            />
+            <TextInput
+              onChange={(username) => setUserName(username)}
+              value ={userName}
+              placeholder="Username"
+              placeholderTextColor={Colors.DEFAULT_GREY}
+              selectionColor={Colors.DEFAULT_GREY}
+              style={styles.inputText}
+            />
+          </View>
+        </View>
+        <Separator height={15} />
+        <View style={styles.inputContainer}>
+          <View style={styles.inputSubContainer}>
+            <Feather
+              name="mail"
+              size={22}
+              color={Colors.DEFAULT_GREY}
+              style={{ marginRight: 10 }}
+            />
+            <TextInput
+              onChange={(email) => setEmail(email)}
+              value= {email}
+              placeholder="Email"
+              placeholderTextColor={Colors.DEFAULT_GREY}
+              selectionColor={Colors.DEFAULT_GREY}
+              style={styles.inputText}
+            />
+          </View>
+        </View>
+        <Separator height={15} />
+        <View style={styles.inputContainer}>
+          <View style={styles.inputSubContainer}>
+            <Feather
+              name="lock"
+              size={22}
+              color={Colors.DEFAULT_GREY}
+              style={{ marginRight: 10 }}
+            />
+            <TextInput
+              onChange={(password) => setPassword(password)}
+              value={password}
+              secureTextEntry={isPasswordShown ? false : true}
+              placeholder="Password"
+              placeholderTextColor={Colors.DEFAULT_GREY}
+              selectionColor={Colors.DEFAULT_GREY}
+              style={styles.inputText}
+            />
+            <Feather
+              onPress={() => {
+                setisPasswordShown(!isPasswordShown);
+              }}
+              name={isPasswordShown ? "eye" : "eye-off"}
+              size={22}
+              color={Colors.DEFAULT_GREY}
+              style={{ marginRight: 10 }}
+            />
+          </View>
+        </View>
+        <TouchableOpacity
+          onPress={handleOnPress}
+          style={styles.signinButton}>
+          <Text style={styles.signinButtonText}>Create Account</Text>
+        </TouchableOpacity>
 
-      <Text style={styles.orText}>OR</Text>
-      <TouchableOpacity style={styles.facebookButton}>
-        <View style={styles.socialButtonsContainer}>
-          <View style={styles.signinButtonLogoContainer}>
-            <Image style={styles.signinButtonLogo} source={Images.FACEBOOK} />
+        <Text style={styles.orText}>OR</Text>
+        <TouchableOpacity style={styles.facebookButton}>
+          <View style={styles.socialButtonsContainer}>
+            <View style={styles.signinButtonLogoContainer}>
+              <Image style={styles.signinButtonLogo} source={Images.FACEBOOK} />
+            </View>
+            <Text style={styles.socialSigninButtonText}>
+              Connect with FaceBook
+            </Text>
           </View>
-          <Text style={styles.socialSigninButtonText}>
-            Connect with FaceBook
-          </Text>
-        </View>
-      </TouchableOpacity>
-      <TouchableOpacity style={styles.googleButton}>
-        <View style={styles.socialButtonsContainer}>
-          <View style={styles.signinButtonLogoContainer}>
-            <Image style={styles.signinButtonLogo} source={Images.GOOGLE} />
+        </TouchableOpacity>
+        <TouchableOpacity style={styles.googleButton}>
+          <View style={styles.socialButtonsContainer}>
+            <View style={styles.signinButtonLogoContainer}>
+              <Image style={styles.signinButtonLogo} source={Images.GOOGLE} />
+            </View>
+            <Text style={styles.socialSigninButtonText}>
+              Connect with Google
+            </Text>
           </View>
-          <Text style={styles.socialSigninButtonText}>Connect with Google</Text>
-        </View>
-      </TouchableOpacity>
-    </View>
+        </TouchableOpacity>
+      </View>
+    )
   );
 };
 
