@@ -6,7 +6,8 @@ import {
   TouchableOpacity,
   Image,
 } from "react-native";
-import { React, useState } from "react";
+import { useDispatch, useSelector } from "react-redux";
+import { React, useEffect, useState } from "react";
 import { Colors, Images } from "../content";
 import { Separator } from "../components";
 import { Display } from "../utils";
@@ -34,6 +35,7 @@ import {
   Poppins_900Black,
   Poppins_900Black_Italic,
 } from "@expo-google-fonts/poppins";
+import { userSignup } from "../store/slices/authSlice";
 
 const SignupScreen = ({ navigation }) => {
   const [email, setEmail] = useState("");
@@ -41,15 +43,23 @@ const SignupScreen = ({ navigation }) => {
   const [password, setPassword] = useState("");
   const [accountType, setAccountType] = useState("");
 
+  const state = useSelector((state) => state);
 
-  const handleOnPress =()=>
-  {
+  useEffect(() => {
+    console.log(state, "<--state");
+  }, [state]);
 
-    console.log(email);
-    console.log(password);
-    console.log(userName)
-    navigation.navigate("RegisterPhoneScreen")
-  }
+  const dispatch = useDispatch();
+
+  const createAccount = () => {
+    let requestBody = {
+      email,
+      password,
+      confirm_password: password,
+    }
+    dispatch(userSignup(requestBody))
+    navigation.navigate("RegisterPhoneScreen");
+  };
 
   const [isPasswordShown, setisPasswordShown] = useState(false);
   let [fontsLoaded] = useFonts({
@@ -62,7 +72,8 @@ const SignupScreen = ({ navigation }) => {
         <StatusBar
           barStyle={"dark-content"}
           backgroundColor={Colors.DEFAULT_WHITE}
-          translucent></StatusBar>
+          translucent
+        ></StatusBar>
         <Separator height={StatusBar.currentHeight} />
         <View style={styles.headerContainer}>
           <IonIcons
@@ -87,8 +98,10 @@ const SignupScreen = ({ navigation }) => {
               style={{ marginRight: 10 }}
             />
             <TextInput
-              onChange={(username) => setUserName(username)}
-              value ={userName}
+              onChangeText={text =>
+                setUserName(text)
+              }
+              value={userName}
               placeholder="Username"
               placeholderTextColor={Colors.DEFAULT_GREY}
               selectionColor={Colors.DEFAULT_GREY}
@@ -106,8 +119,8 @@ const SignupScreen = ({ navigation }) => {
               style={{ marginRight: 10 }}
             />
             <TextInput
-              onChange={(email) => setEmail(email)}
-              value= {email}
+              onChangeText={text => setEmail(text)}
+              value={email}
               placeholder="Email"
               placeholderTextColor={Colors.DEFAULT_GREY}
               selectionColor={Colors.DEFAULT_GREY}
@@ -125,7 +138,7 @@ const SignupScreen = ({ navigation }) => {
               style={{ marginRight: 10 }}
             />
             <TextInput
-              onChange={(password) => setPassword(password)}
+              onChangeText={password => setPassword(password)}
               value={password}
               secureTextEntry={isPasswordShown ? false : true}
               placeholder="Password"
@@ -144,9 +157,7 @@ const SignupScreen = ({ navigation }) => {
             />
           </View>
         </View>
-        <TouchableOpacity
-          onPress={handleOnPress}
-          style={styles.signinButton}>
+        <TouchableOpacity onPress={createAccount} style={styles.signinButton}>
           <Text style={styles.signinButtonText}>Create Account</Text>
         </TouchableOpacity>
 

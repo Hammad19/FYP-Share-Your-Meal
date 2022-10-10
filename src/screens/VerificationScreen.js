@@ -34,7 +34,7 @@ import {
   Poppins_900Black_Italic,
 } from "@expo-google-fonts/poppins";
 
-const VerificationScreen = ({
+const VerificationScreen = ({navigation,
   route: {
     params: { phoneNumber },
   },
