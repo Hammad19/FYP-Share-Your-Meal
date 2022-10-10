@@ -34,6 +34,7 @@ import {
   Poppins_900Black,
   Poppins_900Black_Italic,
 } from "@expo-google-fonts/poppins";
+import { Separator } from "../components";
 
 const SplashScreen = ({ navigation }) => {
   let [fontsLoaded] = useFonts({
@@ -58,6 +59,8 @@ const SplashScreen = ({ navigation }) => {
           resizeMode="contain"
           style={styles.image}
         />
+
+        <Separator width={0.5}/>
         <Text style={styles.titletext}>SHARE YOUR MEAL</Text>
       </View>
     )
@@ -76,6 +79,7 @@ const styles = StyleSheet.create({
     width: Display.setWidth(60),
   },
   titletext: {
+
     color: Colors.DEFAULT_WHITE,
     fontSize: 28,
     fontFamily: "Poppins_600SemiBold",
