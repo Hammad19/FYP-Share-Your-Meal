@@ -4,15 +4,16 @@ import { createMaterialBottomTabNavigator } from '@react-navigation/material-bot
 import { Colors } from '../content';
 import Ionicons from 'react-native-vector-icons/Ionicons';
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
+import { HomeScreen } from '../screens';
 
 
-function Feed() {
-  return (
-    <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center' }}>
-      <Text>Feed!</Text>
-    </View>
-  );
-}
+// function Feed() {
+//   return (
+//     <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center' }}>
+//       <Text>Feed!</Text>
+//     </View>
+//   );
+// }
 
 function Profile() {
   return (
@@ -38,9 +39,10 @@ const Tab = createBottomTabNavigator();
 
 export default function  CustomTabNavigator() {
   return (
-    <Tab.Navigator
+    <Tab.Navigator 
         initialRouteName={homeName}
         screenOptions={({ route }) => ({
+          headerShown: false,
           tabBarActiveTintColor: Colors.DEFAULT_GREEN,
           tabBarInactiveTintColor:'gray',
           tabBarLabelStyle: { paddingBottom: 10, fontSize: 14
@@ -54,10 +56,10 @@ export default function  CustomTabNavigator() {
               iconName = focused ? 'home' : 'home-outline';
 
             } else if (rn === detailsName) {
-              iconName = focused ? 'list' : 'person-outline';
+              iconName = focused ? 'person' : 'person-outline';
 
             } else if (rn === settingsName) {
-              iconName = focused ? 'settings' : 'add-circle-outline';
+              iconName = focused ? 'add-circle' : 'add-circle-outline';
             }
 
             // You can return any component that you like here!
@@ -66,7 +68,7 @@ export default function  CustomTabNavigator() {
         })}
        >
 
-        <Tab.Screen name={homeName} component={Feed} />
+        <Tab.Screen name={homeName} component={HomeScreen} />
         <Tab.Screen name={settingsName} component={Notifications} />
         <Tab.Screen name={detailsName} component={Profile} />
         
