@@ -31,9 +31,18 @@ function Notifications() {
   );
 }
 
+function Orders() {
+  return (
+    <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center' }}>
+      <Text>Orders</Text>
+    </View>
+  );
+}
+
 const homeName = "Home";
-const detailsName = "Profile";
+const profileName = "Profile";
 const settingsName = "Share";
+const ordersName = "Orders";
 
 const Tab = createBottomTabNavigator();
 
@@ -55,11 +64,14 @@ export default function  CustomTabNavigator() {
             if (rn === homeName) {
               iconName = focused ? 'home' : 'home-outline';
 
-            } else if (rn === detailsName) {
+            } else if (rn === profileName) {
               iconName = focused ? 'person' : 'person-outline';
 
             } else if (rn === settingsName) {
               iconName = focused ? 'add-circle' : 'add-circle-outline';
+            }
+            else if (rn === ordersName) {
+              iconName = focused ? 'list' : 'list-outline';
             }
 
             // You can return any component that you like here!
@@ -70,7 +82,9 @@ export default function  CustomTabNavigator() {
 
         <Tab.Screen name={homeName} component={HomeScreen} />
         <Tab.Screen name={settingsName} component={Notifications} />
-        <Tab.Screen name={detailsName} component={Profile} />
+        <Tab.Screen name={ordersName} component={Orders} />
+        <Tab.Screen name={profileName} component={Profile} />
+
         
 
       </Tab.Navigator>
