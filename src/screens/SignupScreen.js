@@ -6,6 +6,7 @@ import {
   TouchableOpacity,
   Image,
 } from "react-native";
+import DropDownPicker from "react-native-dropdown-picker";
 import { useDispatch, useSelector } from "react-redux";
 import { React, useEffect, useState } from "react";
 import { Colors, Images } from "../content";
@@ -16,33 +17,22 @@ import Feather from "react-native-vector-icons/Feather";
 import { TextInput } from "react-native-gesture-handler";
 import {
   useFonts,
-  Poppins_100Thin,
-  Poppins_100Thin_Italic,
-  Poppins_200ExtraLight,
-  Poppins_200ExtraLight_Italic,
-  Poppins_300Light,
-  Poppins_300Light_Italic,
-  Poppins_400Regular,
-  Poppins_400Regular_Italic,
   Poppins_500Medium,
-  Poppins_500Medium_Italic,
-  Poppins_600SemiBold,
-  Poppins_600SemiBold_Italic,
   Poppins_700Bold,
-  Poppins_700Bold_Italic,
-  Poppins_800ExtraBold,
-  Poppins_800ExtraBold_Italic,
-  Poppins_900Black,
-  Poppins_900Black_Italic,
 } from "@expo-google-fonts/poppins";
 import { userSignup } from "../store/slices/authSlice";
-
 const SignupScreen = ({ navigation }) => {
   const [email, setEmail] = useState("");
   const [userName, setUserName] = useState("");
   const [password, setPassword] = useState("");
-  const [accountType, setAccountType] = useState("");
-
+  const [confirmPassword, setConfirmPassword] = useState("");
+  const [accountType, setAccountType] = useState("null");
+  const [open, setOpen] = useState(false);
+  const [value, setValue] = useState(null);
+  const [items, setItems] = useState([
+    { label: "Standard User", value: "User" },
+    { label: "Charitable Organization", value: "Charitable Organization" },
+  ]);
   const state = useSelector((state) => state);
 
   const dispatch = useDispatch();
@@ -54,7 +44,8 @@ const SignupScreen = ({ navigation }) => {
       confirm_password: password,
     };
 
-    dispatch(userSignup(requestBody)).then
+    const response = dispatch(userSignup(requestBody));
+    console.log(response);
     navigation.navigate("RegisterPhoneScreen");
   };
 
@@ -69,8 +60,7 @@ const SignupScreen = ({ navigation }) => {
         <StatusBar
           barStyle={"dark-content"}
           backgroundColor={Colors.DEFAULT_WHITE}
-          translucent
-        ></StatusBar>
+          translucent></StatusBar>
         <Separator height={StatusBar.currentHeight} />
         <View style={styles.headerContainer}>
           <IonIcons
@@ -97,7 +87,7 @@ const SignupScreen = ({ navigation }) => {
             <TextInput
               onChangeText={(text) => setUserName(text)}
               value={userName}
-              placeholder="Username"
+              placeholder="Name"
               placeholderTextColor={Colors.DEFAULT_GREY}
               selectionColor={Colors.DEFAULT_GREY}
               style={styles.inputText}
@@ -152,6 +142,54 @@ const SignupScreen = ({ navigation }) => {
             />
           </View>
         </View>
+
+        <Separator height={15} />
+        <View style={styles.inputContainer}>
+          <View style={styles.inputSubContainer}>
+            <Feather
+              name="lock"
+              size={22}
+              color={Colors.DEFAULT_GREY}
+              style={{ marginRight: 10 }}
+            />
+            <TextInput
+              onChangeText={(password) => setConfirmPassword(password)}
+              value={confirmPassword}
+              secureTextEntry={isPasswordShown ? false : true}
+              placeholder="Confirm Password"
+              placeholderTextColor={Colors.DEFAULT_GREY}
+              selectionColor={Colors.DEFAULT_GREY}
+              style={styles.inputText}
+            />
+            <Feather
+              onPress={() => {
+                setisPasswordShown(!isPasswordShown);
+              }}
+              name={isPasswordShown ? "eye" : "eye-off"}
+              size={22}
+              color={Colors.DEFAULT_GREY}
+              style={{ marginRight: 10 }}
+            />
+          </View>
+        </View>
+        <Separator height={15} />
+        <DropDownPicker
+          style={styles.inputContainer}
+          open={open}
+          value={value}
+          items={items}
+          setOpen={setOpen}
+          setValue={setValue}
+          setItems={setItems}
+          placeholderStyle={styles.dropdownstyles}
+          listParentLabelStyle={styles.dropdownstyles}
+          dropDownContainerStyle={styles.dropdowncontainerstyle}
+          labelStyle={styles.dropdownstyles}
+
+          onChangeValue={(value) => {
+            setAccountType(value);
+          }}
+        />
         <TouchableOpacity onPress={createAccount} style={styles.signinButton}>
           <Text style={styles.signinButtonText}>Create Account</Text>
         </TouchableOpacity>
@@ -222,6 +260,7 @@ const styles = StyleSheet.create({
     backgroundColor: Colors.LIGHT_GREY,
     paddingHorizontal: 10,
     marginHorizontal: 20,
+    width: Display.setWidth(90),
     borderRadius: 8,
     borderWidth: 0.5,
     justifyContent: "center",
@@ -302,5 +341,19 @@ const styles = StyleSheet.create({
     fontSize: 13,
     lineHeight: 13 * 1.4,
     fontFamily: "Poppins_500Medium",
+  },
+
+  dropdownstyles: {
+    fontSize: 18,
+    textAlignVertical: "center",
+    padding: 0,
+    height: Display.setHeight(6),
+    color: Colors.DEFAULT_BLACK,
+    flex: 1,
+  },
+  dropdowncontainerstyle: {
+    width: Display.setWidth(90),
+    marginLeft: 20,
+    justifyContent: "center",
   },
 });
