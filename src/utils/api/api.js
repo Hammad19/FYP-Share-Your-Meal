@@ -2,6 +2,7 @@ import { axiosFormInstance, axiosInstance } from "./axiosInstance";
 
 export const addData = async (endpoint, requestBody) => {
   try {
+    console.log("hheh")
     const result = await axiosInstance.post(endpoint, requestBody);
     return result;
   } catch (error) {

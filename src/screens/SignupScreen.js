@@ -45,10 +45,6 @@ const SignupScreen = ({ navigation }) => {
 
   const state = useSelector((state) => state);
 
-  useEffect(() => {
-    console.log(state, "<--state");
-  }, [state]);
-
   const dispatch = useDispatch();
 
   const createAccount = () => {
@@ -56,8 +52,9 @@ const SignupScreen = ({ navigation }) => {
       email,
       password,
       confirm_password: password,
-    }
-    dispatch(userSignup(requestBody))
+    };
+
+    dispatch(userSignup(requestBody)).then
     navigation.navigate("RegisterPhoneScreen");
   };
 
@@ -98,9 +95,7 @@ const SignupScreen = ({ navigation }) => {
               style={{ marginRight: 10 }}
             />
             <TextInput
-              onChangeText={text =>
-                setUserName(text)
-              }
+              onChangeText={(text) => setUserName(text)}
               value={userName}
               placeholder="Username"
               placeholderTextColor={Colors.DEFAULT_GREY}
@@ -119,7 +114,7 @@ const SignupScreen = ({ navigation }) => {
               style={{ marginRight: 10 }}
             />
             <TextInput
-              onChangeText={text => setEmail(text)}
+              onChangeText={(text) => setEmail(text)}
               value={email}
               placeholder="Email"
               placeholderTextColor={Colors.DEFAULT_GREY}
@@ -138,7 +133,7 @@ const SignupScreen = ({ navigation }) => {
               style={{ marginRight: 10 }}
             />
             <TextInput
-              onChangeText={password => setPassword(password)}
+              onChangeText={(password) => setPassword(password)}
               value={password}
               secureTextEntry={isPasswordShown ? false : true}
               placeholder="Password"

@@ -9,6 +9,7 @@ export const userSignup = createAsyncThunk(
       console.log(requestBody, "<-- requestBody");
       await addData(API_ENDPOINTS.USER_SIGNUP, requestBody).then((response) => {
         console.log(JSON.parse(response));
+
         return response;
       });
     } catch (e) {
@@ -42,7 +43,9 @@ const authSlice = createSlice({
     },
   },
   extraReducers: (builder) => {
-    builder.addCase(userSignup.pending, (state, action) => {}),
+    builder.addCase(userSignup.pending, (state, action) => {
+      console.log(action.payload, "<--rejected");
+    }),
       builder.addCase(userSignup.fulfilled, (state, action) => {}),
       builder.addCase(userSignup.rejected, (state, action) => {
         console.log(action.payload, "<--rejected");
