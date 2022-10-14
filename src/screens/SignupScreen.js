@@ -39,13 +39,15 @@ const SignupScreen = ({ navigation }) => {
 
   const createAccount = () => {
     let requestBody = {
+      first_name: userName,
       email,
       password,
       confirm_password: password,
+      accounttype: accountType
     };
 
-    const response = dispatch(userSignup(requestBody));
-    console.log(response);
+    dispatch(userSignup(requestBody));
+    // console.log(JSON.parse(response));
     navigation.navigate("RegisterPhoneScreen");
   };
 
