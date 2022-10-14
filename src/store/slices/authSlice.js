@@ -7,11 +7,8 @@ export const userSignup = createAsyncThunk(
   async (requestBody, thunkAPI) => {
     try {
       console.log(requestBody, "<-- requestBody");
-      await addData(API_ENDPOINTS.USER_SIGNUP, requestBody).then((response) => {
-        console.log(JSON.parse(response));
-
-        return response;
-      });
+      const response = await addData(API_ENDPOINTS.USER_SIGNUP, requestBody);
+      console.log(response.data);
     } catch (e) {
       thunkAPI.rejectWithValue({
         status: "error",
