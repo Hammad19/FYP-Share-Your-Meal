@@ -60,7 +60,7 @@ const SplashScreen = ({ navigation }) => {
           style={styles.image}
         />
 
-        <Separator width={0.5}/>
+        <Separator height={20}/>
         <Text style={styles.titletext}>SHARE YOUR MEAL</Text>
       </View>
     )
