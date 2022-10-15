@@ -7,8 +7,8 @@ export const addData = async (endpoint, requestBody) => {
     console.log(result.data);
     return result;
   } catch (error) {
-    console.log(error)
-    return error;
+    console.log(error.status)
+    return error.status;
   }
 };
 

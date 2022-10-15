@@ -26,6 +26,7 @@ import {
 } from "@expo-google-fonts/poppins";
 import { userSignup } from "../store/slices/authSlice";
 const SignupScreen = ({ navigation }) => {
+
   const [email, setEmail] = useState("");
   const [userName, setUserName] = useState("");
   const [password, setPassword] = useState("");
@@ -33,6 +34,7 @@ const SignupScreen = ({ navigation }) => {
   const [accounttype, setaccounttype] = useState("");
   const [open, setOpen] = useState(false);
   const [value, setValue] = useState(null);
+  const [isAllValuesNull, setisAllValuesNull] = useState(false);
   const [items, setItems] = useState([
     { label: "Standard User", value: "User" },
     { label: "Charitable Organization", value: "Charitable Organization" },
@@ -46,20 +48,52 @@ const SignupScreen = ({ navigation }) => {
       state: { userName, email, password, confirmPassword, accounttype },
     });
 
+  
+  const validateNull = () => {
+
+    if(userName.length < 1 || email.length < 1 || password.length < 1 || confirmPassword.length < 1 || accounttype.length < 1)
+    {
+      setisAllValuesNull(false);
+      
+    }
+    else
+    {
+      
+      setisAllValuesNull(true);
+      
+    }
+  }
+
+
+  function ShowError(textfieldname) {
+    return (
+      (
+      isFieldInError(textfieldname)&&
+
+            <Text style={{ color: "red", fontSize: 12, marginLeft: 25 }}>
+              {getErrorsInField(textfieldname)[0]}
+            </Text>
+          ))
+  }
+
   const createAccount = () => {
-    validate({
-      userName: { minlength: 3, maxlength: 10, required: true },
-      email: { email: true, required: true },
-      accounttype: { required: true },
-      // number: { numbers: true },
-      // date: { date: 'YYYY-MM-DD' },
-      confirmPassword: {
-        equalPassword: password,
-        minlength: 6,
-        maxlength: 10,
-        required: true,
-      },
-    });
+    // validate({
+    //   userName: { minlength: 3, maxlength: 10, required: true },
+    //   email: { email: true, required: true },
+    //   accounttype: { required: true },
+    //   // number: { numbers: true },
+    //   // date: { date: 'YYYY-MM-DD' },
+    //   confirmPassword: {
+    //     equalPassword: password,
+    //     minlength: 6,
+    //     maxlength: 10,
+    //     required: true,
+    //   },
+    // });
+
+    
+    
+   
 
     let requestBody = {
       first_name: userName,
@@ -69,13 +103,17 @@ const SignupScreen = ({ navigation }) => {
       accounttype: accounttype,
     };
     //if i dont get any errors then i will dispatch the action
-    if (getErrorMessages().length === 0) {
+    if (getErrorMessages().length === 0 && accounttype.length > 0 && userName.length > 0 && email.length > 0 && password.length > 0 && confirmPassword.length > 0) {
       dispatch(userSignup(requestBody)).then((res) => {
-        if (res.status === 400) {
-          console.log(res.data.message);
-        } else {
+        if (res.data.success === "true") {
+
           alert("Account Created Successfully");
+          console.log(res.message);
           navigation.navigate("RegisterPhoneScreen");
+           
+        } else {
+          alert("User Already Exists"); 
+          console.log(res);
         }
       });
           
@@ -123,6 +161,8 @@ const SignupScreen = ({ navigation }) => {
             />
             <TextInput
               onChangeText={(text) => setUserName(text)}
+              onEndEditing={() => validate({ userName: { minlength: 3 } })}
+          
               value={userName}
               placeholder="Name"
               placeholderTextColor={Colors.DEFAULT_GREY}
@@ -131,12 +171,7 @@ const SignupScreen = ({ navigation }) => {
             />
           </View>
         </View>
-        {isFieldInError("userName") &&
-          getErrorsInField("userName").map((errorMessage) => (
-            <Text style={{ color: "red", fontSize: 15, marginLeft: 25 }}>
-              {errorMessage}
-            </Text>
-          ))}
+        {ShowError("userName")}
         <Separator height={15} />
         <View
           style={
@@ -151,6 +186,7 @@ const SignupScreen = ({ navigation }) => {
             />
             <TextInput
               onChangeText={(text) => setEmail(text)}
+              onEndEditing = {() => validate({email: {email: true}})}
               value={email}
               placeholder="Email"
               placeholderTextColor={Colors.DEFAULT_GREY}
@@ -160,12 +196,7 @@ const SignupScreen = ({ navigation }) => {
           </View>
         </View>
 
-        {isFieldInError("email") &&
-          getErrorsInField("email").map((errorMessage) => (
-            <Text style={{ color: "red", fontSize: 15, marginLeft: 25 }}>
-              {errorMessage}
-            </Text>
-          ))}
+        {ShowError("email")}
         <Separator height={15} />
         <View style={styles.inputContainer}>
           <View style={styles.inputSubContainer}>
@@ -177,6 +208,7 @@ const SignupScreen = ({ navigation }) => {
             />
             <TextInput
               onChangeText={(password) => setPassword(password)}
+              onEndEditing={() => validate({ password: { minlength: 6 } })}
               value={password}
               secureTextEntry={isPasswordShown ? false : true}
               placeholder="Password"
@@ -212,12 +244,14 @@ const SignupScreen = ({ navigation }) => {
             />
             <TextInput
               onChangeText={(password) => setConfirmPassword(password)}
+              onEndEditing={() => validate({ confirmPassword: { minlength: 6 } })}
               value={confirmPassword}
               secureTextEntry={isPasswordShown ? false : true}
               placeholder="Confirm Password"
               placeholderTextColor={Colors.DEFAULT_GREY}
               selectionColor={Colors.DEFAULT_GREY}
               style={styles.inputText}
+              
             />
 
             <Feather
@@ -231,12 +265,7 @@ const SignupScreen = ({ navigation }) => {
             />
           </View>
         </View>
-        {isFieldInError("confirmPassword") &&
-          getErrorsInField("confirmPassword").map((errorMessage) => (
-            <Text style={{ color: "red", fontSize: 15, marginLeft: 25 }}>
-              {errorMessage}
-            </Text>
-          ))}
+        {ShowError("confirmPassword")}
         <Separator height={15} />
         <DropDownPicker
           style={styles.inputContainer}
@@ -250,16 +279,17 @@ const SignupScreen = ({ navigation }) => {
           listParentLabelStyle={styles.dropdownstyles}
           dropDownContainerStyle={styles.dropdowncontainerstyle}
           labelStyle={styles.dropdownstyles}
+          
           onChangeValue={(value) => {
             setaccounttype(value);
           }}
+          //validate when the dropdown is closed
+          onClose={() => validate({ accounttype: { required: true } })}
         />
-        {isFieldInError("accounttype") &&
-          getErrorsInField("accounttype").map((errorMessage) => (
-            <Text style={{ color: "red", fontSize: 15, marginLeft: 25 }}>
-              {errorMessage}
-            </Text>
-          ))}
+        {ShowError("accounttype")}
+        {/* {validateNull()? <Text style={styles.error}>All fields are required</Text>: null} */}
+        
+
         <TouchableOpacity onPress={createAccount} style={styles.signinButton}>
           <Text style={styles.signinButtonText}>Create Account</Text>
         </TouchableOpacity>
