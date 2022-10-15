@@ -1,3 +1,6 @@
+
+'use strict';
+
 import {
   StyleSheet,
   Text,
@@ -6,6 +9,7 @@ import {
   TouchableOpacity,
   Image,
 } from "react-native";
+import { useValidation } from 'react-native-form-validator';
 import DropDownPicker from "react-native-dropdown-picker";
 import { useDispatch, useSelector } from "react-redux";
 import { React, useEffect, useState } from "react";
@@ -14,6 +18,7 @@ import { Separator } from "../components";
 import { Display } from "../utils";
 import IonIcons from "react-native-vector-icons/Ionicons";
 import Feather from "react-native-vector-icons/Feather";
+
 import { TextInput } from "react-native-gesture-handler";
 import {
   useFonts,
@@ -37,18 +42,35 @@ const SignupScreen = ({ navigation }) => {
 
   const dispatch = useDispatch();
 
+
+  const { validate, isFieldInError, getErrorsInField, getErrorMessages } =
+    useValidation({
+      state: { userName, email, password, confirmPassword },
+    });
+
   const createAccount = () => {
+    validate({
+      userName: { minlength: 3, maxlength: 10, required: true },
+      email: { email: true },
+      accountType: { required: true },
+      // number: { numbers: true },
+      // date: { date: 'YYYY-MM-DD' },
+      confirmPassword: { equalPassword: password },
+    });
+
+
+
     let requestBody = {
       first_name: userName,
       email,
       password,
       confirm_password: password,
-      accounttype: accountType
+      accounttype: accountType,
     };
 
     dispatch(userSignup(requestBody));
     // console.log(JSON.parse(response));
-    navigation.navigate("RegisterPhoneScreen");
+    // navigation.navigate("RegisterPhoneScreen");
   };
 
   const [isPasswordShown, setisPasswordShown] = useState(false);
@@ -78,7 +100,7 @@ const SignupScreen = ({ navigation }) => {
         <Text style={styles.content}>
           Enter Your email, choose a username and password
         </Text>
-        <View style={styles.inputContainer}>
+        <View style={isFieldInError('userName')?styles.error:styles.inputContainer}>
           <View style={styles.inputSubContainer}>
             <Feather
               name="user"
@@ -94,10 +116,14 @@ const SignupScreen = ({ navigation }) => {
               selectionColor={Colors.DEFAULT_GREY}
               style={styles.inputText}
             />
+             {isFieldInError('userName') &&
+        getErrorsInField('userName').map(errorMessage => (
+          <Text style = {{color: 'red', fontSize:15}}>Invalid Name</Text>
+        ))}
           </View>
         </View>
         <Separator height={15} />
-        <View style={styles.inputContainer}>
+        <View style={isFieldInError('email')?styles.error:styles.inputContainer}>
           <View style={styles.inputSubContainer}>
             <Feather
               name="mail"
@@ -113,6 +139,12 @@ const SignupScreen = ({ navigation }) => {
               selectionColor={Colors.DEFAULT_GREY}
               style={styles.inputText}
             />
+
+{isFieldInError('email') &&
+        getErrorsInField('email').map(errorMessage => (
+
+          <Text style = {{color: 'red', fontSize:15,}}>Invalid Email</Text>
+        ))}
           </View>
         </View>
         <Separator height={15} />
@@ -146,7 +178,7 @@ const SignupScreen = ({ navigation }) => {
         </View>
 
         <Separator height={15} />
-        <View style={styles.inputContainer}>
+        <View style={isFieldInError('confirmPassword')?styles.error:styles.inputContainer}>
           <View style={styles.inputSubContainer}>
             <Feather
               name="lock"
@@ -163,6 +195,10 @@ const SignupScreen = ({ navigation }) => {
               selectionColor={Colors.DEFAULT_GREY}
               style={styles.inputText}
             />
+            {isFieldInError('confirmPassword') &&
+        getErrorsInField('confirmPassword').map(errorMessage => (
+          <Text style = {{color: 'red', fontSize:15}}>Passwords Do not Match</Text>
+        ))}
             <Feather
               onPress={() => {
                 setisPasswordShown(!isPasswordShown);
@@ -172,6 +208,8 @@ const SignupScreen = ({ navigation }) => {
               color={Colors.DEFAULT_GREY}
               style={{ marginRight: 10 }}
             />
+
+
           </View>
         </View>
         <Separator height={15} />
@@ -187,7 +225,6 @@ const SignupScreen = ({ navigation }) => {
           listParentLabelStyle={styles.dropdownstyles}
           dropDownContainerStyle={styles.dropdowncontainerstyle}
           labelStyle={styles.dropdownstyles}
-
           onChangeValue={(value) => {
             setAccountType(value);
           }}
@@ -195,7 +232,7 @@ const SignupScreen = ({ navigation }) => {
         <TouchableOpacity onPress={createAccount} style={styles.signinButton}>
           <Text style={styles.signinButtonText}>Create Account</Text>
         </TouchableOpacity>
-
+        {/* <Text>{getErrorMessages()}</Text> */}
         <Text style={styles.orText}>OR</Text>
         <TouchableOpacity style={styles.facebookButton}>
           <View style={styles.socialButtonsContainer}>
@@ -267,6 +304,17 @@ const styles = StyleSheet.create({
     borderWidth: 0.5,
     justifyContent: "center",
     borderColor: Colors.LIGHT_GREY2,
+  },
+
+  error: {
+    backgroundColor: Colors.LIGHT_GREY,
+    paddingHorizontal: 10,
+    marginHorizontal: 20,
+    width: Display.setWidth(90),
+    borderRadius: 8,
+    borderColor: Colors.DEFAULT_RED,
+    borderWidth: 1,
+    justifyContent: "center",
   },
   inputSubContainer: {
     flexDirection: "row",
