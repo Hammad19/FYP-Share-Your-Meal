@@ -1,3 +1,5 @@
+"use strict";
+
 import {
   StyleSheet,
   Text,
@@ -6,6 +8,7 @@ import {
   TouchableOpacity,
   Image,
 } from "react-native";
+import { useValidation } from "react-native-form-validator";
 import DropDownPicker from "react-native-dropdown-picker";
 import { useDispatch, useSelector } from "react-redux";
 import { React, useEffect, useState } from "react";
@@ -14,6 +17,7 @@ import { Separator } from "../components";
 import { Display } from "../utils";
 import IonIcons from "react-native-vector-icons/Ionicons";
 import Feather from "react-native-vector-icons/Feather";
+
 import { TextInput } from "react-native-gesture-handler";
 import {
   useFonts,
@@ -22,13 +26,15 @@ import {
 } from "@expo-google-fonts/poppins";
 import { userSignup } from "../store/slices/authSlice";
 const SignupScreen = ({ navigation }) => {
+
   const [email, setEmail] = useState("");
   const [userName, setUserName] = useState("");
   const [password, setPassword] = useState("");
   const [confirmPassword, setConfirmPassword] = useState("");
-  const [accountType, setAccountType] = useState("null");
+  const [accounttype, setaccounttype] = useState("");
   const [open, setOpen] = useState(false);
   const [value, setValue] = useState(null);
+  const [isAllValuesNull, setisAllValuesNull] = useState(false);
   const [items, setItems] = useState([
     { label: "Standard User", value: "User" },
     { label: "Charitable Organization", value: "Charitable Organization" },
@@ -37,18 +43,82 @@ const SignupScreen = ({ navigation }) => {
 
   const dispatch = useDispatch();
 
+  const { validate, isFieldInError, getErrorsInField, getErrorMessages } =
+    useValidation({
+      state: { userName, email, password, confirmPassword, accounttype },
+    });
+
+  
+  const validateNull = () => {
+
+    if(userName.length < 1 || email.length < 1 || password.length < 1 || confirmPassword.length < 1 || accounttype.length < 1)
+    {
+      setisAllValuesNull(false);
+      
+    }
+    else
+    {
+      
+      setisAllValuesNull(true);
+      
+    }
+  }
+
+
+  function ShowError(textfieldname) {
+    return (
+      (
+      isFieldInError(textfieldname)&&
+
+            <Text style={{ color: "red", fontSize: 12, marginLeft: 25 }}>
+              {getErrorsInField(textfieldname)[0]}
+            </Text>
+          ))
+  }
+
   const createAccount = () => {
+    // validate({
+    //   userName: { minlength: 3, maxlength: 10, required: true },
+    //   email: { email: true, required: true },
+    //   accounttype: { required: true },
+    //   // number: { numbers: true },
+    //   // date: { date: 'YYYY-MM-DD' },
+    //   confirmPassword: {
+    //     equalPassword: password,
+    //     minlength: 6,
+    //     maxlength: 10,
+    //     required: true,
+    //   },
+    // });
+
+    
+    
+   
+
     let requestBody = {
       first_name: userName,
       email,
       password,
       confirm_password: password,
-      accounttype: accountType
+      accounttype: accounttype,
     };
+    //if i dont get any errors then i will dispatch the action
+    if (getErrorMessages().length === 0 && accounttype.length > 0 && userName.length > 0 && email.length > 0 && password.length > 0 && confirmPassword.length > 0) {
+      dispatch(userSignup(requestBody)).then((res) => {
+        if (res.data.success === "true") {
 
-    dispatch(userSignup(requestBody));
-    // console.log(JSON.parse(response));
-    navigation.navigate("RegisterPhoneScreen");
+          alert("Account Created Successfully");
+          console.log(res.message);
+          navigation.navigate("RegisterPhoneScreen");
+           
+        } else {
+          alert("User Already Exists"); 
+          console.log(res);
+        }
+      });
+          
+
+    }
   };
 
   const [isPasswordShown, setisPasswordShown] = useState(false);
@@ -78,7 +148,10 @@ const SignupScreen = ({ navigation }) => {
         <Text style={styles.content}>
           Enter Your email, choose a username and password
         </Text>
-        <View style={styles.inputContainer}>
+        <View
+          style={
+            isFieldInError("userName") ? styles.error : styles.inputContainer
+          }>
           <View style={styles.inputSubContainer}>
             <Feather
               name="user"
@@ -88,6 +161,8 @@ const SignupScreen = ({ navigation }) => {
             />
             <TextInput
               onChangeText={(text) => setUserName(text)}
+              onEndEditing={() => validate({ userName: { minlength: 3 } })}
+          
               value={userName}
               placeholder="Name"
               placeholderTextColor={Colors.DEFAULT_GREY}
@@ -96,8 +171,12 @@ const SignupScreen = ({ navigation }) => {
             />
           </View>
         </View>
+        {ShowError("userName")}
         <Separator height={15} />
-        <View style={styles.inputContainer}>
+        <View
+          style={
+            isFieldInError("email") ? styles.error : styles.inputContainer
+          }>
           <View style={styles.inputSubContainer}>
             <Feather
               name="mail"
@@ -107,6 +186,7 @@ const SignupScreen = ({ navigation }) => {
             />
             <TextInput
               onChangeText={(text) => setEmail(text)}
+              onEndEditing = {() => validate({email: {email: true}})}
               value={email}
               placeholder="Email"
               placeholderTextColor={Colors.DEFAULT_GREY}
@@ -115,6 +195,8 @@ const SignupScreen = ({ navigation }) => {
             />
           </View>
         </View>
+
+        {ShowError("email")}
         <Separator height={15} />
         <View style={styles.inputContainer}>
           <View style={styles.inputSubContainer}>
@@ -126,6 +208,7 @@ const SignupScreen = ({ navigation }) => {
             />
             <TextInput
               onChangeText={(password) => setPassword(password)}
+              onEndEditing={() => validate({ password: { minlength: 6 } })}
               value={password}
               secureTextEntry={isPasswordShown ? false : true}
               placeholder="Password"
@@ -146,7 +229,12 @@ const SignupScreen = ({ navigation }) => {
         </View>
 
         <Separator height={15} />
-        <View style={styles.inputContainer}>
+        <View
+          style={
+            isFieldInError("confirmPassword")
+              ? styles.error
+              : styles.inputContainer
+          }>
           <View style={styles.inputSubContainer}>
             <Feather
               name="lock"
@@ -156,13 +244,16 @@ const SignupScreen = ({ navigation }) => {
             />
             <TextInput
               onChangeText={(password) => setConfirmPassword(password)}
+              onEndEditing={() => validate({ confirmPassword: { minlength: 6 } })}
               value={confirmPassword}
               secureTextEntry={isPasswordShown ? false : true}
               placeholder="Confirm Password"
               placeholderTextColor={Colors.DEFAULT_GREY}
               selectionColor={Colors.DEFAULT_GREY}
               style={styles.inputText}
+              
             />
+
             <Feather
               onPress={() => {
                 setisPasswordShown(!isPasswordShown);
@@ -174,6 +265,7 @@ const SignupScreen = ({ navigation }) => {
             />
           </View>
         </View>
+        {ShowError("confirmPassword")}
         <Separator height={15} />
         <DropDownPicker
           style={styles.inputContainer}
@@ -187,15 +279,21 @@ const SignupScreen = ({ navigation }) => {
           listParentLabelStyle={styles.dropdownstyles}
           dropDownContainerStyle={styles.dropdowncontainerstyle}
           labelStyle={styles.dropdownstyles}
-
+          
           onChangeValue={(value) => {
-            setAccountType(value);
+            setaccounttype(value);
           }}
+          //validate when the dropdown is closed
+          onClose={() => validate({ accounttype: { required: true } })}
         />
+        {ShowError("accounttype")}
+        {/* {validateNull()? <Text style={styles.error}>All fields are required</Text>: null} */}
+        
+
         <TouchableOpacity onPress={createAccount} style={styles.signinButton}>
           <Text style={styles.signinButtonText}>Create Account</Text>
         </TouchableOpacity>
-
+        {/* <Text>{getErrorMessages()}</Text> */}
         <Text style={styles.orText}>OR</Text>
         <TouchableOpacity style={styles.facebookButton}>
           <View style={styles.socialButtonsContainer}>
@@ -267,6 +365,17 @@ const styles = StyleSheet.create({
     borderWidth: 0.5,
     justifyContent: "center",
     borderColor: Colors.LIGHT_GREY2,
+  },
+
+  error: {
+    backgroundColor: Colors.LIGHT_GREY,
+    paddingHorizontal: 10,
+    marginHorizontal: 20,
+    width: Display.setWidth(90),
+    borderRadius: 8,
+    borderColor: Colors.DEFAULT_RED,
+    borderWidth: 1,
+    justifyContent: "center",
   },
   inputSubContainer: {
     flexDirection: "row",
