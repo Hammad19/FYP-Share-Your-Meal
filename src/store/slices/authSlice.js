@@ -19,6 +19,24 @@ export const userSignup = createAsyncThunk(
     }
   }
 );
+/// User Login
+export const userLogin = createAsyncThunk(
+  API_ENDPOINTS.USER_LOGIN,
+  async (requestBody, thunkAPI) => {
+    try {
+      console.log(requestBody, "<-- requestBody");
+      await addData(API_ENDPOINTS.USER_LOGIN, requestBody).then((response) => {
+       // console.log(JSON.parse(response));
+        return response;
+      });
+    } catch (e) {
+      thunkAPI.rejectWithValue({
+        status: "error",
+        message: "Unable to Login",
+      });
+    }
+  }
+);
 
 const initialState = {
   user: {},
@@ -49,6 +67,14 @@ const authSlice = createSlice({
       builder.addCase(userSignup.rejected, (state, action) => {
         console.log(action.payload, "<--rejected");
       });
+//Login
+      builder.addCase(userLogin.pending, (state, action) => {
+        console.log(action.payload, "<--Pending");
+      }),
+        builder.addCase(userLogin.fulfilled, (state, action) => {}),
+        builder.addCase(userLogin.rejected, (state, action) => {
+          console.log(action.payload, "<-- Login rejected");
+        });
   },
 });
 

@@ -12,6 +12,7 @@ import Feather from "react-native-vector-icons/Feather";
 import { TextInput } from "react-native-gesture-handler";
 import { Separator, ToggleButton } from "../components";
 import { Colors, Images } from "../content";
+import { useDispatch, useSelector } from "react-redux";
 
 import {
   useFonts,
@@ -35,6 +36,7 @@ import {
   Poppins_900Black_Italic,
 } from "@expo-google-fonts/poppins";
 import { Display } from "../utils";
+import { userLogin } from "../store/slices/authSlice";
 
 const SigninScreen = ({ navigation }) => {
   const [isPasswordShown, setisPasswordShown] = useState(false);
@@ -42,6 +44,24 @@ const SigninScreen = ({ navigation }) => {
     Poppins_500Medium,
     Poppins_700Bold,
   });
+
+  const [email, setEmail] = useState("");
+  const [password, setPassword] = useState("");
+
+  const state = useSelector((state) => state);
+  const dispatch = useDispatch();
+
+  const Login = () => {
+    let requestBody = {
+      email,
+      password,
+    };
+
+    dispatch(userLogin(requestBody));
+    // console.log(JSON.parse(response));
+    navigation.navigate("CustomTabNavigator");
+  };
+
   return (
     fontsLoaded && (
       <View style={styles.container}>
@@ -74,6 +94,8 @@ const SigninScreen = ({ navigation }) => {
               style={{ marginRight: 10 }}
             />
             <TextInput
+              onChangeText={(text) => setEmail(text)}
+              value={email}
               placeholder="Username"
               placeholderTextColor={Colors.DEFAULT_GREY}
               selectionColor={Colors.DEFAULT_GREY}
@@ -91,6 +113,8 @@ const SigninScreen = ({ navigation }) => {
               style={{ marginRight: 10 }}
             />
             <TextInput
+              onChangeText={(password) => setPassword(password)}
+              value={password}
               secureTextEntry={isPasswordShown ? false : true}
               placeholder="Password"
               placeholderTextColor={Colors.DEFAULT_GREY}
@@ -111,17 +135,30 @@ const SigninScreen = ({ navigation }) => {
         <Text></Text>
         <View style={styles.forgotPasswordContainer}>
           <View style={styles.toggleContainer}>
-            <ToggleButton size={0.5}/>
+            <ToggleButton size={0.5} />
             <Text style={styles.rememberMeText}>Remember Me</Text>
           </View>
-          <Text onPress={()=>navigation.navigate('ForgotPasswordScreen')} style={styles.forgotPasswordText}>Forgot Password</Text>
+          <Text
+            onPress={() => navigation.navigate("ForgotPasswordScreen")}
+            style={styles.forgotPasswordText}
+          >
+            Forgot Password
+          </Text>
         </View>
-        <TouchableOpacity onPress={()=>navigation.navigate('CustomTabNavigator')} style={styles.signinButton}>
-          <Text  style={styles.signinButtonText}>Sign In</Text>
+        <TouchableOpacity
+          onPress={Login}
+          style={styles.signinButton}
+        >
+          <Text style={styles.signinButtonText}>Sign In</Text>
         </TouchableOpacity>
         <View style={styles.signupContainer}>
           <Text style={styles.accountText}>Don't have an Account ?</Text>
-          <Text onPress={()=>navigation.navigate('SignupScreen')} style={styles.signupText}>Sign Up</Text>
+          <Text
+            onPress={() => navigation.navigate("SignupScreen")}
+            style={styles.signupText}
+          >
+            Sign Up
+          </Text>
         </View>
         <Text style={styles.orText}>OR</Text>
         <TouchableOpacity style={styles.facebookButton}>
@@ -266,7 +303,6 @@ const styles = StyleSheet.create({
     fontFamily: "Poppins_500Medium",
     marginLeft: 5,
     alignSelf: "center",
-  
   },
   facebookButton: {
     backgroundColor: Colors.FABEBOOK_BLUE,
