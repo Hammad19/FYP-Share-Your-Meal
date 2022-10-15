@@ -1,5 +1,4 @@
-
-'use strict';
+"use strict";
 
 import {
   StyleSheet,
@@ -9,7 +8,7 @@ import {
   TouchableOpacity,
   Image,
 } from "react-native";
-import { useValidation } from 'react-native-form-validator';
+import { useValidation } from "react-native-form-validator";
 import DropDownPicker from "react-native-dropdown-picker";
 import { useDispatch, useSelector } from "react-redux";
 import { React, useEffect, useState } from "react";
@@ -31,7 +30,7 @@ const SignupScreen = ({ navigation }) => {
   const [userName, setUserName] = useState("");
   const [password, setPassword] = useState("");
   const [confirmPassword, setConfirmPassword] = useState("");
-  const [accountType, setAccountType] = useState("null");
+  const [accounttype, setaccounttype] = useState("");
   const [open, setOpen] = useState(false);
   const [value, setValue] = useState(null);
   const [items, setItems] = useState([
@@ -42,35 +41,46 @@ const SignupScreen = ({ navigation }) => {
 
   const dispatch = useDispatch();
 
-
   const { validate, isFieldInError, getErrorsInField, getErrorMessages } =
     useValidation({
-      state: { userName, email, password, confirmPassword },
+      state: { userName, email, password, confirmPassword, accounttype },
     });
 
   const createAccount = () => {
     validate({
       userName: { minlength: 3, maxlength: 10, required: true },
-      email: { email: true },
-      accountType: { required: true },
+      email: { email: true, required: true },
+      accounttype: { required: true },
       // number: { numbers: true },
       // date: { date: 'YYYY-MM-DD' },
-      confirmPassword: { equalPassword: password },
+      confirmPassword: {
+        equalPassword: password,
+        minlength: 6,
+        maxlength: 10,
+        required: true,
+      },
     });
-
-
 
     let requestBody = {
       first_name: userName,
       email,
       password,
       confirm_password: password,
-      accounttype: accountType,
+      accounttype: accounttype,
     };
+    //if i dont get any errors then i will dispatch the action
+    if (getErrorMessages().length === 0) {
+      dispatch(userSignup(requestBody)).then((res) => {
+        if (res.status === 400) {
+          console.log(res.data.message);
+        } else {
+          alert("Account Created Successfully");
+          navigation.navigate("RegisterPhoneScreen");
+        }
+      });
+          
 
-    dispatch(userSignup(requestBody));
-    // console.log(JSON.parse(response));
-    // navigation.navigate("RegisterPhoneScreen");
+    }
   };
 
   const [isPasswordShown, setisPasswordShown] = useState(false);
@@ -100,7 +110,10 @@ const SignupScreen = ({ navigation }) => {
         <Text style={styles.content}>
           Enter Your email, choose a username and password
         </Text>
-        <View style={isFieldInError('userName')?styles.error:styles.inputContainer}>
+        <View
+          style={
+            isFieldInError("userName") ? styles.error : styles.inputContainer
+          }>
           <View style={styles.inputSubContainer}>
             <Feather
               name="user"
@@ -116,14 +129,19 @@ const SignupScreen = ({ navigation }) => {
               selectionColor={Colors.DEFAULT_GREY}
               style={styles.inputText}
             />
-             {isFieldInError('userName') &&
-        getErrorsInField('userName').map(errorMessage => (
-          <Text style = {{color: 'red', fontSize:15}}>Invalid Name</Text>
-        ))}
           </View>
         </View>
+        {isFieldInError("userName") &&
+          getErrorsInField("userName").map((errorMessage) => (
+            <Text style={{ color: "red", fontSize: 15, marginLeft: 25 }}>
+              {errorMessage}
+            </Text>
+          ))}
         <Separator height={15} />
-        <View style={isFieldInError('email')?styles.error:styles.inputContainer}>
+        <View
+          style={
+            isFieldInError("email") ? styles.error : styles.inputContainer
+          }>
           <View style={styles.inputSubContainer}>
             <Feather
               name="mail"
@@ -139,14 +157,15 @@ const SignupScreen = ({ navigation }) => {
               selectionColor={Colors.DEFAULT_GREY}
               style={styles.inputText}
             />
-
-{isFieldInError('email') &&
-        getErrorsInField('email').map(errorMessage => (
-
-          <Text style = {{color: 'red', fontSize:15,}}>Invalid Email</Text>
-        ))}
           </View>
         </View>
+
+        {isFieldInError("email") &&
+          getErrorsInField("email").map((errorMessage) => (
+            <Text style={{ color: "red", fontSize: 15, marginLeft: 25 }}>
+              {errorMessage}
+            </Text>
+          ))}
         <Separator height={15} />
         <View style={styles.inputContainer}>
           <View style={styles.inputSubContainer}>
@@ -178,7 +197,12 @@ const SignupScreen = ({ navigation }) => {
         </View>
 
         <Separator height={15} />
-        <View style={isFieldInError('confirmPassword')?styles.error:styles.inputContainer}>
+        <View
+          style={
+            isFieldInError("confirmPassword")
+              ? styles.error
+              : styles.inputContainer
+          }>
           <View style={styles.inputSubContainer}>
             <Feather
               name="lock"
@@ -195,10 +219,7 @@ const SignupScreen = ({ navigation }) => {
               selectionColor={Colors.DEFAULT_GREY}
               style={styles.inputText}
             />
-            {isFieldInError('confirmPassword') &&
-        getErrorsInField('confirmPassword').map(errorMessage => (
-          <Text style = {{color: 'red', fontSize:15}}>Passwords Do not Match</Text>
-        ))}
+
             <Feather
               onPress={() => {
                 setisPasswordShown(!isPasswordShown);
@@ -208,10 +229,14 @@ const SignupScreen = ({ navigation }) => {
               color={Colors.DEFAULT_GREY}
               style={{ marginRight: 10 }}
             />
-
-
           </View>
         </View>
+        {isFieldInError("confirmPassword") &&
+          getErrorsInField("confirmPassword").map((errorMessage) => (
+            <Text style={{ color: "red", fontSize: 15, marginLeft: 25 }}>
+              {errorMessage}
+            </Text>
+          ))}
         <Separator height={15} />
         <DropDownPicker
           style={styles.inputContainer}
@@ -226,9 +251,15 @@ const SignupScreen = ({ navigation }) => {
           dropDownContainerStyle={styles.dropdowncontainerstyle}
           labelStyle={styles.dropdownstyles}
           onChangeValue={(value) => {
-            setAccountType(value);
+            setaccounttype(value);
           }}
         />
+        {isFieldInError("accounttype") &&
+          getErrorsInField("accounttype").map((errorMessage) => (
+            <Text style={{ color: "red", fontSize: 15, marginLeft: 25 }}>
+              {errorMessage}
+            </Text>
+          ))}
         <TouchableOpacity onPress={createAccount} style={styles.signinButton}>
           <Text style={styles.signinButtonText}>Create Account</Text>
         </TouchableOpacity>
