@@ -37,6 +37,7 @@ import {
 } from "@expo-google-fonts/poppins";
 import { Display } from "../utils";
 import { userLogin } from "../store/slices/authSlice";
+import { useValidation } from "react-native-form-validator";
 
 const SigninScreen = ({ navigation }) => {
   const [isPasswordShown, setisPasswordShown] = useState(false);
@@ -47,20 +48,59 @@ const SigninScreen = ({ navigation }) => {
 
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
+  const [isAllValuesNull, setisAllValuesNull] = useState(false);
 
   const state = useSelector((state) => state);
   const dispatch = useDispatch();
 
+  const validateNull = () => {
+
+    if(email?.length < 1 || password?.length < 1)
+    {
+      setisAllValuesNull(true)
+      
+    }
+    else
+    {
+      
+      setisAllValuesNull(false)
+      
+    }
+  }
+  function ShowError(textfieldname) {
+    return (
+      (
+      isFieldInError(textfieldname)&&
+
+            <Text style={{ color: "red", fontSize: 12, marginLeft: 25 }}>
+              {getErrorsInField(textfieldname)[0]}
+            </Text>
+          ))
+  }
+
   const Login = () => {
+    
+
+    setTimeout(() => {
+      setisAllValuesNull(false)
+    }, 2000);
+    
+    validateNull()
+
     let requestBody = {
       email,
       password,
     };
 
-    dispatch(userLogin(requestBody));
-    // console.log(JSON.parse(response));
-    navigation.navigate("CustomTabNavigator");
+    if (getErrorMessages().length === 0 && email.length > 0 && password.length > 0 ) {
+      dispatch(userLogin(requestBody));
+   }
   };
+
+  const { validate, isFieldInError, getErrorsInField, getErrorMessages } =
+    useValidation({
+      state: { email, password},
+    });
 
   return (
     fontsLoaded && (
@@ -85,7 +125,9 @@ const SigninScreen = ({ navigation }) => {
         <Text style={styles.content}>
           Enter Your Username and Password and Enjoy Having Food
         </Text>
-        <View style={styles.inputContainer}>
+        <View style={
+            isFieldInError("email") ? styles.error : styles.inputContainer
+          }>
           <View style={styles.inputSubContainer}>
             <Feather
               name="user"
@@ -94,17 +136,30 @@ const SigninScreen = ({ navigation }) => {
               style={{ marginRight: 10 }}
             />
             <TextInput
-              onChangeText={(text) => setEmail(text)}
+
+              onFocus={() => {
+                validate({email: {email: true,required: true}});
+              }
+              }
+              onChangeText={
+                (text) => 
+                {
+                setEmail(text)
+                validate({email: {required: true,email: true}});
+                }
+              }
               value={email}
-              placeholder="Username"
+              placeholder="Email"
               placeholderTextColor={Colors.DEFAULT_GREY}
               selectionColor={Colors.DEFAULT_GREY}
               style={styles.inputText}
+              onEndEditing = {() => validate({email: {email: true,required: true}})}
             />
           </View>
         </View>
+        {ShowError("email")}
         <Separator height={15} />
-        <View style={styles.inputContainer}>
+        <View style={isFieldInError("password") ? styles.error : styles.inputContainer}>
           <View style={styles.inputSubContainer}>
             <Feather
               name="lock"
@@ -113,13 +168,21 @@ const SigninScreen = ({ navigation }) => {
               style={{ marginRight: 10 }}
             />
             <TextInput
-              onChangeText={(password) => setPassword(password)}
+              onFocus={
+                () => {
+                  validate({ password: { minlength: 6,required:true } });
+              }
+            }
+              onChangeText={(password) => {
+                setPassword(password)
+                validate({ password: { minlength: 6,required:true } })}}
               value={password}
               secureTextEntry={isPasswordShown ? false : true}
               placeholder="Password"
               placeholderTextColor={Colors.DEFAULT_GREY}
               selectionColor={Colors.DEFAULT_GREY}
               style={styles.inputText}
+              onEndEditing={() => validate({ password: { minlength: 6,required:true } })}
             />
             <Feather
               onPress={() => {
@@ -132,6 +195,7 @@ const SigninScreen = ({ navigation }) => {
             />
           </View>
         </View>
+        {ShowError("password")}
         <Text></Text>
         <View style={styles.forgotPasswordContainer}>
           <View style={styles.toggleContainer}>
@@ -145,6 +209,7 @@ const SigninScreen = ({ navigation }) => {
             Forgot Password
           </Text>
         </View>
+        {isAllValuesNull? <Text style={{ color: "red", fontSize: 15, marginLeft: 25 }}>All fields are required</Text>: null}
         <TouchableOpacity
           onPress={Login}
           style={styles.signinButton}
@@ -229,6 +294,17 @@ const styles = StyleSheet.create({
     borderWidth: 0.5,
     justifyContent: "center",
     borderColor: Colors.LIGHT_GREY2,
+  },
+
+  error: {
+    backgroundColor: Colors.LIGHT_GREY,
+    paddingHorizontal: 10,
+    marginHorizontal: 20,
+    width: Display.setWidth(90),
+    borderRadius: 8,
+    borderColor: Colors.DEFAULT_RED,
+    borderWidth: 1,
+    justifyContent: "center",
   },
   inputSubContainer: {
     flexDirection: "row",

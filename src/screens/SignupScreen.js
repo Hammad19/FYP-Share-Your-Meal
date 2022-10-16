@@ -17,7 +17,6 @@ import { Separator } from "../components";
 import { Display } from "../utils";
 import IonIcons from "react-native-vector-icons/Ionicons";
 import Feather from "react-native-vector-icons/Feather";
-
 import { TextInput } from "react-native-gesture-handler";
 import {
   useFonts,
@@ -29,12 +28,13 @@ const SignupScreen = ({ navigation }) => {
 
   const [email, setEmail] = useState("");
   const [userName, setUserName] = useState("");
-  const [password, setPassword] = useState("");
+  const [password, setPassword] = useState( "");
   const [confirmPassword, setConfirmPassword] = useState("");
   const [accounttype, setaccounttype] = useState("");
   const [open, setOpen] = useState(false);
   const [value, setValue] = useState(null);
   const [isAllValuesNull, setisAllValuesNull] = useState(false);
+  const [showallErrors, setShowAllErros] = useState(true);
   const [items, setItems] = useState([
     { label: "Standard User", value: "User" },
     { label: "Charitable Organization", value: "Charitable Organization" },
@@ -51,15 +51,15 @@ const SignupScreen = ({ navigation }) => {
   
   const validateNull = () => {
 
-    if(userName.length < 1 || email.length < 1 || password.length < 1 || confirmPassword.length < 1 || accounttype.length < 1)
+    if(userName?.length < 1 || email?.length < 1 || password?.length < 1 || confirmPassword?.length < 1 || accounttype?.length < 1)
     {
-      setisAllValuesNull(false);
+      setisAllValuesNull(true)
       
     }
     else
     {
       
-      setisAllValuesNull(true);
+      setisAllValuesNull(false)
       
     }
   }
@@ -76,46 +76,37 @@ const SignupScreen = ({ navigation }) => {
           ))
   }
 
-  const createAccount = () => {
+  const  createAccount = () => {
     // validate({
     //   userName: { minlength: 3, maxlength: 10, required: true },
-    //   email: { email: true, required: true },
+    //   email: {email: true,required: true},
+    //   password: { minlength: 8,required:true },
     //   accounttype: { required: true },
-    //   // number: { numbers: true },
-    //   // date: { date: 'YYYY-MM-DD' },
     //   confirmPassword: {
     //     equalPassword: password,
-    //     minlength: 6,
-    //     maxlength: 10,
+    //     minlength: 8,
+    //     maxlength: 16,
     //     required: true,
     //   },
     // });
 
+    setTimeout(() => {
+      setisAllValuesNull(false)
+    }, 2000);
     
-    
+    validateNull()
    
 
     let requestBody = {
       first_name: userName,
       email,
       password,
-      confirm_password: password,
+      confirm_password: confirmPassword,
       accounttype: accounttype,
     };
     //if i dont get any errors then i will dispatch the action
     if (getErrorMessages().length === 0 && accounttype.length > 0 && userName.length > 0 && email.length > 0 && password.length > 0 && confirmPassword.length > 0) {
-      dispatch(userSignup(requestBody)).then((res) => {
-        if (res.data.success === "true") {
-
-          alert("Account Created Successfully");
-          console.log(res.message);
-          navigation.navigate("RegisterPhoneScreen");
-           
-        } else {
-          alert("User Already Exists"); 
-          console.log(res);
-        }
-      });
+       dispatch(userSignup(requestBody));
           
 
     }
@@ -160,8 +151,12 @@ const SignupScreen = ({ navigation }) => {
               style={{ marginRight: 10 }}
             />
             <TextInput
-              onChangeText={(text) => setUserName(text)}
-              onEndEditing={() => validate({ userName: { minlength: 3 } })}
+              onChangeText={(text) => {
+                setUserName(text)
+                console.log(userName);
+                validate({ userName: { minlength: 3, maxlength: 10, required: true } })
+              }}
+              onEndEditing={() => validate({ userName: { minlength: 3, maxlength: 10, required: true } })}
           
               value={userName}
               placeholder="Name"
@@ -185,8 +180,14 @@ const SignupScreen = ({ navigation }) => {
               style={{ marginRight: 10 }}
             />
             <TextInput
-              onChangeText={(text) => setEmail(text)}
-              onEndEditing = {() => validate({email: {email: true}})}
+              // onFocus={() => {
+              //   validate({email: {email: true,required: true}})
+              // }
+              // }
+              onChangeText={(text) => {
+                setEmail(text)
+                validate({email: {email: true,required: true}})}}
+              onEndEditing = {() => validate({email: {email: true,required: true}})}
               value={email}
               placeholder="Email"
               placeholderTextColor={Colors.DEFAULT_GREY}
@@ -207,8 +208,12 @@ const SignupScreen = ({ navigation }) => {
               style={{ marginRight: 10 }}
             />
             <TextInput
-              onChangeText={(password) => setPassword(password)}
-              onEndEditing={() => validate({ password: { minlength: 6 } })}
+              // onFocus={() => {validate({ password: { minlength: 8, maxlength:16,required:true } })}}
+              onChangeText={(password) => {
+                setPassword(password)
+                validate({ password: { minlength: 8,maxlength:16,required:true } })
+              }}
+              onEndEditing={() => validate({ password: { minlength: 8,maxlength:16,required:true } })}
               value={password}
               secureTextEntry={isPasswordShown ? false : true}
               placeholder="Password"
@@ -227,7 +232,7 @@ const SignupScreen = ({ navigation }) => {
             />
           </View>
         </View>
-
+              {ShowError("password")}
         <Separator height={15} />
         <View
           style={
@@ -243,8 +248,20 @@ const SignupScreen = ({ navigation }) => {
               style={{ marginRight: 10 }}
             />
             <TextInput
-              onChangeText={(password) => setConfirmPassword(password)}
-              onEndEditing={() => validate({ confirmPassword: { minlength: 6 } })}
+              // onFocus={() => {
+              //   validate({ confirmPassword: {
+              //     equalPassword: password,
+              //     minlength: 8,
+              //     maxlength: 16,
+              //     required: true,
+              //   } })
+              // }}
+              onChangeText={(pass) => {
+                setConfirmPassword(pass)
+                validate({ confirmPassword: {equalPassword: password,minlength: 8,maxlength: 16,required: true} })
+                }
+              }
+              onEndEditing={() => validate({ confirmPassword: {equalPassword: password,minlength: 8,maxlength: 16,required: true} })}
               value={confirmPassword}
               secureTextEntry={isPasswordShown ? false : true}
               placeholder="Confirm Password"
@@ -279,15 +296,16 @@ const SignupScreen = ({ navigation }) => {
           listParentLabelStyle={styles.dropdownstyles}
           dropDownContainerStyle={styles.dropdowncontainerstyle}
           labelStyle={styles.dropdownstyles}
-          
+          placeholder="Select Account Type"
           onChangeValue={(value) => {
             setaccounttype(value);
           }}
+          //validate when it is unfocused 
           //validate when the dropdown is closed
           onClose={() => validate({ accounttype: { required: true } })}
         />
         {ShowError("accounttype")}
-        {/* {validateNull()? <Text style={styles.error}>All fields are required</Text>: null} */}
+        {isAllValuesNull? <Text style={{ color: "red", fontSize: 15, marginLeft: 25 }}>All fields are required</Text>: null}
         
 
         <TouchableOpacity onPress={createAccount} style={styles.signinButton}>

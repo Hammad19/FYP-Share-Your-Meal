@@ -1,4 +1,5 @@
 import { createSlice, createAsyncThunk } from "@reduxjs/toolkit";
+import { Alert } from "react-native";
 import { addData } from "../../utils/api/api";
 import API_ENDPOINTS from "../../utils/endpoints";
 
@@ -8,7 +9,14 @@ export const userSignup = createAsyncThunk(
     try {
       console.log(requestBody, "<-- requestBody");
       await addData(API_ENDPOINTS.USER_SIGNUP, requestBody).then((response) => {
-        console.log(JSON.parse(response));
+        console.log(response);
+        if(response.success == false){
+          Alert.alert("Error", response.message);
+        }
+        else if(response.success == true){
+          Alert.alert("Success", response.message);
+        }
+
         return response;
       });
     } catch (e) {
@@ -19,6 +27,7 @@ export const userSignup = createAsyncThunk(
     }
   }
 );
+
 /// User Login
 export const userLogin = createAsyncThunk(
   API_ENDPOINTS.USER_LOGIN,
@@ -26,7 +35,12 @@ export const userLogin = createAsyncThunk(
     try {
       console.log(requestBody, "<-- requestBody");
       await addData(API_ENDPOINTS.USER_LOGIN, requestBody).then((response) => {
-       // console.log(JSON.parse(response));
+        if(response.success == false){
+          Alert.alert("Error", response.message);
+        }
+        else if(response.success == true){
+          Alert.alert("Success", response.message);
+        }
         return response;
       });
     } catch (e) {
@@ -52,6 +66,18 @@ const authSlice = createSlice({
   name: "auth",
   initialState,
   reducers: {
+
+    //change the initial state when userlogins
+    userLoggedIn: (state, action) => {
+      state.isLoggedIn = true;
+      state.user = action.payload;
+    },
+    //change the initial state when userlogouts
+
+    userLoggedOut: (state, action) => {
+      state.isLoggedIn = false;
+      state.user = {};
+    },
     updateUserData: (state, action) => {
       state.user = action.payload.data.user;
     },
@@ -63,11 +89,9 @@ const authSlice = createSlice({
     builder.addCase(userSignup.pending, (state, action) => {
       //console.log(action.payload, "<--rejected");
     }),
-      builder.addCase(userSignup.fulfilled, (state, action) => {}),
       builder.addCase(userSignup.rejected, (state, action) => {
         console.log(action.payload, "<--rejected");
       });
-//Login
       builder.addCase(userLogin.pending, (state, action) => {
         console.log(action.payload, "<--Pending");
       }),
@@ -78,6 +102,6 @@ const authSlice = createSlice({
   },
 });
 
-export const { updateUserData, updateToken } = authSlice.actions;
+export const { updateUserData, updateToken ,userLoggedIn,userLoggedOut} = authSlice.actions;
 
 export default authSlice.reducer;
