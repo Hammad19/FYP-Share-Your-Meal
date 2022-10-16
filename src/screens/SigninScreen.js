@@ -51,74 +51,72 @@ const SigninScreen = ({ navigation }) => {
   const [password, setPassword] = useState("");
   const [isAllValuesNull, setisAllValuesNull] = useState(false);
   const [fieldname, setFieldName] = useState("");
+  const [error, setError] = useState("");
 
   const state = useSelector((state) => state);
   const dispatch = useDispatch();
 
   useEffect(() => {
-    
-    validateField()
-  
-  }, [email,password])
+    validateField();
+  }, [email, password]);
 
   const validateField = () => {
-    if(fieldname == "email")
-    {
-      validate({email: {email: true,required: true}})
-    }
-    else if(fieldname == "password")
-    {
-      validate({ password: { minlength: 8,maxlength:16,required:true } })
+    if (fieldname == "email") {
+      validate({ email: { email: true, required: true } });
+    } else if (fieldname == "password") {
+      validate({ password: { minlength: 8, maxlength: 16, required: true } });
     }
   };
   const validateNull = () => {
-
-    if(email?.length < 1 || password?.length < 1)
-    {
-      setisAllValuesNull(true)
-      
+    if (email?.length < 1 || password?.length < 1) {
+      setisAllValuesNull(true);
+    } else {
+      setisAllValuesNull(false);
     }
-    else
-    {
-      
-      setisAllValuesNull(false)
-      
-    }
-  }
+  };
   function ShowError(textfieldname) {
     return (
-      (
-      isFieldInError(textfieldname)&&
-
-            <Text style={{ color: "red", fontSize: 12, marginLeft: 25 }}>
-              {getErrorsInField(textfieldname)[0]}
-            </Text>
-          ))
+      isFieldInError(textfieldname) && (
+        <Text style={{ color: "red", fontSize: 12, marginLeft: 25 }}>
+          {getErrorsInField(textfieldname)[0]}
+        </Text>
+      )
+    );
   }
 
   const Login = () => {
-    
+    setError(false);
+
+    validate({
+      email: { email: true, required: true },
+      password: { minlength: 8, maxlength: 16, required: true },
+    });
 
     setTimeout(() => {
-      setisAllValuesNull(false)
+      setisAllValuesNull(false);
     }, 2000);
-    
-    validateNull()
+
+    validateNull();
 
     let requestBody = {
       email,
       password,
     };
 
-    if (getErrorMessages().length === 0 && email.length > 0 && password.length > 0 ) {
+    if (isFormValid() && email.length > 0 && password.length > 0) {
       dispatch(userLogin(requestBody));
-   }
+    }
   };
 
-  const { validate, isFieldInError, getErrorsInField, getErrorMessages } =
-    useValidation({
-      state: { email, password},
-    });
+  const {
+    validate,
+    isFieldInError,
+    getErrorsInField,
+    getErrorMessages,
+    isFormValid,
+  } = useValidation({
+    state: { email, password },
+  });
 
   return (
     fontsLoaded && (
@@ -126,8 +124,7 @@ const SigninScreen = ({ navigation }) => {
         <StatusBar
           barStyle={"dark-content"}
           backgroundColor={Colors.DEFAULT_WHITE}
-          translucent
-        ></StatusBar>
+          translucent></StatusBar>
         <Separator height={StatusBar.currentHeight} />
         <View style={styles.headerContainer}>
           <IonIcons
@@ -143,7 +140,8 @@ const SigninScreen = ({ navigation }) => {
         <Text style={styles.content}>
           Enter Your Username and Password and Enjoy Having Food
         </Text>
-        <View style={
+        <View
+          style={
             isFieldInError("email") ? styles.error : styles.inputContainer
           }>
           <View style={styles.inputSubContainer}>
@@ -154,14 +152,11 @@ const SigninScreen = ({ navigation }) => {
               style={{ marginRight: 10 }}
             />
             <TextInput
-              onChangeText={
-                (text) => 
-                {
+              onChangeText={(text) => {
+                setError(true);
                 setFieldName("email");
-                setEmail(text)
-              
-                }
-              }
+                setEmail(text);
+              }}
               value={email}
               placeholder="Email"
               placeholderTextColor={Colors.DEFAULT_GREY}
@@ -170,9 +165,12 @@ const SigninScreen = ({ navigation }) => {
             />
           </View>
         </View>
-        {ShowError("email")}
+        {error && ShowError("email")}
         <Separator height={15} />
-        <View style={isFieldInError("password") ? styles.error : styles.inputContainer}>
+        <View
+          style={
+            isFieldInError("password") ? styles.error : styles.inputContainer
+          }>
           <View style={styles.inputSubContainer}>
             <Feather
               name="lock"
@@ -181,18 +179,22 @@ const SigninScreen = ({ navigation }) => {
               style={{ marginRight: 10 }}
             />
             <TextInput
-            
               onChangeText={(password) => {
+                setError(true);
                 setFieldName("password");
-                setPassword(password)
-                }}
+                setPassword(password);
+              }}
+              // onFocus={(password) => {
+              //   setError(true);
+              //   setFieldName("password");
+              //   setPassword(password)
+              //   }}
               value={password}
               secureTextEntry={isPasswordShown ? false : true}
               placeholder="Password"
               placeholderTextColor={Colors.DEFAULT_GREY}
               selectionColor={Colors.DEFAULT_GREY}
               style={styles.inputText}
-      
             />
             <Feather
               onPress={() => {
@@ -205,7 +207,7 @@ const SigninScreen = ({ navigation }) => {
             />
           </View>
         </View>
-        {ShowError("password")}
+        {error && ShowError("password")}
         <Text></Text>
         <View style={styles.forgotPasswordContainer}>
           <View style={styles.toggleContainer}>
@@ -214,24 +216,23 @@ const SigninScreen = ({ navigation }) => {
           </View>
           <Text
             onPress={() => navigation.navigate("ForgotPasswordScreen")}
-            style={styles.forgotPasswordText}
-          >
+            style={styles.forgotPasswordText}>
             Forgot Password
           </Text>
         </View>
-        {isAllValuesNull? <Text style={{ color: "red", fontSize: 15, marginLeft: 25 }}>All fields are required</Text>: null}
-        <TouchableOpacity
-          onPress={Login}
-          style={styles.signinButton}
-        >
+        {isAllValuesNull ? (
+          <Text style={{ color: "red", fontSize: 15, marginLeft: 25 }}>
+            All fields are required
+          </Text>
+        ) : null}
+        <TouchableOpacity onPress={Login} style={styles.signinButton}>
           <Text style={styles.signinButtonText}>Sign In</Text>
         </TouchableOpacity>
         <View style={styles.signupContainer}>
           <Text style={styles.accountText}>Don't have an Account ?</Text>
           <Text
             onPress={() => navigation.navigate("SignupScreen")}
-            style={styles.signupText}
-          >
+            style={styles.signupText}>
             Sign Up
           </Text>
         </View>

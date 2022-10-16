@@ -25,16 +25,16 @@ import {
 } from "@expo-google-fonts/poppins";
 import { userSignup } from "../store/slices/authSlice";
 const SignupScreen = ({ navigation }) => {
-
   const [email, setEmail] = useState("");
   const [userName, setUserName] = useState("");
-  const [password, setPassword] = useState( "");
+  const [password, setPassword] = useState("");
   const [confirmPassword, setConfirmPassword] = useState("");
   const [accounttype, setaccounttype] = useState("");
   const [open, setOpen] = useState(false);
   const [value, setValue] = useState(null);
   const [isAllValuesNull, setisAllValuesNull] = useState(false);
   const [fieldname, setFieldName] = useState("");
+  const [error, setError] = useState("");
   const [items, setItems] = useState([
     { label: "Standard User", value: "User" },
     { label: "Charitable Organization", value: "Charitable Organization" },
@@ -43,81 +43,89 @@ const SignupScreen = ({ navigation }) => {
 
   const dispatch = useDispatch();
 
-  const { validate, isFieldInError, getErrorsInField, getErrorMessages,isFormValid } =
-    useValidation({
-      state: { userName, email, password, confirmPassword, accounttype },
-    });
+  const {
+    validate,
+    isFieldInError,
+    getErrorsInField,
+    getErrorMessages,
+    isFormValid,
+  } = useValidation({
+    state: { userName, email, password, confirmPassword, accounttype },
+  });
 
-  
   const validateNull = () => {
-
-    if(userName?.length < 1 || email?.length < 1 || password?.length < 1 || confirmPassword?.length < 1 || accounttype?.length < 1)
-    {
-      setisAllValuesNull(true)
-      
+    if (
+      userName?.length < 1 ||
+      email?.length < 1 ||
+      password?.length < 1 ||
+      confirmPassword?.length < 1 ||
+      accounttype?.length < 1
+    ) {
+      setisAllValuesNull(true);
+    } else {
+      setisAllValuesNull(false);
     }
-    else
-    {
-      
-      setisAllValuesNull(false)
-      
-    }
-  }
-
+  };
 
   function ShowError(textfieldname) {
     return (
-      (
-      isFieldInError(textfieldname)&&
-
-            <Text style={{ color: "red", fontSize: 12, marginLeft: 25 }}>
-              {getErrorsInField(textfieldname)[0]}
-            </Text>
-          ))
+      isFieldInError(textfieldname) && (
+        <Text style={{ color: "red", fontSize: 12, marginLeft: 25 }}>
+          {getErrorsInField(textfieldname)[0]}
+        </Text>
+      )
+    );
   }
 
   useEffect(() => {
-    
-    validateField()
-  
-  }, [userName,email,password,confirmPassword,accounttype,fieldname])
-
+    validateField();
+  }, [userName, email, password, confirmPassword, accounttype, fieldname]);
 
   //function which takes field name and validates it
   const validateField = () => {
-    if(fieldname == "userName") 
-    { 
-      validate({ userName: { minlength: 3, maxlength: 10, required: true } })
-
-    }
-    else if(fieldname == "email")
-    {
-      validate({email: {email: true,required: true}})
-    }
-    else if(fieldname == "password")
-    {
-      validate({ password: { minlength: 8,maxlength:16,required:true } })
-    }
-    else if(fieldname == "confirmPassword")
-    { 
-      validate({ confirmPassword: {equalPassword: password,minlength: 8,maxlength: 16,required: true} }) 
-    }
-    else if(fieldname == "accounttype")
-    {
+    if (fieldname == "userName") {
+      validate({ userName: { minlength: 3, maxlength: 10, required: true } });
+    } else if (fieldname == "email") {
+      validate({ email: { email: true, required: true } });
+    } else if (fieldname == "password") {
+      validate({ password: { minlength: 8, maxlength: 16, required: true } });
+    } else if (fieldname == "confirmPassword") {
+      validate({
+        confirmPassword: {
+          equalPassword: password,
+          minlength: 8,
+          maxlength: 16,
+          required: true,
+        },
+      });
+    } else if (fieldname == "accounttype") {
       validate({
         accounttype: { required: true },
       });
     }
   };
 
-  const  createAccount = () => {
-    
+  const createAccount = () => {
+    setError(false);
+    validate({
+      userName: { minlength: 3, maxlength: 10, required: true },
+      email: { email: true, required: true },
+      password: { minlength: 8, maxlength: 16, required: true },
+      confirmPassword: {
+        equalPassword: password,
+        minlength: 8,
+        maxlength: 16,
+        required: true,
+      },
+      accounttype: { required: true },
+    });
+
+    console.log(isFormValid());
     setTimeout(() => {
-      setisAllValuesNull(false)
+      setisAllValuesNull(false);
     }, 2000);
-    
-    validateNull()
-   
+
+    validateNull();
 
     let requestBody = {
       first_name: userName,
@@ -127,10 +135,15 @@ const SignupScreen = ({ navigation }) => {
       accounttype: accounttype,
     };
     //if i dont get any errors then i will dispatch the action
-    if (getErrorMessages().length === 0 && accounttype.length > 0 && userName.length > 0 && email.length > 0 && password.length > 0 && confirmPassword.length > 0) {
-       dispatch(userSignup(requestBody));
-          
-
+    if (
+      isFormValid() &&
+      accounttype.length > 0 &&
+      userName.length > 0 &&
+      email.length > 0 &&
+      password.length > 0 &&
+      confirmPassword.length > 0
+    ) {
+      dispatch(userSignup(requestBody));
     }
   };
 
@@ -174,11 +187,12 @@ const SignupScreen = ({ navigation }) => {
             />
             <TextInput
               onChangeText={(text) => {
+                setError(true);
                 setFieldName("userName");
                 setUserName(text);
               }}
               // onEndEditing={() => }
-          
+
               value={userName}
               placeholder="Name"
               placeholderTextColor={Colors.DEFAULT_GREY}
@@ -187,7 +201,7 @@ const SignupScreen = ({ navigation }) => {
             />
           </View>
         </View>
-        {ShowError("userName")}
+        {error && ShowError("userName")}
         <Separator height={15} />
         <View
           style={
@@ -202,9 +216,10 @@ const SignupScreen = ({ navigation }) => {
             />
             <TextInput
               onChangeText={(text) => {
+                setError(true);
                 setFieldName("email");
-                setEmail(text)
-                }}
+                setEmail(text);
+              }}
               value={email}
               placeholder="Email"
               placeholderTextColor={Colors.DEFAULT_GREY}
@@ -214,12 +229,11 @@ const SignupScreen = ({ navigation }) => {
           </View>
         </View>
 
-        {ShowError("email")}
+        {error && ShowError("email")}
         <Separator height={15} />
-        <View style={
-            isFieldInError("password")
-              ? styles.error
-              : styles.inputContainer
+        <View
+          style={
+            isFieldInError("password") ? styles.error : styles.inputContainer
           }>
           <View style={styles.inputSubContainer}>
             <Feather
@@ -230,8 +244,9 @@ const SignupScreen = ({ navigation }) => {
             />
             <TextInput
               onChangeText={(password) => {
+                setError(true);
                 setFieldName("password");
-                setPassword(password)
+                setPassword(password);
               }}
               value={password}
               secureTextEntry={isPasswordShown ? false : true}
@@ -251,7 +266,7 @@ const SignupScreen = ({ navigation }) => {
             />
           </View>
         </View>
-              {ShowError("password")}
+        {error && ShowError("password")}
         <Separator height={15} />
         <View
           style={
@@ -267,20 +282,17 @@ const SignupScreen = ({ navigation }) => {
               style={{ marginRight: 10 }}
             />
             <TextInput
-            
               onChangeText={(pass) => {
+                setError(true);
                 setFieldName("confirmPassword");
-                setConfirmPassword(pass)
-                
-                }
-              }
+                setConfirmPassword(pass);
+              }}
               value={confirmPassword}
               secureTextEntry={isPasswordShown ? false : true}
               placeholder="Confirm Password"
               placeholderTextColor={Colors.DEFAULT_GREY}
               selectionColor={Colors.DEFAULT_GREY}
               style={styles.inputText}
-              
             />
 
             <Feather
@@ -294,7 +306,7 @@ const SignupScreen = ({ navigation }) => {
             />
           </View>
         </View>
-        {ShowError("confirmPassword")}
+        {error && ShowError("confirmPassword")}
         <Separator height={15} />
         <DropDownPicker
           style={styles.inputContainer}
@@ -309,19 +321,19 @@ const SignupScreen = ({ navigation }) => {
           dropDownContainerStyle={styles.dropdowncontainerstyle}
           labelStyle={styles.dropdownstyles}
           placeholder="Select Account Type"
-          onChangeValue={(value) => {
+          onSelectItem={(item) => {
+            setError(true);
             setFieldName("accounttype");
-            setaccounttype(value);
+            console.log(item.value);
+            setaccounttype(item.value);
           }}
-          //validate when it is unfocused 
-          //validate when the dropdown is closed
-          onClose={(value) => {setFieldName("accounttype");
-          setaccounttype(value);}}
-
         />
-        {ShowError("accounttype")}
-        {isAllValuesNull? <Text style={{ color: "red", fontSize: 15, marginLeft: 25 }}>All fields are required</Text>: null}
-        
+        {error && ShowError("accounttype")}
+        {isAllValuesNull ? (
+          <Text style={{ color: "red", fontSize: 15, marginLeft: 25 }}>
+            All fields are required
+          </Text>
+        ) : null}
 
         <TouchableOpacity onPress={createAccount} style={styles.signinButton}>
           <Text style={styles.signinButtonText}>Create Account</Text>
