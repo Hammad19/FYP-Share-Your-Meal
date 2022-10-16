@@ -34,7 +34,7 @@ const SignupScreen = ({ navigation }) => {
   const [open, setOpen] = useState(false);
   const [value, setValue] = useState(null);
   const [isAllValuesNull, setisAllValuesNull] = useState(false);
-  const [showallErrors, setShowAllErros] = useState(true);
+  const [fieldname, setFieldName] = useState("");
   const [items, setItems] = useState([
     { label: "Standard User", value: "User" },
     { label: "Charitable Organization", value: "Charitable Organization" },
@@ -43,7 +43,7 @@ const SignupScreen = ({ navigation }) => {
 
   const dispatch = useDispatch();
 
-  const { validate, isFieldInError, getErrorsInField, getErrorMessages } =
+  const { validate, isFieldInError, getErrorsInField, getErrorMessages,isFormValid } =
     useValidation({
       state: { userName, email, password, confirmPassword, accounttype },
     });
@@ -76,20 +76,42 @@ const SignupScreen = ({ navigation }) => {
           ))
   }
 
-  const  createAccount = () => {
-    // validate({
-    //   userName: { minlength: 3, maxlength: 10, required: true },
-    //   email: {email: true,required: true},
-    //   password: { minlength: 8,required:true },
-    //   accounttype: { required: true },
-    //   confirmPassword: {
-    //     equalPassword: password,
-    //     minlength: 8,
-    //     maxlength: 16,
-    //     required: true,
-    //   },
-    // });
+  useEffect(() => {
+    
+    validateField()
+  
+  }, [userName,email,password,confirmPassword,accounttype,fieldname])
 
+
+  //function which takes field name and validates it
+  const validateField = () => {
+    if(fieldname == "userName") 
+    { 
+      validate({ userName: { minlength: 3, maxlength: 10, required: true } })
+
+    }
+    else if(fieldname == "email")
+    {
+      validate({email: {email: true,required: true}})
+    }
+    else if(fieldname == "password")
+    {
+      validate({ password: { minlength: 8,maxlength:16,required:true } })
+    }
+    else if(fieldname == "confirmPassword")
+    { 
+      validate({ confirmPassword: {equalPassword: password,minlength: 8,maxlength: 16,required: true} }) 
+    }
+    else if(fieldname == "accounttype")
+    {
+      validate({
+        accounttype: { required: true },
+      });
+    }
+  };
+
+  const  createAccount = () => {
+    
     setTimeout(() => {
       setisAllValuesNull(false)
     }, 2000);
@@ -152,11 +174,10 @@ const SignupScreen = ({ navigation }) => {
             />
             <TextInput
               onChangeText={(text) => {
-                setUserName(text)
-                console.log(userName);
-                validate({ userName: { minlength: 3, maxlength: 10, required: true } })
+                setFieldName("userName");
+                setUserName(text);
               }}
-              onEndEditing={() => validate({ userName: { minlength: 3, maxlength: 10, required: true } })}
+              // onEndEditing={() => }
           
               value={userName}
               placeholder="Name"
@@ -180,14 +201,10 @@ const SignupScreen = ({ navigation }) => {
               style={{ marginRight: 10 }}
             />
             <TextInput
-              // onFocus={() => {
-              //   validate({email: {email: true,required: true}})
-              // }
-              // }
               onChangeText={(text) => {
+                setFieldName("email");
                 setEmail(text)
-                validate({email: {email: true,required: true}})}}
-              onEndEditing = {() => validate({email: {email: true,required: true}})}
+                }}
               value={email}
               placeholder="Email"
               placeholderTextColor={Colors.DEFAULT_GREY}
@@ -199,7 +216,11 @@ const SignupScreen = ({ navigation }) => {
 
         {ShowError("email")}
         <Separator height={15} />
-        <View style={styles.inputContainer}>
+        <View style={
+            isFieldInError("password")
+              ? styles.error
+              : styles.inputContainer
+          }>
           <View style={styles.inputSubContainer}>
             <Feather
               name="lock"
@@ -208,12 +229,10 @@ const SignupScreen = ({ navigation }) => {
               style={{ marginRight: 10 }}
             />
             <TextInput
-              // onFocus={() => {validate({ password: { minlength: 8, maxlength:16,required:true } })}}
               onChangeText={(password) => {
+                setFieldName("password");
                 setPassword(password)
-                validate({ password: { minlength: 8,maxlength:16,required:true } })
               }}
-              onEndEditing={() => validate({ password: { minlength: 8,maxlength:16,required:true } })}
               value={password}
               secureTextEntry={isPasswordShown ? false : true}
               placeholder="Password"
@@ -248,20 +267,13 @@ const SignupScreen = ({ navigation }) => {
               style={{ marginRight: 10 }}
             />
             <TextInput
-              // onFocus={() => {
-              //   validate({ confirmPassword: {
-              //     equalPassword: password,
-              //     minlength: 8,
-              //     maxlength: 16,
-              //     required: true,
-              //   } })
-              // }}
+            
               onChangeText={(pass) => {
+                setFieldName("confirmPassword");
                 setConfirmPassword(pass)
-                validate({ confirmPassword: {equalPassword: password,minlength: 8,maxlength: 16,required: true} })
+                
                 }
               }
-              onEndEditing={() => validate({ confirmPassword: {equalPassword: password,minlength: 8,maxlength: 16,required: true} })}
               value={confirmPassword}
               secureTextEntry={isPasswordShown ? false : true}
               placeholder="Confirm Password"
@@ -298,11 +310,14 @@ const SignupScreen = ({ navigation }) => {
           labelStyle={styles.dropdownstyles}
           placeholder="Select Account Type"
           onChangeValue={(value) => {
+            setFieldName("accounttype");
             setaccounttype(value);
           }}
           //validate when it is unfocused 
           //validate when the dropdown is closed
-          onClose={() => validate({ accounttype: { required: true } })}
+          onClose={(value) => {setFieldName("accounttype");
+          setaccounttype(value);}}
+
         />
         {ShowError("accounttype")}
         {isAllValuesNull? <Text style={{ color: "red", fontSize: 15, marginLeft: 25 }}>All fields are required</Text>: null}

@@ -35,6 +35,7 @@ import {
   Poppins_900Black,
   Poppins_900Black_Italic,
 } from "@expo-google-fonts/poppins";
+import { useEffect } from "react";
 import { Display } from "../utils";
 import { userLogin } from "../store/slices/authSlice";
 import { useValidation } from "react-native-form-validator";
@@ -49,10 +50,27 @@ const SigninScreen = ({ navigation }) => {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [isAllValuesNull, setisAllValuesNull] = useState(false);
+  const [fieldname, setFieldName] = useState("");
 
   const state = useSelector((state) => state);
   const dispatch = useDispatch();
 
+  useEffect(() => {
+    
+    validateField()
+  
+  }, [email,password])
+
+  const validateField = () => {
+    if(fieldname == "email")
+    {
+      validate({email: {email: true,required: true}})
+    }
+    else if(fieldname == "password")
+    {
+      validate({ password: { minlength: 8,maxlength:16,required:true } })
+    }
+  };
   const validateNull = () => {
 
     if(email?.length < 1 || password?.length < 1)
@@ -136,16 +154,12 @@ const SigninScreen = ({ navigation }) => {
               style={{ marginRight: 10 }}
             />
             <TextInput
-
-              onFocus={() => {
-                validate({email: {email: true,required: true}});
-              }
-              }
               onChangeText={
                 (text) => 
                 {
+                setFieldName("email");
                 setEmail(text)
-                validate({email: {required: true,email: true}});
+              
                 }
               }
               value={email}
@@ -153,7 +167,6 @@ const SigninScreen = ({ navigation }) => {
               placeholderTextColor={Colors.DEFAULT_GREY}
               selectionColor={Colors.DEFAULT_GREY}
               style={styles.inputText}
-              onEndEditing = {() => validate({email: {email: true,required: true}})}
             />
           </View>
         </View>
@@ -168,21 +181,18 @@ const SigninScreen = ({ navigation }) => {
               style={{ marginRight: 10 }}
             />
             <TextInput
-              onFocus={
-                () => {
-                  validate({ password: { minlength: 6,required:true } });
-              }
-            }
+            
               onChangeText={(password) => {
+                setFieldName("password");
                 setPassword(password)
-                validate({ password: { minlength: 6,required:true } })}}
+                }}
               value={password}
               secureTextEntry={isPasswordShown ? false : true}
               placeholder="Password"
               placeholderTextColor={Colors.DEFAULT_GREY}
               selectionColor={Colors.DEFAULT_GREY}
               style={styles.inputText}
-              onEndEditing={() => validate({ password: { minlength: 6,required:true } })}
+      
             />
             <Feather
               onPress={() => {
