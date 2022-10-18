@@ -90,36 +90,29 @@ const authSlice = createSlice({
     },
   },
   extraReducers: (builder) => {
-    builder.addCase(userSignup.pending, (state, action) => {
-      //console.log(action.payload, "<--rejected");
-    }),
 
     builder.addCase(userSignup.fulfilled, (state, action) => {
-      state.error.status = "idle";
+      state.error.status = "success";
       console.log(action.payload, "<--fulfilled");
-      
       
     }),
       builder.addCase(userSignup.rejected, (state, action) => {
         state.error = action.payload;
       });
-      builder.addCase(userLogin.pending, (state, action) => {
-        // console.log(action.payload, "<--Pending");
-      }),
+    
         builder.addCase(userLogin.fulfilled, (state, action) => {
-          // console.log(action, "<--fulfilled");
           state.error.status = "idle";
           state.isLoggedIn = true;
           state.user = action.payload.user;
           state.token = action.payload.token;
-          console.log(state.user, "<--state.user");
+
 
         }),
         builder.addCase(userLogin.rejected, (state, action) => {
           // console.log(action.payload, "<-- Login rejected");
-          state.error = action.payload;
+          state.error.status = "loginerror";
+          state.error.message = action.payload.message;
           state.isLoggedIn = false;
-          console.log(state.error, "<-- state.error");
         });
   },
 });

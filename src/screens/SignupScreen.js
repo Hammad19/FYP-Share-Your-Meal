@@ -41,7 +41,6 @@ const SignupScreen = ({ navigation }) => {
     { label: "Charitable Organization", value: "Charitable Organization" },
   ]);
   const state = useSelector((state) => state);
-
   const dispatch = useDispatch();
 
   const {
@@ -77,6 +76,22 @@ const SignupScreen = ({ navigation }) => {
       )
     );
   }
+  useEffect(() => {
+    NavigatetoSignInScreen();
+
+  }, [state])
+
+  const NavigatetoSignInScreen= () => {
+    if(state.auth.error.status== "error")
+        {
+          Alert.alert("Error", state.auth.error.message);
+        }
+        else if(state.auth.error.status== "success")
+        {
+          Alert.alert("Success", "Account Created Successfully Please Login");
+          navigation.navigate("SigninScreen");
+        }
+      }
 
   useEffect(() => {
     validateField();
@@ -146,19 +161,8 @@ const SignupScreen = ({ navigation }) => {
     ) {
       //dispattch the action and then print the state
       console.log(state, "state");
-      dispatch(userSignup(requestBody)).then(() => {
-        console.log(state, "<--state");
-        if(state.auth.error.status== "error")
-        {
-          Alert.alert("Error", state.auth.error.message);
-        }
-        else
-        {
-          Alert.alert("Success", "Account Created Successfully Please Login");
-          navigation.navigate("SigninScreen");
-        }
-      }
-      );
+      dispatch(userSignup(requestBody))
+      
 
 
       

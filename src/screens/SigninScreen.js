@@ -54,12 +54,15 @@ const SigninScreen = ({ navigation }) => {
   const [fieldname, setFieldName] = useState("");
   const [error, setError] = useState("");
 
+
   const state = useSelector((state) => state);
+
   const dispatch = useDispatch();
 
   useEffect(() => {
     validateField();
   }, [email, password]);
+
 
   const validateField = () => {
     if (fieldname == "email") {
@@ -85,6 +88,26 @@ const SigninScreen = ({ navigation }) => {
     );
   }
 
+  useEffect(() => {
+    NavigatetoHome();
+
+  }, [state])
+  
+
+  const NavigatetoHome = () => {
+    
+
+      if(state.auth.isLoggedIn)
+    {
+      Alert.alert("Success", "User Logged in Successfully ");
+      navigation.navigate("CustomTabNavigator");
+      
+    }
+    else if(state.auth.error.status== "loginerror")
+    {
+      Alert.alert("Error", state.auth.error.message);
+    }
+  };
   const Login = () => 
   {
     setError(false);
@@ -108,16 +131,10 @@ const SigninScreen = ({ navigation }) => {
     if (isFormValid() && email.length > 0 && password.length > 0) {
       dispatch(userLogin(requestBody)).then(() => {
         console.log(state, "<--state");
-        if(state.auth.isLoggedIn)
-        {
-          Alert.alert("Success", "User Logged in Successfully ");
-          navigation.navigate("CustomTabNavigator");
-          
-        }
-        else
-        {
-          Alert.alert("Error", state.auth.error.message);
-        }
+        //wait for the state to change
+        
+
+        
       }
       );
     }
