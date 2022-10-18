@@ -7,18 +7,19 @@ export const userSignup = createAsyncThunk(
   API_ENDPOINTS.USER_SIGNUP,
   async (requestBody, thunkAPI) => {
     try {
-      console.log(requestBody, "<-- requestBody");
-      await addData(API_ENDPOINTS.USER_SIGNUP, requestBody).then((response) => {
-        console.log(response);
-        if(response.success == false){
-          Alert.alert("Error", response.message);
-        }
-        else if(response.success == true){
-          Alert.alert("Success", response.message);
-        }
-
-        return response;
-      });
+      const result = await addData(API_ENDPOINTS.USER_SIGNUP, requestBody)
+      if(result.success == true){
+        return result;
+      }
+      else
+      {
+        console.log(result, "<-- result");
+        return thunkAPI.rejectWithValue
+        ({
+          status: "error",
+          message: result.message,
+        });
+      } 
     } catch (e) {
       thunkAPI.rejectWithValue({
         status: "error",
@@ -33,18 +34,21 @@ export const userLogin = createAsyncThunk(
   API_ENDPOINTS.USER_LOGIN,
   async (requestBody, thunkAPI) => {
     try {
-      console.log(requestBody, "<-- requestBody");
-      await addData(API_ENDPOINTS.USER_LOGIN, requestBody).then((response) => {
-        if(response.success == false){
-          Alert.alert("Error", response.message);
-        }
-        else if(response.success == true){
-          Alert.alert("Success", response.message);
-        }
-        return response;
-      });
+      const result = await addData(API_ENDPOINTS.USER_LOGIN, requestBody)
+      if(result.success == true){
+        return result;
+      }
+      else
+      {
+        console.log(result, "<-- result");
+        return thunkAPI.rejectWithValue
+        ({
+          status: "error",
+          message: result.message,
+        });
+      } 
     } catch (e) {
-      thunkAPI.rejectWithValue({
+      return thunkAPI.rejectWithValue({
         status: "error",
         message: "Unable to Login",
       });
@@ -89,15 +93,32 @@ const authSlice = createSlice({
     builder.addCase(userSignup.pending, (state, action) => {
       //console.log(action.payload, "<--rejected");
     }),
+
+    builder.addCase(userSignup.fulfilled, (state, action) => {
+      state.error.status = "idle";
+      console.log(action.payload, "<--fulfilled");
+      
+      
+    }),
       builder.addCase(userSignup.rejected, (state, action) => {
-        console.log(action.payload, "<--rejected");
+        state.error = action.payload;
       });
       builder.addCase(userLogin.pending, (state, action) => {
-        console.log(action.payload, "<--Pending");
+        // console.log(action.payload, "<--Pending");
       }),
-        builder.addCase(userLogin.fulfilled, (state, action) => {}),
+        builder.addCase(userLogin.fulfilled, (state, action) => {
+          // console.log(action, "<--fulfilled");
+          state.error.status = "idle";
+          state.user = action.payload.user;
+          state.token = action.payload.token;
+          console.log(state.user, "<--state.user");
+
+        }),
         builder.addCase(userLogin.rejected, (state, action) => {
-          console.log(action.payload, "<-- Login rejected");
+          // console.log(action.payload, "<-- Login rejected");
+          state.error = action.payload;
+          state.isLoggedIn = true;
+          console.log(state.error, "<-- state.error");
         });
   },
 });

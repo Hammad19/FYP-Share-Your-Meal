@@ -7,6 +7,7 @@ import {
   StatusBar,
   TouchableOpacity,
   Image,
+  Alert,
 } from "react-native";
 import { useValidation } from "react-native-form-validator";
 import DropDownPicker from "react-native-dropdown-picker";
@@ -143,7 +144,25 @@ const SignupScreen = ({ navigation }) => {
       password.length > 0 &&
       confirmPassword.length > 0
     ) {
-      dispatch(userSignup(requestBody));
+      //dispattch the action and then print the state
+      console.log(state, "state");
+      dispatch(userSignup(requestBody)).then(() => {
+        console.log(state, "<--state");
+        if(state.auth.error.status== "error")
+        {
+          Alert.alert("Error", state.auth.error.message);
+        }
+        else
+        {
+          Alert.alert("Success", "Account Created Successfully Please Login");
+          navigation.navigate("SigninScreen");
+        }
+      }
+      );
+
+
+      
+    
     }
   };
 

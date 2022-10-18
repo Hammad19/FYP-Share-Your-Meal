@@ -5,6 +5,7 @@ import {
   View,
   Image,
   StatusBar,
+  Alert,
 } from "react-native";
 import React, { useState } from "react";
 import IonIcons from "react-native-vector-icons/Ionicons";
@@ -84,7 +85,8 @@ const SigninScreen = ({ navigation }) => {
     );
   }
 
-  const Login = () => {
+  const Login = () => 
+  {
     setError(false);
 
     validate({
@@ -104,7 +106,19 @@ const SigninScreen = ({ navigation }) => {
     };
 
     if (isFormValid() && email.length > 0 && password.length > 0) {
-      dispatch(userLogin(requestBody));
+      dispatch(userLogin(requestBody)).then(() => {
+        console.log(state, "<--state");
+        if(state.auth.error.status== "error")
+        {
+          Alert.alert("Error", state.auth.error.message);
+        }
+        else
+        {
+          Alert.alert("Success", "User Logged in Successfully ");
+          navigation.navigate("CustomTabNavigator");
+        }
+      }
+      );
     }
   };
 
