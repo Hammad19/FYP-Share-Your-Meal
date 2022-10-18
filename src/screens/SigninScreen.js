@@ -108,14 +108,15 @@ const SigninScreen = ({ navigation }) => {
     if (isFormValid() && email.length > 0 && password.length > 0) {
       dispatch(userLogin(requestBody)).then(() => {
         console.log(state, "<--state");
-        if(state.auth.error.status== "error")
-        {
-          Alert.alert("Error", state.auth.error.message);
-        }
-        else
+        if(state.auth.isLoggedIn)
         {
           Alert.alert("Success", "User Logged in Successfully ");
           navigation.navigate("CustomTabNavigator");
+          
+        }
+        else
+        {
+          Alert.alert("Error", state.auth.error.message);
         }
       }
       );

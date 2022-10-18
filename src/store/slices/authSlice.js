@@ -109,6 +109,7 @@ const authSlice = createSlice({
         builder.addCase(userLogin.fulfilled, (state, action) => {
           // console.log(action, "<--fulfilled");
           state.error.status = "idle";
+          state.isLoggedIn = true;
           state.user = action.payload.user;
           state.token = action.payload.token;
           console.log(state.user, "<--state.user");
@@ -117,7 +118,7 @@ const authSlice = createSlice({
         builder.addCase(userLogin.rejected, (state, action) => {
           // console.log(action.payload, "<-- Login rejected");
           state.error = action.payload;
-          state.isLoggedIn = true;
+          state.isLoggedIn = false;
           console.log(state.error, "<-- state.error");
         });
   },
