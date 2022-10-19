@@ -11,6 +11,8 @@ import { FlatList } from "react-native-gesture-handler";
 import { WelcomeCard, Separator } from "../components";
 import { Display } from "../utils";
 import {useFonts, Poppins_700Bold, Poppins_500Medium } from "@expo-google-fonts/poppins";
+import { useDispatch } from "react-redux";
+import { reset } from "../store/slices/authSlice";
 
 const pageStyle = (isActive) =>
   isActive
@@ -49,6 +51,8 @@ const WelcomeScreen = ({navigation}) => {
       index: welcomeListIndex < 2 ? welcomeListIndex + 1 : welcomeListIndex,
     });
   };
+
+  const dispatch = useDispatch();
   return (
     fontsLoaded&&
     <View style={styles.container}>
@@ -79,7 +83,10 @@ const WelcomeScreen = ({navigation}) => {
         <TouchableOpacity
           activeOpacity={0.8}
           style={styles.gettingStartedButton}
-          onPress={()=>{navigation.navigate("SigninScreen")}}
+          onPress={()=>{
+            
+            dispatch(reset());
+            navigation.navigate("SigninScreen")}}
         >
           <Text style={styles.gettingStartedButtonText}>Get Started</Text>
         </TouchableOpacity>

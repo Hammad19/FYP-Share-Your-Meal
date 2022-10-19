@@ -24,7 +24,7 @@ import {
   Poppins_500Medium,
   Poppins_700Bold,
 } from "@expo-google-fonts/poppins";
-import { userSignup } from "../store/slices/authSlice";
+import { reset, userSignup } from "../store/slices/authSlice";
 const SignupScreen = ({ navigation }) => {
   const [email, setEmail] = useState("");
   const [userName, setUserName] = useState("");
@@ -40,8 +40,11 @@ const SignupScreen = ({ navigation }) => {
     { label: "Standard User", value: "User" },
     { label: "Charitable Organization", value: "Charitable Organization" },
   ]);
-  const state = useSelector((state) => state);
+
   const dispatch = useDispatch();
+  const state = useSelector((state) => state);
+  
+
 
   const {
     validate,
@@ -86,7 +89,7 @@ const SignupScreen = ({ navigation }) => {
         {
           Alert.alert("Error", state.auth.error.message);
         }
-        else if(state.auth.error.status== "success")
+        else if(state.auth.error.status== "signupsuccess")
         {
           Alert.alert("Success", "Account Created Successfully Please Login");
           navigation.navigate("SigninScreen");
@@ -188,6 +191,8 @@ const SignupScreen = ({ navigation }) => {
             name="chevron-back-outline"
             size={30}
             onPress={() => {
+
+              dispatch(reset());
               navigation.goBack();
             }}
           />

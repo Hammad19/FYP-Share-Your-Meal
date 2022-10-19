@@ -38,8 +38,9 @@ import {
 } from "@expo-google-fonts/poppins";
 import { useEffect } from "react";
 import { Display } from "../utils";
-import { userLogin } from "../store/slices/authSlice";
+import {reset ,userLogin} from "../store/slices/authSlice";
 import { useValidation } from "react-native-form-validator";
+
 
 const SigninScreen = ({ navigation }) => {
   const [isPasswordShown, setisPasswordShown] = useState(false);
@@ -53,11 +54,10 @@ const SigninScreen = ({ navigation }) => {
   const [isAllValuesNull, setisAllValuesNull] = useState(false);
   const [fieldname, setFieldName] = useState("");
   const [error, setError] = useState("");
-
-
-  const state = useSelector((state) => state);
-
+  
   const dispatch = useDispatch();
+  
+  const state = useSelector((state) => state);
 
   useEffect(() => {
     validateField();
@@ -108,6 +108,8 @@ const SigninScreen = ({ navigation }) => {
       Alert.alert("Error", state.auth.error.message);
     }
   };
+
+  
   const Login = () => 
   {
     setError(false);
@@ -139,6 +141,8 @@ const SigninScreen = ({ navigation }) => {
       );
     }
   };
+
+  
 
   const {
     validate,
@@ -263,7 +267,11 @@ const SigninScreen = ({ navigation }) => {
         <View style={styles.signupContainer}>
           <Text style={styles.accountText}>Don't have an Account ?</Text>
           <Text
-            onPress={() => navigation.navigate("SignupScreen")}
+            onPress={() => 
+              {
+                
+                dispatch(reset());
+                navigation.navigate("SignupScreen")}}
             style={styles.signupText}>
             Sign Up
           </Text>
