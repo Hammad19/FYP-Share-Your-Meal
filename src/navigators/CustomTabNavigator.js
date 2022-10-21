@@ -5,8 +5,13 @@ import { Colors } from '../content';
 import Ionicons from 'react-native-vector-icons/Ionicons';
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
 import { HomeScreen } from '../screens';
+<<<<<<< Updated upstream
 import FoodDetailScreen from '../screens/FoodDetailScreen';
 import HomeTabNavigator from './HomeTabNavigator';
+=======
+import AddFoodScreen from '../screens/AddFoodScreen';
+import AddFoodNavigator from './AddFoodNavigator';
+>>>>>>> Stashed changes
 
 // function Feed() {
 //   return (
@@ -24,13 +29,13 @@ function Profile() {
   );
 }
 
-function Notifications() {
-  return (
-    <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center' }}>
-      <Text>Settings!</Text>
-    </View>
-  );
-}
+// function Notifications() {
+//   return (
+//     <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center' }}>
+//       <Text>Settings!</Text>
+//     </View>
+//   );
+// }
 
 function Orders() {
   return (
@@ -81,13 +86,16 @@ export default function  CustomTabNavigator() {
         })}
        >
 
+<<<<<<< Updated upstream
         <Tab.Screen name={homeName} component={HomeTabNavigator} />
         {/* <Tab.Screen name="FoodDetailScreen" component={FoodDetailScreen} /> */}
         <Tab.Screen name={settingsName} component={Notifications} />
+=======
+        <Tab.Screen name={homeName} component={HomeScreen} />
+        <Tab.Screen name={settingsName} component={AddFoodNavigator} />
+>>>>>>> Stashed changes
         <Tab.Screen name={ordersName} component={Orders} />
         <Tab.Screen name={profileName} component={Profile} />
-
-        
 
       </Tab.Navigator>
   );
