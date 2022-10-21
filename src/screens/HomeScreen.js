@@ -25,7 +25,7 @@ import MaterialIcons from "react-native-vector-icons/MaterialIcons";
 import Feather from "react-native-vector-icons/Feather";
 import { Display } from "../utils";
 import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityIcons';
-const HomeScreen = () => {
+const HomeScreen = ({navigation}) => {
 
   const [foodType,setFoodType] = useState(true);
   const [delivery, setDelivery] = useState(true);
@@ -42,8 +42,8 @@ const HomeScreen = () => {
 
           <StatusBar
             barStyle="light-content"
-            backgroundColor={Colors.DEFAULT_GREEN}
-            translucent
+            backgroundColor="transparent"
+            translucent 
           />
           <Separator height={StatusBar.currentHeight} />
           <View style={styles.backgroundCurvedContainer} />

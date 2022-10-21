@@ -5,7 +5,8 @@ import { Colors } from '../content';
 import Ionicons from 'react-native-vector-icons/Ionicons';
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
 import { HomeScreen } from '../screens';
-
+import FoodDetailScreen from '../screens/FoodDetailScreen';
+import HomeTabNavigator from './HomeTabNavigator';
 
 // function Feed() {
 //   return (
@@ -80,7 +81,8 @@ export default function  CustomTabNavigator() {
         })}
        >
 
-        <Tab.Screen name={homeName} component={HomeScreen} />
+        <Tab.Screen name={homeName} component={HomeTabNavigator} />
+        {/* <Tab.Screen name="FoodDetailScreen" component={FoodDetailScreen} /> */}
         <Tab.Screen name={settingsName} component={Notifications} />
         <Tab.Screen name={ordersName} component={Orders} />
         <Tab.Screen name={profileName} component={Profile} />
