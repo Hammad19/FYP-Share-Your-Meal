@@ -26,42 +26,93 @@ export const addFood = createAsyncThunk(
   }
 );
 
-/// User Login
-export const userLogin = createAsyncThunk(
-  API_ENDPOINTS.USER_LOGIN,
-  async (requestBody, thunkAPI) => {
-    try {
-      const result = await addData(API_ENDPOINTS.USER_LOGIN, requestBody);
-      if (result.success == true) {
-        return result;
-      } else {
-        console.log(result, "<-- result");
-        return thunkAPI.rejectWithValue({
-          status: "error",
-          message: result.message,
-        });
-      }
-    } catch (e) {
-      return thunkAPI.rejectWithValue({
-        status: "error",
-        message: "Unable to Login",
-      });
+//Update Food
+export const updateFood = createAsyncThunk(
+    API_ENDPOINTS.FOOD_UPDATE,
+    async (requestBody, thunkAPI) => {
+        try {
+            const result = await addData(API_ENDPOINTS.FOOD_UPDATE, requestBody);
+            if (result.success == true) {
+                return result;
+            } else {
+                console.log(result, "<-- result");
+                return thunkAPI.rejectWithValue({
+                    status: "error",
+                    message: result.message,
+                });
+            }
+        } catch (e) {
+            return thunkAPI.rejectWithValue({
+                status: "error",
+                message: "Unable to signup",
+            });
+        }
     }
-  }
+);
+
+//Delete Food
+export const deleteFood = createAsyncThunk(
+    API_ENDPOINTS.FOOD_DELETE,
+    async (requestBody, thunkAPI) => {
+        try {
+            const result = await addData(API_ENDPOINTS.FOOD_DELETE, requestBody);
+            if (result.success == true) {
+                return result;
+
+            } else {
+
+                console.log(result, "<-- result");
+                return thunkAPI.rejectWithValue({
+                    status: "error",
+                    message: result.message,
+                });
+            }
+        } catch (e) {
+            return thunkAPI.rejectWithValue({
+                status: "error",
+                message: "Unable to signup",
+            });
+        }
+    }
+);
+
+//Get Food
+export const getFood = createAsyncThunk(
+    API_ENDPOINTS.FOOD_GET,
+    async (requestBody, thunkAPI) => {
+        try {
+            const result = await addData(API_ENDPOINTS.FOOD_GET, requestBody);
+            if (result.success == true) {
+                return result;
+            } else {
+
+                console.log(result, "<-- result");
+                return thunkAPI.rejectWithValue({
+                    status: "error",
+                    message: result.message,
+                });
+            }
+        } catch (e) {
+            return thunkAPI.rejectWithValue({
+                status: "error",
+                message: "Unable to signup",
+            });
+        }
+    }
 );
 
 const initialState = {
-  user: {},
-  isLoggedIn: false,
-  token: "",
-  error: {
-    status: "idle",
-    message: "",
-  },
+    food: {},
+    foodlist: [],
+    isAdded: false,
+    error: {
+        status: "idle",
+        message: "",
+    },
 };
 
-const authSlice = createSlice({
-  name: "auth",
+const foodSlice = createSlice({
+  name: "food",
   initialState,
   reducers: {
     //change the initial state when userlogins
@@ -69,7 +120,7 @@ const authSlice = createSlice({
       state.isLoggedIn = true;
       state.user = action.payload;
     },
-    reset: (state,action) => {
+    foodreset: (state,action) => {
       state.user = {};
       state.isLoggedIn = false;
       state.token = "";
@@ -92,32 +143,23 @@ const authSlice = createSlice({
     },
   },
   extraReducers: (builder) => {
-    builder.addCase(userSignup.fulfilled, (state, action) => {
-      state.error.status = "signupsuccess";
-      state.isLoggedIn = false;
-      console.log(state, "<--state usersignup fulfilled");
+    builder.addCase(addFood.fulfilled, (state, action) => {
+      
+      console.log("<--food added fulfilled");
     }),
-      builder.addCase(userSignup.rejected, (state, action) => {
-        state.error = action.payload;
+      builder.addCase(addFood.rejected, (state, action) => {
+        console.log("<--food added rejected");
       });
 
-    builder.addCase(userLogin.fulfilled, (state, action) => {
-      state.error.status = "loginsuccess";
-      state.isLoggedIn = true;
-      state.user = action.payload.user;
-      state.token = action.payload.token;
-      console.log(state,  "<-- state userlogin fulfilled");
+    builder.addCase(deleteFood.fulfilled, (state, action) => {
+      console.log("<--food deleted fulfilled");
     }),
-      builder.addCase(userLogin.rejected, (state, action) => {
-        // console.log(action.payload, "<-- Login rejected");
-        state.error.status = "loginerror";
-        state.error.message = action.payload.message;
-        state.isLoggedIn = false;
+      builder.addCase(deleteFood.rejected, (state, action) => {
+        console.log("<--food deleted rejected");
       });
   },
 });
 
-export const { updateUserData, updateToken, userLoggedIn, userLoggedOut,reset } =
-  authSlice.actions;
+export const {} = foodSlice.actions;
 
-export default authSlice.reducer;
+export default foodSlice.reducer;
