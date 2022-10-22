@@ -16,7 +16,7 @@ export const addFormData = async (endpoint, requestBody) => {
   } catch (error) {
     return error;
   }
-};
+}
 
 export const updateData = async (endpoint, requestBody) => {
   try {
