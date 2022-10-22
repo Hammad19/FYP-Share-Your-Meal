@@ -1,10 +1,7 @@
-import { NavigationContainer, StackActions } from "@react-navigation/native";
 import { createStackNavigator, Header } from "@react-navigation/stack";
-import { ScreenStackHeaderLeftView } from "react-native-screens";
-import { SplashScreen,WelcomeScreen,SigninScreen, SignupScreen, ForgotPasswordScreen ,RegisterPhoneScreen, HomeScreen} from "../screens";
+import {HomeScreen} from "../screens";
 import FoodDetailScreen from "../screens/FoodDetailScreen";
-import VerificationScreen from "../screens/VerificationScreen";
-import CustomTabNavigator from "./CustomTabNavigator";
+
 
 
 
