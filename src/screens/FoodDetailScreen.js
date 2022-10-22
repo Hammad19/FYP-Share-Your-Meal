@@ -129,7 +129,7 @@ export default ({route,navigation}) => {
         <Image
               style={styles.image}
               
-              source={{uri: "https://media.istockphoto.com/photos/chicken-rice-claypot-picture-id492095676?k=20&m=492095676&s=612x612&w=0&h=AYnS0HeTbtCH3LDvdHk51zRGHTMPuXzfeCaRDR3PbBw="}}
+              source={{uri:postImage}}
             />
       <Text style={styles.title}>Singaporean Rice</Text>
       <View style={styles.details}>
