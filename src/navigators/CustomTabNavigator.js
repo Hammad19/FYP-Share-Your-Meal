@@ -58,7 +58,7 @@ export default function  CustomTabNavigator() {
           tabBarInactiveTintColor:'gray',
           tabBarLabelStyle: { paddingBottom: 10, fontSize: 14
           },
-          tabBarStyle: { padding: 10, height: 70},
+          tabBarStyle: { padding: 10, height: 72},
           tabBarIcon: ({ focused, color, size }) => {
             let iconName;
             let rn = route.name;
@@ -77,7 +77,7 @@ export default function  CustomTabNavigator() {
             }
 
             // You can return any component that you like here!
-            return <Ionicons name={iconName} size={size} color={color} />;
+            return <Ionicons name={iconName} size={30} color={color} />;
           },
         })}
        >
