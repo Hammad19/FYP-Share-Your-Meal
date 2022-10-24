@@ -205,7 +205,7 @@ const InsertFoddItemScreen = ({navigation}) => {
           </View>
         </View>
         <Separator height={15} />
-        <View style={styles.inputContainer}>
+        <View style={isFieldInError("foodName") ? styles.error : styles.inputContainer}>
         <View style={styles.inputSubContainer}>
             <IonIcons
               name="md-fast-food-outline"
@@ -230,7 +230,7 @@ const InsertFoddItemScreen = ({navigation}) => {
         </View>
         {error && ShowError("foodName")}
           <Separator height={15} />
-        <View style={styles.inputContainer}>
+        <View style={isFieldInError("foodPrice") ? styles.error : styles.inputContainer}>
         <View style={styles.inputSubContainer}>
             <IonIcons
               name="pricetags-outline"
@@ -255,7 +255,7 @@ const InsertFoddItemScreen = ({navigation}) => {
         </View>
         {error && ShowError("foodPrice")}
           <Separator height={15} />
-          <View style={styles.inputContainer }>
+          <View style={isFieldInError("foodDescription") ? styles.error : styles.inputContainer}>
         <View style={styles.inputSubContainer }>
             <MaterialIcons
               name="details"
@@ -425,5 +425,16 @@ const styles = StyleSheet.create({
     lineHeight: 18 * 1.4,
     color: Colors.DEFAULT_WHITE,
     fontFamily: "Poppins_700Bold",
+  },
+
+  error: {
+    backgroundColor: Colors.LIGHT_GREY,
+    paddingHorizontal: 10,
+    marginHorizontal: 20,
+    width: Display.setWidth(90),
+    borderRadius: 8,
+    borderColor: Colors.DEFAULT_RED,
+    borderWidth: 1,
+    justifyContent: "center",
   },
 });
