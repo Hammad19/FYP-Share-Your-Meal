@@ -36,7 +36,7 @@ const Post = (props) => {
       <Text style={styles.prices}>
         <Text style={styles.oldPrice}>${post.oldPrice}</Text>
         <Text style={styles.price}>  ${post.newPrice} </Text>
-        / night
+        / Per Serving
       </Text>
 
       {/*  Total price */}
