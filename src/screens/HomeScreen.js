@@ -6,9 +6,9 @@ import {
   FlatList,
   StatusBar,
   TextInput,
-  Image
+  Image,
 } from "react-native";
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { Colors, Images } from "../content";
 import {
   useFonts,
@@ -24,26 +24,43 @@ import Ionicons from "react-native-vector-icons/Ionicons";
 import MaterialIcons from "react-native-vector-icons/MaterialIcons";
 import Feather from "react-native-vector-icons/Feather";
 import { Display } from "../utils";
-import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityIcons';
-const HomeScreen = ({navigation}) => {
-
-  const [foodType,setFoodType] = useState(true);
+import MaterialCommunityIcons from "react-native-vector-icons/MaterialCommunityIcons";
+import { useSelector, useDispatch } from "react-redux";
+import { getFood } from "../store/slices/foodSlice";
+const HomeScreen = ({ navigation }) => {
+  const [foodType, setFoodType] = useState(true);
   const [delivery, setDelivery] = useState(true);
   let [fontsLoaded] = useFonts({
     Poppins_500Medium,
     Poppins_700Bold,
     Poppins_600SemiBold,
   });
+
+  const dispatch = useDispatch();
+  const state = useSelector((state) => state);
+
+  const FetchFoodData = () => {
+    dispatch(getFood());
+  };
+
+  // FetchFoodData();
+
+  useEffect(() => {
+    FetchFoodData();
+    setTimeout(() => {
+      console.log(state.food.foodlist);
+    }, 10000);
+  }, [])
+  
+
   return (
     fontsLoaded && (
       <>
         <View style={styles.container}>
-          
-
           <StatusBar
             barStyle="light-content"
             backgroundColor="transparent"
-            translucent 
+            translucent
           />
           <Separator height={StatusBar.currentHeight} />
           <View style={styles.backgroundCurvedContainer} />
@@ -92,58 +109,57 @@ const HomeScreen = ({navigation}) => {
               />
             </View>
 
-            <View style = {{flexDirection:'row',alignItems:'center', justifyContent:'space-evenly' ,marginTop:20,width:Display.setWidth(100)}}>
-
-            <TouchableOpacity
-      onPress={() => setFoodType("free")}
-      style={styles.category()}>
-      <Ionicons name={foodType == "free"?'fast-food':'fast-food-outline'} size={35} color={foodType == "free"?Colors.DEFAULT_WHITE:Colors.DEFAULT_GREY} />
-      <Text style={styles.categoryText(foodType === "free")}>FREE</Text>
-    </TouchableOpacity>
-            <TouchableOpacity
-      onPress={() => setFoodType("buy")}
-      style={styles.category()}>
-       <MaterialCommunityIcons name={foodType == "buy"?'food':'food-outline'} size={35} color={foodType == "buy"?Colors.DEFAULT_WHITE:Colors.DEFAULT_GREY} />
-      <Text style={styles.categoryText(foodType === "buy")}>Order</Text>
-    </TouchableOpacity>
-
-   
-    </View>
-    
+            <View
+              style={{
+                flexDirection: "row",
+                alignItems: "center",
+                justifyContent: "space-evenly",
+                marginTop: 20,
+                width: Display.setWidth(100),
+              }}>
+              <TouchableOpacity
+                onPress={() => setFoodType("free")}
+                style={styles.category()}>
+                <Ionicons
+                  name={foodType == "free" ? "fast-food" : "fast-food-outline"}
+                  size={35}
+                  color={
+                    foodType == "free"
+                      ? Colors.DEFAULT_WHITE
+                      : Colors.DEFAULT_GREY
+                  }
+                />
+                <Text style={styles.categoryText(foodType === "free")}>
+                  FREE
+                </Text>
+              </TouchableOpacity>
+              <TouchableOpacity
+                onPress={() => setFoodType("buy")}
+                style={styles.category()}>
+                <MaterialCommunityIcons
+                  name={foodType == "buy" ? "food" : "food-outline"}
+                  size={35}
+                  color={
+                    foodType == "buy"
+                      ? Colors.DEFAULT_WHITE
+                      : Colors.DEFAULT_GREY
+                  }
+                />
+                <Text style={styles.categoryText(foodType === "buy")}>
+                  Order
+                </Text>
+              </TouchableOpacity>
+            </View>
           </View>
 
-          <Separator height={15}/>
+          <Separator height={15} />
           <FlatList
-        style= {{flex:1}}
-      
-      data={food}
-      renderItem={({item}) => <FoodItem post={item} />}
-      //
-    />
-          
+            style={{ flex: 1 }}
+            data={state.food.foodlist}
+            renderItem={({ item }) => <FoodItem post={item} />}
+            //
+          />
         </View>
-        
-
-          
-        
-      
-
-        {/* <View style={styles.container}>
-
-      <TouchableOpacity
-      onPress={()=>setDelivery(true)}>
-      <View style = {{...styles.deliveryButton,backgroundColor:delivery?Colors.DEFAULT_GREEN:Colors.DEFAULT_GREY}}>
-        <Text style = {styles.deliveryText}>Buy</Text>
-      </View>
-      </TouchableOpacity>
-
-      <TouchableOpacity
-      onPress={()=>setDelivery(false)}>
-      <View style = {{...styles.deliveryButton,backgroundColor:delivery?Colors.DEFAULT_GREY:Colors.DEFAULT_GREEN}}>
-        <Text style = {styles.deliveryText}>Free</Text>
-      </View>
-      </TouchableOpacity>
-    </View> */}
       </>
     )
   );
@@ -152,38 +168,18 @@ const HomeScreen = ({navigation}) => {
 export default HomeScreen;
 
 const styles = StyleSheet.create({
-  // container:
-  // {
-  //     marginTop:50,
-  //     flexDirection:'row',
-  //     justifyContent:'space-evenly'
-
-  // },
-  // deliveryButton: {
-    
-  //   borderRadius: 16,
-  //   paddingVertical: 5,
-  // },
-  // deliveryText: {
-  //   color: Colors.DEFAULT_BLACK,
-  //   marginLeft: 5,
-  //   fontSize: 16,
-  //   fontFamily: "Poppins_500Medium",
-  // },
-
   container: {
     flex: 1,
     backgroundColor: Colors.SECONDARY_WHITE,
   },
   backgroundCurvedContainer: {
     backgroundColor: Colors.DEFAULT_GREEN,
-    height: 2000,
+    height: 1685,
     position: "absolute",
-    top: -1 * (2000 - 230),
-    width: 2000,
-    borderRadius: 2000,
+    top: -1 * (1700 - 240),
+    width: 1700,
+    borderRadius: 1700,
     alignSelf: "center",
-    zIndex: -1,
   },
   headerContainer: {
     justifyContent: "space-evenly",
@@ -231,7 +227,7 @@ const styles = StyleSheet.create({
     height: 45,
     borderRadius: 8,
     marginHorizontal: 20,
-    marginTop: 20,
+    marginTop: 15,
     flexDirection: "row",
     justifyContent: "space-between",
     alignItems: "center",
@@ -248,75 +244,20 @@ const styles = StyleSheet.create({
     fontFamily: "Poppins_500Medium",
     marginLeft: 10,
   },
-  // categoriesContainer: {
-  //   flexDirection: "row",
-  //   justifyContent: "space-evenly",
-  //   marginTop: 20,
-  // },
-  // listContainer: {
-  //   paddingVertical: 5,
-  //   zIndex: -5,
-  // },
-  // horizontalListContainer: {
-  //   marginTop: 30,
-  // },
-  // listHeader: {
-  //   flexDirection: "row",
-  //   alignItems: "center",
-  //   justifyContent: "space-between",
-  //   marginHorizontal: 20,
-  //   marginBottom: 5,
-  // },
-  // listHeaderTitle: {
-  //   color: Colors.DEFAULT_BLACK,
-  //   fontSize: 16,
-  //   lineHeight: 16 * 1.4,
-  //   fontFamily: "Poppins_500Medium",
-  // },
-  // listHeaderSubtitle: {
-  //   color: Colors.DEFAULT_YELLOW,
-  //   fontSize: 13,
-  //   lineHeight: 13 * 1.4,
-  //   fontFamily: "Poppins_500Medium",
-  // },
-  // sortListContainer: {
-  //   flexDirection: "row",
-  //   justifyContent: "space-evenly",
-  //   alignItems: "center",
-  //   backgroundColor: Colors.DEFAULT_WHITE,
-  //   marginTop: 8,
-  //   elevation: 1,
-  // },
-  // sortListItem: {
-  //   flex: 1,
-  //   justifyContent: "center",
-  //   alignItems: "center",
-  //   borderBottomWidth: 1,
-  //   borderBottomColor: Colors.DEFAULT_YELLOW,
-  //   height: 40,
-  // },
-  // sortListItemText: {
-  //   color: Colors.DEFAULT_BLACK,
-  //   fontSize: 13,
-  //   lineHeight: 13 * 1.4,
-  //   fontFamily: "Poppins_600SemiBold",
-  // },
-
   category: (marginTop = 0) => ({
-    alignItems: 'center',
+    alignItems: "center",
     marginTop,
   }),
-  categoryIcon: isActive => ({
+  categoryIcon: (isActive) => ({
     height: 40,
     width: 40,
     opacity: isActive ? 1 : 0.5,
   }),
-  categoryText: isActive => ({
+  categoryText: (isActive) => ({
     fontSize: 14,
     lineHeight: 14 * 1.4,
-    fontFamily: 'Poppins_500Medium',
+    fontFamily: "Poppins_500Medium",
     color: Colors.DEFAULT_WHITE,
-    marginTop: 5,
     opacity: isActive ? 1 : 0.5,
   }),
 });
