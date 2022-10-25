@@ -9,6 +9,15 @@ export const addData = async (endpoint, requestBody) => {
   }
 };
 
+export const getData = async (endpoint) => {
+  try {
+    const result = await axiosInstance.get(endpoint);
+    return result.data;
+  } catch (error) {
+    return error.response.data;
+  }
+};
+
 export const addFormData = async (endpoint, requestBody) => {
   try {
     const result = await axiosFormInstance.post(endpoint, requestBody);

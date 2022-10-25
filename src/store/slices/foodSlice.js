@@ -1,6 +1,6 @@
 import { createSlice, createAsyncThunk } from "@reduxjs/toolkit";
 import { Alert } from "react-native";
-import { addData } from "../../utils/api/api";
+import { addData, getData } from "../../utils/api/api";
 import API_ENDPOINTS from "../../utils/endpoints";
 
 export const addFood = createAsyncThunk(
@@ -79,9 +79,9 @@ export const deleteFood = createAsyncThunk(
 //Get Food
 export const getFood = createAsyncThunk(
     API_ENDPOINTS.FOOD_GET,
-    async (requestBody, thunkAPI) => {
+    async (thunkAPI) => {
         try {
-            const result = await addData(API_ENDPOINTS.FOOD_GET, requestBody);
+            const result = await getData(API_ENDPOINTS.FOOD_GET);
             if (result.success == true) {
                 return result;
             } else {
@@ -157,7 +157,27 @@ const foodSlice = createSlice({
       builder.addCase(deleteFood.rejected, (state, action) => {
         console.log("<--food deleted rejected");
       });
+
+      builder.addCase(updateFood.fulfilled, (state, action) => {
+        console.log("<--food updated fulfilled");
+      }
+      ),
+      builder.addCase(updateFood.rejected, (state, action) => {
+        console.log("<--food updated rejected");
+      }
+      );
+      builder.addCase(getFood.fulfilled, (state, action) => {
+        state.foodlist = action.payload.food;
+        console.log(state.foodlist,"<--food get fulfilled");
+
+      }
+      ),
+      builder.addCase(getFood.rejected, (state, action) => {
+        console.log("<--food get rejected");
+      }
+      );
   },
+
 });
 
 export const {} = foodSlice.actions;
