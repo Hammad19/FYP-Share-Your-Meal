@@ -111,7 +111,7 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     paddingHorizontal: Display.setWidth(5),
     justifyContent: 'space-between',
-    backgroundColor: Colors.DEFAULT_WHITE,
+    backgroundColor: 'transparent',
     width: Display.setWidth(100),
     paddingVertical: Display.setWidth(2.5),
   },
@@ -154,7 +154,7 @@ const styles = StyleSheet.create({
 export default ({route,navigation}) => {
   const[itemCount,setItemCount]=useState(0);
 
-    const { postImage } = route.params;
+    const { post } = route.params;
  
   return (
 <>
@@ -171,13 +171,12 @@ export default ({route,navigation}) => {
     
   </View>
     <ScrollView style={styles.container}>
-       
         <Image
               style={styles.image}
               
-              source={{uri:postImage}}
+              source={{uri:post.postImage}}
             />
-      <Text style={styles.title}>Singaporean Rice</Text>
+      <Text style={styles.title}>{post.title}</Text>
       <View style={styles.details}>
         <Icon name="star" color="rgb(255, 56, 92)" size={18} />
         <Text style={styles.detailText}>4.93 (891)</Text>
@@ -197,8 +196,7 @@ export default ({route,navigation}) => {
         </View>
         <View style={styles.divider} />
         <Text style={styles.text}>
-        Singaporean Rice Recipe is way more delicate than the typical Singapore recipes. Pakistani taste of desi dishes, the aroma, the combination of flavors and the presentation of Pakistani recipes has no match with any of the Singaporean recipes. Singaporean Rice is a delicacy which consists of well-seasoned boiled rice, seasoned boiled noodles, layered with each individual’s preferred meat like chicken chunks, prawns or fish and topped with sauces (Mayo, Ketchup, Thousand Island sauce,  Martini  or Chimichuri). Vegetarians can also replace meat with their own preference such as your favorite type of vegetables, mushrooms, cottage cheese aka Paneer.
-        </Text>
+        {post.description} </Text>
       </View>
 
 

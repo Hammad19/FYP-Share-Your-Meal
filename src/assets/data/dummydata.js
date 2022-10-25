@@ -1,9 +1,9 @@
 export default [
     {
       id: '0',
-      image: 'https://notjustdev-dummy.s3.us-east-2.amazonaws.com/images/1.jpg',
-      type: 'Private Room',
-      title: 'Bright room in the heart of the city',
+      image: 'https://vismaifood.com/storage/app/uploads/public/e12/7b7/127/thumb__700_0_0_0_auto.jpg',
+      type: 'Desi Food',
+      title: 'Chicken Biryani',
       description: 'Lorem Ipsum is simplyLorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry\'s standard dummy text ever since the 1500s, when an unknown printer took a galley of type and scrambled it to make a type specimen book. It has survived not only five centuries, but also the leap into electronic typesetting, remaining essentially unchanged. It was popularised in the 1960s with the release of Letraset sheets containing Lorem Ipsum passages, and more recently with desktop publishing software like Aldus PageMaker including versions of Lorem Ipsum.Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry\'s standard dummy text ever since the 1500s, when an unknown printer took a galley of type and scrambled it to make a type specimen book. It has survived not only five centuries, but also the leap into electronic typesetting, remaining essentially unchanged. It was popularised in the 1960s with the release of Letraset sheets containing Lorem Ipsum passages, and more recently with desktop publishing software like Aldus PageMaker including versions of Lorem Ipsum. dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry\'s standard dummy text ever since the 1500s, when an unknown printer took a galley of type and scrambled it to make a type specimen book. It has survived not only five centuries, but also the leap into electronic typesetting, remaining essentially unchanged. It was popularised in the 1960s with the release of Letraset sheets containing Lorem Ipsum passages, and more recently with desktop publishing software like Aldus PageMaker including versions of Lorem Ipsum.',
       bed: 2,
       bedroom: 3,
@@ -17,9 +17,9 @@ export default [
     },
     {
       id: '1',
-      image: 'https://notjustdev-dummy.s3.us-east-2.amazonaws.com/images/2.jpg',
-      type: 'Entire Flat',
-      title: 'NEW lux. apartment in the center of Santa Cruz',
+      image: 'https://www.cscassets.com/recipes/wide_cknew/wide_62233.jpg',
+      type: 'Chinese Food',
+      title: 'Chicken Alfredo Pasta',
       description: 'Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry\'s standard dummy text ever since the 1500s, when an unknown printer took a galley of type and scrambled it to make a type specimen book. It has survived not only five centuries, but also the leap into electronic typesetting, remaining essentially unchanged. It was popularised in the 1960s with the release of Letraset sheets containing Lorem Ipsum passages, and more recently with desktop publishing software like Aldus PageMaker including versions of Lorem Ipsum.',
       bed: 3,
       bedroom: 2,
@@ -33,9 +33,9 @@ export default [
     },
     {
       id: '2',
-      image: 'https://notjustdev-dummy.s3.us-east-2.amazonaws.com/images/3.jpg',
-      type: 'Private Property',
-      title: 'Green House Santa Cruz',
+      image: 'https://thumbs.dreamstime.com/b/karahi-chicken-masala-indian-food-36983497.jpg',
+      type: 'Desi Food',
+      title: 'Chicken Karahi',
       description: 'Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry\'s standard dummy text ever since the 1500s, when an unknown printer took a galley of type and scrambled it to make a type specimen book. It has survived not only five centuries, but also the leap into electronic typesetting, remaining essentially unchanged. It was popularised in the 1960s with the release of Letraset sheets containing Lorem Ipsum passages, and more recently with desktop publishing software like Aldus PageMaker including versions of Lorem Ipsum.',
       bed: 2,
       bedroom: 1,
