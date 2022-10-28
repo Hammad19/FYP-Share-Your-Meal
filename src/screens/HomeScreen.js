@@ -26,7 +26,7 @@ import Feather from "react-native-vector-icons/Feather";
 import { Display } from "../utils";
 import MaterialCommunityIcons from "react-native-vector-icons/MaterialCommunityIcons";
 import { useSelector, useDispatch } from "react-redux";
-import { getFood } from "../store/slices/foodSlice";
+import { getFood,getfoodforcharitableorganization } from "../store/slices/foodSlice";
 const HomeScreen = ({ navigation }) => {
   const [foodType, setFoodType] = useState(true);
   const [delivery, setDelivery] = useState(true);
@@ -36,11 +36,35 @@ const HomeScreen = ({ navigation }) => {
     Poppins_600SemiBold,
   });
 
+  
+
   const dispatch = useDispatch();
   const state = useSelector((state) => state);
 
   const FetchFoodData = () => {
-    dispatch(getFood());
+
+    let requestBody = {
+      food_quantity: 1,
+      is_free: true
+    }
+
+    console.log(requestBody);
+
+    
+    
+
+    if(state.auth.user.accounttype === "User"){
+
+      dispatch(getFood());
+    }
+    else if(state.auth.user.accounttype === "Charitable Organization")
+
+    {
+
+      console.log("Hello in charitable")
+      
+      dispatch(getfoodforcharitableorganization(requestBody));
+    }
   };
 
   // FetchFoodData();
@@ -109,7 +133,7 @@ const HomeScreen = ({ navigation }) => {
               />
             </View>
 
-            <View
+            {state.auth.user.accounttype === "User" && (<View
               style={{
                 flexDirection: "row",
                 alignItems: "center",
@@ -150,6 +174,7 @@ const HomeScreen = ({ navigation }) => {
                 </Text>
               </TouchableOpacity>
             </View>
+            )}
           </View>
 
           <Separator height={15} />

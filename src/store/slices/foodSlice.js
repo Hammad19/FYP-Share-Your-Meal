@@ -80,6 +80,7 @@ export const deleteFood = createAsyncThunk(
 export const getFood = createAsyncThunk(
     API_ENDPOINTS.FOOD_GET,
     async (thunkAPI) => {
+
         try {
             const result = await getData(API_ENDPOINTS.FOOD_GET);
             if (result.success == true) {
@@ -100,6 +101,31 @@ export const getFood = createAsyncThunk(
         }
     }
 );
+
+export const getfoodforcharitableorganization = createAsyncThunk(
+    API_ENDPOINTS.FOOD_GET_FOR_CHARITABLE_ORGANIZATION,
+    async (requestBody,thunkAPI) => {
+        try {
+            const result = await getData(API_ENDPOINTS.FOOD_GET_FOR_CHARITABLE_ORGANIZATION,requestBody);
+            if (result.success == true) {
+                return result;
+            } else {
+              return thunkAPI.rejectWithValue({
+                status: "error",
+                message: result.message,
+              });
+            }
+        } catch (e) {
+
+            return thunkAPI.rejectWithValue({
+
+                status: "error",
+                message: "Unable to signup",
+            });
+        }
+    }
+);
+
 
 const initialState = {
     food: {},
@@ -176,6 +202,18 @@ const foodSlice = createSlice({
         console.log("<--food get rejected");
       }
       );
+      builder.addCase(getfoodforcharitableorganization.fulfilled, (state, action) => {
+        console.log(action.payload.food)
+        state.foodlist = action.payload.food;
+        console.log(state.foodlist,"<--food get for charitable organization fulfilled");
+      }
+      );
+      builder.addCase(getfoodforcharitableorganization.rejected,(state,action) =>
+      {
+        state.error =  action.payload;
+
+        console.log(state.error.message)
+      } )
   },
 
 });

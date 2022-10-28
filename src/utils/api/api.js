@@ -9,9 +9,9 @@ export const addData = async (endpoint, requestBody) => {
   }
 };
 
-export const getData = async (endpoint) => {
+export const getData = async (endpoint,requestBody) => {
   try {
-    const result = await axiosInstance.get(endpoint);
+    const result = await axiosInstance.get(endpoint,requestBody);
     return result.data;
   } catch (error) {
     return error.response.data;
