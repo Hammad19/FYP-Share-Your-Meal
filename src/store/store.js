@@ -3,9 +3,11 @@ import { configureStore } from "@reduxjs/toolkit";
 // import { persistReducer } from "redux-persist";
 // import storage from "redux-persist/lib/storage";
 import authSlice from "./slices/authSlice";
+import foodSlice from "./slices/foodSlice";
 
 const reducers = combineReducers({
-  auth: authSlice
+  auth: authSlice,
+  food: foodSlice
 });
 
 // const persistConfig = {

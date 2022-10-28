@@ -1,8 +1,9 @@
-import React from "react";
-import {ScrollView ,Dimensions, Image, StyleSheet, Text, View } from "react-native";
+import React, { useState } from "react";
+import {ScrollView ,Dimensions, Image, StyleSheet, Text, View,TouchableOpacity } from "react-native";
 import { Entypo as Icon } from "@expo/vector-icons";
 import { Colors, Images } from "../content";
 import { Display } from "../utils";
+import AntDesign from "react-native-vector-icons/AntDesign";
 
 import {
   useFonts,
@@ -99,16 +100,61 @@ const styles = StyleSheet.create({
   image: { 
     //lie image in between the headercontainer
   
-   height:400,
+   height:Display.setHeight(40),
    width : Display.setWidth(100),
     resizeMode: "cover",
     top: 0,
   },
+  buttonsContainer: {
+    position: 'absolute',
+    bottom: 0,
+    flexDirection: 'row',
+    paddingHorizontal: Display.setWidth(5),
+    justifyContent: 'space-between',
+    backgroundColor: 'transparent',
+    width: Display.setWidth(100),
+    paddingVertical: Display.setWidth(2.5),
+  },
+  itemAddContainer: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    backgroundColor: Colors.LIGHT_GREY2,
+    height: Display.setHeight(6),
+    width: Display.setWidth(30),
+    justifyContent: 'center',
+    borderRadius: 8,
+  },
+  itemCountText: {
+    color: Colors.DEFAULT_BLACK,
+    fontSize: 14,
+    lineHeight: 14 * 1.4,
+    fontFamily: "Poppins_600SemiBold",
+    marginHorizontal: 8,
+  },
+  cartButton: {
+    backgroundColor: Colors.DEFAULT_GREEN,
+    height: Display.setHeight(6),
+    width: Display.setWidth(58),
+    justifyContent: 'center',
+    alignItems: 'center',
+    borderRadius: 8,
+  },
+  cartButtonText: {
+    color: Colors.DEFAULT_WHITE,
+    fontSize: 14,
+    lineHeight: 14 * 1.4,
+    fontFamily: "Poppins_500Medium",
+  },
+  
+
+
+  
 });
 
 export default ({route,navigation}) => {
+  const[itemCount,setItemCount]=useState(0);
 
-    const { postImage } = route.params;
+    const { post } = route.params;
  
   return (
 <>
@@ -125,13 +171,12 @@ export default ({route,navigation}) => {
     
   </View>
     <ScrollView style={styles.container}>
-       
         <Image
               style={styles.image}
               
-              source={{uri: "https://media.istockphoto.com/photos/chicken-rice-claypot-picture-id492095676?k=20&m=492095676&s=612x612&w=0&h=AYnS0HeTbtCH3LDvdHk51zRGHTMPuXzfeCaRDR3PbBw="}}
+              source={{uri:post.postImage}}
             />
-      <Text style={styles.title}>Singaporean Rice</Text>
+      <Text style={styles.title}>{post.title}</Text>
       <View style={styles.details}>
         <Icon name="star" color="rgb(255, 56, 92)" size={18} />
         <Text style={styles.detailText}>4.93 (891)</Text>
@@ -139,9 +184,6 @@ export default ({route,navigation}) => {
         <Text style={styles.detailText}>4.93 (891)</Text>
       </View>
       <View>
-        <Text style={styles.text}>
-          Singaporean Rice with normal Spices
-        </Text>
         <View style={styles.smallDivider} />
         <View style={styles.host}>
           <View>
@@ -154,10 +196,37 @@ export default ({route,navigation}) => {
         </View>
         <View style={styles.divider} />
         <Text style={styles.text}>
-        Singaporean Rice Recipe is way more delicate than the typical Singapore recipes. Pakistani taste of desi dishes, the aroma, the combination of flavors and the presentation of Pakistani recipes has no match with any of the Singaporean recipes. Singaporean Rice is a delicacy which consists of well-seasoned boiled rice, seasoned boiled noodles, layered with each individual’s preferred meat like chicken chunks, prawns or fish and topped with sauces (Mayo, Ketchup, Thousand Island sauce,  Martini  or Chimichuri). Vegetarians can also replace meat with their own preference such as your favorite type of vegetables, mushrooms, cottage cheese aka Paneer.
-        </Text>
+        {post.description} </Text>
       </View>
+
+
     </ScrollView>
+
+    <View style={styles.buttonsContainer}>
+        <View style={styles.itemAddContainer}>
+          <AntDesign
+            name="minus"
+            color={Colors.DEFAULT_YELLOW}
+            size={18}
+            onPress={() => setItemCount(itemCount - 1)}
+          />
+          <Text style={styles.itemCountText}>{itemCount ? itemCount : 0}</Text>
+          <AntDesign
+            name="plus"
+            color={Colors.DEFAULT_YELLOW}
+            size={18}
+            onPress={() => setItemCount(itemCount + 1)}
+          />
+        </View>
+        <TouchableOpacity
+          style={styles.cartButton}
+          onPress={() => navigation.navigate('Cart')}
+          activeOpacity={0.8}>
+          <Text style={styles.cartButtonText}>Go to Cart</Text>
+        </TouchableOpacity>
+      </View>
+    
     </>
   );
 };
+
