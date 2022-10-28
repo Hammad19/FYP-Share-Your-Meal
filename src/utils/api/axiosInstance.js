@@ -1,9 +1,6 @@
 import axios from 'axios';
-<<<<<<< Updated upstream
-export const BASE_URL = 'http:/192.168.1.103:8080/api/'
-=======
+
 export const BASE_URL = 'http://192.168.10.11:8080/api/'
->>>>>>> Stashed changes
 
 export const axiosInstance = axios.create({
   baseURL: BASE_URL,
@@ -21,6 +18,6 @@ export const axiosFormInstance = axios.create({
     Accept: 'application/json',
     'Content-Type': 'multipart/form-data',
     'Access-Control-Allow-Origin': '*',
-    Authorization: 'Bearer '
+    Authorization: 'Bearer'
   }
 });
