@@ -174,7 +174,9 @@ const foodSlice = createSlice({
       console.log("<--food added fulfilled");
     }),
       builder.addCase(addFood.rejected, (state, action) => {
-        console.log("<--food added rejected");
+
+
+        console.log(action.payload, "<-- action.payload");
       });
 
     builder.addCase(deleteFood.fulfilled, (state, action) => {

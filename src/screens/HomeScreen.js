@@ -62,13 +62,12 @@ const HomeScreen = ({ navigation }) => {
     {
 
       console.log("Hello in charitable")
-      
+
       dispatch(getfoodforcharitableorganization(requestBody));
     }
   };
 
   // FetchFoodData();
-
   useEffect(() => {
     FetchFoodData();
     setTimeout(() => {
