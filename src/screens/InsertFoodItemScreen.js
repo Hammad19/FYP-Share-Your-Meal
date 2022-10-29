@@ -368,7 +368,7 @@ const InsertFoodItemScreen = ({ navigation }) => {
       <View style={styles.inputContainer}>
         <View style={styles.inputSubContainer}>
           <MaterialIcons
-            name="number"
+            name="format-list-numbered"
             size={22}
             color={Colors.DEFAULT_GREY}
             style={{ marginRight: 10 }}
