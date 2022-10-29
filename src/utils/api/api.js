@@ -11,7 +11,7 @@ export const addData = async (endpoint, requestBody) => {
 
 export const getData = async (endpoint,requestBody) => {
   try {
-    const result = await axiosInstance.post(endpoint,requestBody);
+    const result = await axiosInstance.get(endpoint);
     return result.data;
   } catch (error) {
     return error.response.data;
@@ -20,7 +20,12 @@ export const getData = async (endpoint,requestBody) => {
 
 export const addFormData = async (endpoint, requestBody) => {
   try {
-    const result = await axiosFormInstance.post(endpoint, requestBody);
+    const result = await axiosFormInstance.post(endpoint,{
+      params:
+      {
+        food_shared_by: requestBody.food_shared_by,
+      }
+    });
     return result;
   } catch (error) {
     return error;

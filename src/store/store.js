@@ -4,10 +4,12 @@ import { configureStore } from "@reduxjs/toolkit";
 // import storage from "redux-persist/lib/storage";
 import authSlice from "./slices/authSlice";
 import foodSlice from "./slices/foodSlice";
+import userlistingSlice from "./slices/userlistingSlice";
 
 const reducers = combineReducers({
   auth: authSlice,
-  food: foodSlice
+  food: foodSlice,
+  userlisting: userlistingSlice,
 });
 
 // const persistConfig = {

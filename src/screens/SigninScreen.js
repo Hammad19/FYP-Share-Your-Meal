@@ -90,8 +90,7 @@ const SigninScreen = ({ navigation }) => {
 
   useEffect(() => {
     NavigatetoHome();
-
-  }, [state])
+  }, [state.auth])
   
 
   const NavigatetoHome = () => {
