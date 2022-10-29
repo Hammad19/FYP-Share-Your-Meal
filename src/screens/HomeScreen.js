@@ -8,7 +8,7 @@ import {
   TextInput,
   Image,
 } from "react-native";
-import React, { useEffect, useState } from "react";
+import React, { useCallback, useEffect, useState } from "react";
 import { Colors, Images } from "../content";
 import {
   useFonts,
@@ -27,6 +27,8 @@ import { Display } from "../utils";
 import MaterialCommunityIcons from "react-native-vector-icons/MaterialCommunityIcons";
 import { useSelector, useDispatch } from "react-redux";
 import { getFood,getfoodforcharitableorganization } from "../store/slices/foodSlice";
+import { setissharepage } from "../store/slices/userlistingSlice";
+import { useFocusEffect } from "@react-navigation/native";
 const HomeScreen = ({ navigation }) => {
   const [foodType, setFoodType] = useState(true);
   const [delivery, setDelivery] = useState(true);
@@ -36,6 +38,8 @@ const HomeScreen = ({ navigation }) => {
     Poppins_600SemiBold,
   });
 
+  //whenever the user comes in this page set issharepage to false
+  
   
 
   const dispatch = useDispatch();
@@ -43,15 +47,13 @@ const HomeScreen = ({ navigation }) => {
 
   const FetchFoodData = () => {
 
+
     let requestBody = {
-      food_quantity: 1,
+      food_quantity: 5,
       is_free: true
     }
 
     console.log(requestBody);
-
-    
-    
 
     if(state.auth.user.accounttype === "User"){
 
@@ -67,17 +69,20 @@ const HomeScreen = ({ navigation }) => {
     }
   };
 
-  // FetchFoodData();
-  useEffect(() => {
-    FetchFoodData();
-    setTimeout(() => {
-      console.log(state.food.foodlist);
-    }, 10000);
-  }, [])
+  
+  useFocusEffect(
+    useCallback(() => {
+      dispatch(setissharepage(false));
+      FetchFoodData();
+    }, [])
+  );
+
+  
   
 
   return (
     fontsLoaded && (
+      
       <>
         <View style={styles.container}>
           <StatusBar
@@ -178,7 +183,7 @@ const HomeScreen = ({ navigation }) => {
 
           <Separator height={15} />
           <FlatList
-            style={{ flex: 1 }}
+            style={{ flex: 1 ,zIndex:-1, paddingTop: 100}}
             data={state.food.foodlist}
             renderItem={({ item }) => <FoodItem post={item} />}
             //
