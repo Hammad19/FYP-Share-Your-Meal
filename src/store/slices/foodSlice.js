@@ -1,6 +1,6 @@
 import { createSlice, createAsyncThunk } from "@reduxjs/toolkit";
 import { Alert } from "react-native";
-import { addData, getData } from "../../utils/api/api";
+import { addData, getAllData, getData } from "../../utils/api/api";
 import API_ENDPOINTS from "../../utils/endpoints";
 
 export const addFood = createAsyncThunk(
@@ -106,7 +106,7 @@ export const getfoodforcharitableorganization = createAsyncThunk(
     API_ENDPOINTS.FOOD_GET_FOR_CHARITABLE_ORGANIZATION,
     async (requestBody,thunkAPI) => {
         try {
-            const result = await getData(API_ENDPOINTS.FOOD_GET_FOR_CHARITABLE_ORGANIZATION,requestBody);
+            const result = await getData(API_ENDPOINTS.FOOD_GET_FOR_CHARITABLE_ORGANIZATION + "/"+requestBody.food_quantity+"/"+requestBody.is_free);
             if (result.success == true) {
                 return result;
             } else {
@@ -161,16 +161,24 @@ const foodSlice = createSlice({
       state.isLoggedIn = false;
       state.user = {};
     },
-    updateUserData: (state, action) => {
-      state.user = action.payload.data.user;
+    reset: (state) => {
+
+    state.food = {};
+    state.foodlist= [];
+    state.isAdded= false;
+    state.error.status= "idle"
+    state.error.message= ""
+       
     },
+
+
     updateToken: (state, action) => {
       state.token = action.payload;
     },
   },
   extraReducers: (builder) => {
     builder.addCase(addFood.fulfilled, (state, action) => {
-      
+      state.food.isAdded = true;
       console.log("<--food added fulfilled");
     }),
       builder.addCase(addFood.rejected, (state, action) => {
