@@ -4,6 +4,7 @@ import { useNavigation } from '@react-navigation/native';
 import { Entypo as Icon,MaterialIcons } from "@expo/vector-icons";
 import { Colors } from '../content';
 import { Display } from '../utils';
+import { useSelector } from 'react-redux';
 const days = 7;
 
 const Post = (props) => {
@@ -16,6 +17,8 @@ const Post = (props) => {
   const goToPostPage = () => {
     navigation.navigate('FoodDetailScreen', {post: post});
   }
+
+  const state = useSelector((state) => state);
 
   return (
 <>
@@ -59,7 +62,7 @@ const Post = (props) => {
       <Text style={styles.totalPrice}>{post.food_quantity} Servings Total</Text>
         
 
-      {isSharePage && (
+      {state.userlisting.isSharePage && (
       <View style={{flexDirection: 'row',justifyContent:'space-between',marginTop:10,}}>
       <TouchableOpacity
           style={styles.cartButton}
