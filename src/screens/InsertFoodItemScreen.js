@@ -7,6 +7,7 @@ import {
   TouchableHighlight,
   ToastAndroid,
   ImagePickerIOS,
+  Alert,
 } from "react-native";
 import { useValidation } from "react-native-form-validator";
 import DropDownPicker from "react-native-dropdown-picker";
@@ -239,8 +240,8 @@ const InsertFoodItemScreen = ({ navigation }) => {
       foodCategory.length > 0
     ) {
       //dispattch the action and then print the state
-      console.log(state.food, "food state");
       dispatch(addFood(requestBody));
+      Alert.alert(state.food.message);
     }
   };
 
