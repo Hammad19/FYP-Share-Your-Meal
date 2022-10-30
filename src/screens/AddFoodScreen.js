@@ -1,5 +1,5 @@
 import { StyleSheet, Text, View, TouchableOpacity,StatusBar ,FlatList} from "react-native";
-import React, { useCallback, useState } from "react";
+import React, { useCallback, useEffect, useState } from "react";
 import { Colors } from "../content";
 
 import {
@@ -12,7 +12,7 @@ import { Separator } from "../components";
 import IonIcons from "react-native-vector-icons/Ionicons";
 import { Display } from "../utils";
 import { useSelector, useDispatch } from "react-redux";
-import { getlistingsofUser, setissharepage } from "../store/slices/userlistingSlice";
+import { deleteuserlisting, getlistingsofUser, setissharepage } from "../store/slices/userlistingSlice";
 import FoodItem from "../components/FoodItem";
 import { useFocusEffect } from "@react-navigation/native";
 const AddFoodScreen = ({navigation}) => {
@@ -33,8 +33,15 @@ const AddFoodScreen = ({navigation}) => {
     useCallback(() => {
       dispatch(setissharepage(true));
       dispatch(getlistingsofUser(requestBody));
+      
     }, [])
   );
+
+  
+  useEffect(() => {
+    dispatch(getlistingsofUser(requestBody));
+  }, [state.userlisting.isupdated]);
+  
 
   return (
     fontsLoaded && (
