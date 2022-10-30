@@ -53,9 +53,9 @@ export const updateFormData = async (endpoint, requestBody) => {
 export const deleteData = async (endpoint) => {
   try {
     const result = await axiosInstance.delete(endpoint);
-    return result;
+    return result.data;
   } catch (error) {
-    return error;
+    return error.response.data;
   }
 };
 
