@@ -174,9 +174,9 @@ export default ({route,navigation}) => {
         <Image
               style={styles.image}
               
-              source={{uri:post.postImage}}
+              source={{uri:post.food_image}}
             />
-      <Text style={styles.title}>{post.title}</Text>
+      <Text style={styles.title}>{post.food_name}</Text>
       <View style={styles.details}>
         <Icon name="star" color="rgb(255, 56, 92)" size={18} />
         <Text style={styles.detailText}>4.93 (891)</Text>
@@ -196,7 +196,7 @@ export default ({route,navigation}) => {
         </View>
         <View style={styles.divider} />
         <Text style={styles.text}>
-        {post.description} </Text>
+        {post.food_description} </Text>
       </View>
 
 
