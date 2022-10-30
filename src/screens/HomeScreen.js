@@ -26,7 +26,7 @@ import Feather from "react-native-vector-icons/Feather";
 import { Display } from "../utils";
 import MaterialCommunityIcons from "react-native-vector-icons/MaterialCommunityIcons";
 import { useSelector, useDispatch } from "react-redux";
-import { getFood,getfoodforcharitableorganization } from "../store/slices/foodSlice";
+import { getFood,getfoodbytype,getfoodforcharitableorganization } from "../store/slices/foodSlice";
 import { setissharepage } from "../store/slices/userlistingSlice";
 import { useFocusEffect } from "@react-navigation/native";
 const HomeScreen = ({ navigation }) => {
@@ -46,7 +46,6 @@ const HomeScreen = ({ navigation }) => {
   const state = useSelector((state) => state);
 
   const FetchFoodData = () => {
-
 
     let requestBody = {
       food_quantity: 5,
@@ -69,15 +68,35 @@ const HomeScreen = ({ navigation }) => {
     }
   };
 
-  
+
+  const FetchFoodByType = () => {
+    if(foodType === "Free Food"){
+      let requestBody = {
+        is_free: "true"
+      }
+      dispatch(getfoodbytype(requestBody));
+    }
+    else if(foodType === "Paid Food"){
+      let requestBody = {
+        is_free: "false"
+      }
+      dispatch(getfoodbytype(requestBody));
+    }
+  }
+    
+
+  useEffect(() => {
+    FetchFoodByType();
+  }, [foodType]);
+
+
+    
   useFocusEffect(
     useCallback(() => {
       dispatch(setissharepage(false));
       FetchFoodData();
     }, [])
   );
-
-  
   
 
   return (
@@ -139,51 +158,50 @@ const HomeScreen = ({ navigation }) => {
 
             {state.auth.user.accounttype === "User" && (<View
               style={{
+                top: 20,
                 flexDirection: "row",
                 alignItems: "center",
                 justifyContent: "space-evenly",
-                marginTop: 20,
                 width: Display.setWidth(100),
               }}>
               <TouchableOpacity
-                onPress={() => setFoodType("free")}
+                onPress={() => setFoodType("Free Food")}
                 style={styles.category()}>
                 <Ionicons
-                  name={foodType == "free" ? "fast-food" : "fast-food-outline"}
+                  name={foodType == "Free Food" ? "fast-food" : "fast-food-outline"}
                   size={35}
                   color={
-                    foodType == "free"
+                    foodType == "Free Food"
                       ? Colors.DEFAULT_WHITE
                       : Colors.DEFAULT_GREY
                   }
                 />
-                <Text style={styles.categoryText(foodType === "free")}>
+                <Text style={styles.categoryText(foodType === "Free Food")}>
                   FREE
                 </Text>
               </TouchableOpacity>
               <TouchableOpacity
-                onPress={() => setFoodType("buy")}
+                onPress={() => setFoodType("Paid Food")}
                 style={styles.category()}>
                 <MaterialCommunityIcons
-                  name={foodType == "buy" ? "food" : "food-outline"}
+                  name={foodType == "Paid Food" ? "food" : "food-outline"}
                   size={35}
                   color={
-                    foodType == "buy"
+                    foodType == "Paid Food"
                       ? Colors.DEFAULT_WHITE
                       : Colors.DEFAULT_GREY
                   }
                 />
-                <Text style={styles.categoryText(foodType === "buy")}>
+                <Text style={styles.categoryText(foodType === "Paid Food")}>
                   Order
                 </Text>
               </TouchableOpacity>
             </View>
             )}
           </View>
-
-          <Separator height={15} />
+     
           <FlatList
-            style={{ flex: 1 ,zIndex:-1, paddingTop: 100}}
+            style={{ flex: 1 ,zIndex:-1, paddingTop: 55}}
             data={state.food.foodlist}
             renderItem={({ item }) => <FoodItem post={item} />}
             //
