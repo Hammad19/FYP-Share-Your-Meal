@@ -59,7 +59,7 @@ export default function  CustomTabNavigator() {
           tabBarInactiveTintColor:'gray',
           tabBarLabelStyle: { paddingBottom: 10, fontSize: 14
           },
-          tabBarStyle: { padding: 10, height: 72},
+          tabBarStyle: { padding: 10, height: 65},
           tabBarIcon: ({ focused, color, size }) => {
             let iconName;
             let rn = route.name;
@@ -78,13 +78,13 @@ export default function  CustomTabNavigator() {
             }
 
             // You can return any component that you like here!
-            return <Ionicons name={iconName} size={30} color={color} />;
+            return <Ionicons name={iconName} size={26} color={color} />;
           },
         })}
        >
 
         <Tab.Screen name={homeName} component={HomeTabNavigator} />
-        {/* <Tab.Screen name="FoodDetailScreen" component={FoodDetailScreen} /> */}
+        {/* <Tab.Screen name="FoodDetailScreen" component={FoodDetailScreen} /> */} 
         <Tab.Screen name={settingsName} component={AddFoodNavigator} />
         <Tab.Screen name={ordersName} component={Orders} />
         <Tab.Screen name={profileName} component={Profile} />
