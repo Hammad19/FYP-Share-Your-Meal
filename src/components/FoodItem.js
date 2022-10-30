@@ -4,7 +4,8 @@ import { useNavigation } from '@react-navigation/native';
 import { Entypo as Icon,MaterialIcons } from "@expo/vector-icons";
 import { Colors } from '../content';
 import { Display } from '../utils';
-import { useSelector } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
+import { deleteuserlisting } from '../store/slices/userlistingSlice';
 const days = 7;
 
 const Post = (props) => {
@@ -18,8 +19,19 @@ const Post = (props) => {
     navigation.navigate('FoodDetailScreen', {post: post});
   }
 
+  
+  const dispatch = useDispatch();
   const state = useSelector((state) => state);
 
+  const deleteFood = (id) => 
+  {
+    console.log("DeleteFood");
+    console.log(post);
+    let requestBody = {_id: id};
+    console.log(requestBody);
+    dispatch(deleteuserlisting(requestBody));
+  };
+  
   return (
 <>
 
@@ -66,13 +78,14 @@ const Post = (props) => {
       <View style={{flexDirection: 'row',justifyContent:'space-between',marginTop:10,}}>
       <TouchableOpacity
           style={styles.cartButton}
-          onPress={() => navigation.navigate('Cart')}
+          onPress={() => navigation.goBack()}
           activeOpacity={0.8}>
           <Text style={styles.cartButtonText}><Icon name='edit' size={18}></Icon>Edit Post</Text>
         </TouchableOpacity>
         <TouchableOpacity
           style={styles.cartButton}
-          onPress={() => navigation.navigate('Cart')}
+        
+          onPress={() => deleteFood(post._id)}
           activeOpacity={0.8}>
           <Text style={styles.cartButtonText}><MaterialIcons name="delete" size={18} />Delete post</Text>
         </TouchableOpacity>
