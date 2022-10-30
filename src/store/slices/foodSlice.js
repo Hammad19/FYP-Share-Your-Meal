@@ -26,56 +26,6 @@ export const addFood = createAsyncThunk(
   }
 );
 
-//Update Food
-export const updateFood = createAsyncThunk(
-    API_ENDPOINTS.FOOD_UPDATE,
-    async (requestBody, thunkAPI) => {
-        try {
-            const result = await addData(API_ENDPOINTS.FOOD_UPDATE, requestBody);
-            if (result.success == true) {
-                return result;
-            } else {
-                console.log(result, "<-- result");
-                return thunkAPI.rejectWithValue({
-                    status: "error",
-                    message: result.message,
-                });
-            }
-        } catch (e) {
-            return thunkAPI.rejectWithValue({
-                status: "error",
-                message: "Unable to signup",
-            });
-        }
-    }
-);
-
-//Delete Food
-export const deleteFood = createAsyncThunk(
-    API_ENDPOINTS.FOOD_DELETE,
-    async (requestBody, thunkAPI) => {
-        try {
-            const result = await addData(API_ENDPOINTS.FOOD_DELETE, requestBody);
-            if (result.success == true) {
-                return result;
-
-            } else {
-
-                console.log(result, "<-- result");
-                return thunkAPI.rejectWithValue({
-                    status: "error",
-                    message: result.message,
-                });
-            }
-        } catch (e) {
-            return thunkAPI.rejectWithValue({
-                status: "error",
-                message: "Unable to signup",
-            });
-        }
-    }
-);
-
 //Get Food
 export const getFood = createAsyncThunk(
     API_ENDPOINTS.FOOD_GET,
@@ -95,6 +45,33 @@ export const getFood = createAsyncThunk(
             }
         } catch (e) {
             return thunkAPI.rejectWithValue({
+                status: "error",
+                message: "Unable to signup",
+            });
+        }
+    }
+);
+
+export const getfoodbytype = createAsyncThunk(
+    API_ENDPOINTS.FOOD_GET_BY_TYPE,
+    async (requestBody, thunkAPI) => {
+
+        try {
+            const result = await getData(API_ENDPOINTS.FOOD_GET_BY_TYPE+requestBody.is_free);
+            if (result.success == true) {
+                return result;
+            } else {
+              
+                console.log(result, "<-- result");
+                return thunkAPI.rejectWithValue({
+                    status: "error",
+                    message: result.message,
+                });
+            }
+        } catch (e) {
+
+            return thunkAPI.rejectWithValue({
+
                 status: "error",
                 message: "Unable to signup",
             });
@@ -187,21 +164,7 @@ const foodSlice = createSlice({
         console.log(action.payload, "<-- action.payload");
       });
 
-    builder.addCase(deleteFood.fulfilled, (state, action) => {
-      console.log("<--food deleted fulfilled");
-    }),
-      builder.addCase(deleteFood.rejected, (state, action) => {
-        console.log("<--food deleted rejected");
-      });
 
-      builder.addCase(updateFood.fulfilled, (state, action) => {
-        console.log("<--food updated fulfilled");
-      }
-      ),
-      builder.addCase(updateFood.rejected, (state, action) => {
-        console.log("<--food updated rejected");
-      }
-      );
       builder.addCase(getFood.fulfilled, (state, action) => {
         state.foodlist = action.payload.food;
         console.log(state.foodlist,"<--food get fulfilled");
@@ -223,7 +186,17 @@ const foodSlice = createSlice({
         state.error =  action.payload;
 
         console.log(state.error.message)
-      } )
+      } );
+      builder.addCase(getfoodbytype.fulfilled, (state, action) => {
+        state.foodlist = action.payload.food;
+        console.log(state.foodlist,"<--food get by type fulfilled");
+      }
+      );
+      builder.addCase(getfoodbytype.rejected,(state,action) =>
+      {
+        state.error =  action.payload;
+        console.log(state.error.message)
+      } );
   },
 
 });
