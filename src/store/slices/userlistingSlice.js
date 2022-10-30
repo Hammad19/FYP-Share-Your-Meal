@@ -1,6 +1,6 @@
 import { createSlice, createAsyncThunk } from "@reduxjs/toolkit";
 import { Alert } from "react-native";
-import { addData,getData } from "../../utils/api/api";
+import { addData,deleteData,getData } from "../../utils/api/api";
 import API_ENDPOINTS from "../../utils/endpoints";
 
 export const getlistingsofUser = createAsyncThunk(
@@ -29,11 +29,37 @@ export const getlistingsofUser = createAsyncThunk(
     }
 );
 
+export const deleteuserlisting = createAsyncThunk(
+    API_ENDPOINTS.FOOD_DELETE,
+    
+    async (requestBody,thunkAPI) => {
+
+        try {
+            const result = await deleteData(API_ENDPOINTS.FOOD_DELETE+requestBody._id);
+            if (result.success == true) {
+                return result;
+            } else {
+                console.log(result, "<-- result");
+                return thunkAPI.rejectWithValue({
+                    status: "error",
+                    message: result.message,
+                });
+            }
+        } catch (e) {
+            return thunkAPI.rejectWithValue({
+                status: "error",
+                message: "Unable to signup",
+            });
+        }
+    }
+);
+
 const initialState = {
     food: {},
     foodlist: [],
     isSharePage: false,
     isloaded: false,
+    isupdated: false,
     error: {
         status: "idle",
         message: "",
@@ -57,12 +83,23 @@ const userlistingSlice = createSlice({
     builder.addCase(getlistingsofUser.fulfilled, (state, action) => {
         state.foodlist = action.payload.food;
         state.isloaded = true;
-        console.log(action.payload,"<-- state.foodlist");
+        console.log(action.payload,"<-- state.foodlist getlistingsofUser.fulfilled");
     });
     builder.addCase(getlistingsofUser.rejected, (state, action) => {
         state.error = action.payload;
         state.isloaded = false;
         console.log(state.error,"<-- state.error");
+    });
+
+    builder.addCase(deleteuserlisting.fulfilled, (state, action) => {
+        state.isupdated = !state.isupdated;
+        console.log(action.payload,"<-- state.foodlist fulfiled");
+    });
+
+    builder.addCase(deleteuserlisting.rejected, (state, action) => {
+        // state.foodlist = action.payload.food;
+        // state.isloaded = true;
+        console.log(action.payload,"<-- state.foodlist rejected");
     });
 },
 });
