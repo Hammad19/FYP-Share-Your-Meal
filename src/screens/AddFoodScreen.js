@@ -15,6 +15,7 @@ import { useSelector, useDispatch } from "react-redux";
 import { deleteuserlisting, getlistingsofUser, setissharepage } from "../store/slices/userlistingSlice";
 import FoodItem from "../components/FoodItem";
 import { useFocusEffect } from "@react-navigation/native";
+import { resetmessage } from "../store/slices/foodSlice";
 const AddFoodScreen = ({navigation}) => {
   const [delivery, setDelivery] = useState(true);
   let [fontsLoaded] = useFonts({
@@ -31,6 +32,7 @@ const AddFoodScreen = ({navigation}) => {
   
   useFocusEffect(
     useCallback(() => {
+      dispatch(resetmessage());
       dispatch(setissharepage(true));
       dispatch(getlistingsofUser(requestBody));
       
