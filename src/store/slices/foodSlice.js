@@ -118,26 +118,8 @@ const foodSlice = createSlice({
   name: "food",
   initialState,
   reducers: {
-    //change the initial state when userlogins
-    userLoggedIn: (state, action) => {
-      state.isLoggedIn = true;
-      state.user = action.payload;
-    },
-    foodreset: (state,action) => {
-      state.user = {};
-      state.isLoggedIn = false;
-      state.token = "";
-      state.error.status = "idle";
-      state.error.message = "";
-      console.log(state,"<-- state")
-    },
+    
     //change the initial state when userlogouts
-
-    userLoggedOut: (state) => {
-      
-      state.isLoggedIn = false;
-      state.user = {};
-    },
     reset: (state) => {
 
     state.food = {};
@@ -148,20 +130,22 @@ const foodSlice = createSlice({
        
     },
 
+    resetmessage: (state) => {
 
-    updateToken: (state, action) => {
-      state.token = action.payload;
-    },
+      state.error.status= "idle"
+      state.error.message= ""
+         
+      },
   },
   extraReducers: (builder) => {
     builder.addCase(addFood.fulfilled, (state, action) => {
+      state.error.status = "success";
+      state.error.message = action.payload.message;
       state.food.isAdded = true;
-      console.log("<--food added fulfilled");
+      console.log(action.payload.message,"<--food added fulfilled");
     }),
       builder.addCase(addFood.rejected, (state, action) => {
-
-
-        console.log(action.payload, "<-- action.payload");
+        console.log(action.payload, "<-- action.payload food rejected");
       });
 
 
@@ -201,6 +185,6 @@ const foodSlice = createSlice({
 
 });
 
-export const {} = foodSlice.actions;
+export const {resetmessage} = foodSlice.actions;
 
 export default foodSlice.reducer;
