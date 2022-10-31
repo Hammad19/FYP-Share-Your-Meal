@@ -24,7 +24,7 @@ const Post = (props) => {
   const state = useSelector((state) => state);
 
   const handleEditButton = () => {
-    navigation.navigate('InsertFoodItemScreen', {post: post});
+    navigation.navigate('UpdateFoodScreen', {post: post});
     
   }
 
@@ -42,8 +42,6 @@ const Post = (props) => {
 
   
     <Pressable onPress={goToPostPage} style={styles.container}>
-
-
       {/* Image  */}
       <Image
         style={styles.image}
@@ -79,8 +77,6 @@ const Post = (props) => {
 
       {/*  Total price */}
       <Text style={styles.totalPrice}>{post.food_quantity} Servings Total</Text>
-        
-
       {state.userlisting.isSharePage && (
       <View style={{flexDirection: 'row',justifyContent:'space-between',marginTop:10,}}>
       <TouchableOpacity
@@ -94,7 +90,7 @@ const Post = (props) => {
         
           onPress={() => deleteFood(post._id)}
           activeOpacity={0.8}>
-          <Text style={styles.cartButtonText}><MaterialIcons name="delete" size={18} />Delete post</Text>
+          <Text style={styles.cartButtonText}><MaterialIcons name="delete" size={20} />Delete post</Text>
         </TouchableOpacity>
       </View>
       )}
