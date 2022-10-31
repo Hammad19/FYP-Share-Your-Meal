@@ -9,6 +9,7 @@ import {
   ImagePickerIOS,
   ScrollView,
   Alert,
+  Image,
 } from "react-native";
 import { useValidation } from "react-native-form-validator";
 import DropDownPicker from "react-native-dropdown-picker";
@@ -43,7 +44,7 @@ const InsertFoodItemScreen = ({ navigation }) => {
   const [foodPrice, setfoodPrice] = useState("");
   const [foodQuantity, setfoodQuantity] = useState("");
   const [foodDescription, setfoodDescription] = useState("");
-  const [foodImage, setfoodImage] = useState("");
+  const [foodImage, setfoodImage] = useState(null);
   const [foodCategory, setfoodCategory] = useState("");
   const [foodType, setFoodType] = useState("");
   const [accounttype, setaccounttype] = useState("");
@@ -287,17 +288,16 @@ const InsertFoodItemScreen = ({ navigation }) => {
         <View style={styles.inputImageContainer}>   
           <TouchableHighlight
             underlayColor="rgba(0,0,0,0)"
-            onPress={() => setImage()}>
-            <View style={styles.inputImageSubContainer}>
-              <IonIcons
-                name="image-outline"
-                size={22}
-                color={Colors.DEFAULT_GREY}
-                style={{ marginRight: 10 }}
-              />
-              <Text style={styles.inputImageText}>Select Food Image</Text>
-            </View>
-          </TouchableHighlight>
+            onPress={() => setImage()} >
+            {foodImage == null ? (
+              <View style={styles.inputImageSubContainer}>  
+                <IonIcons name="image-outline" size={50} color="grey" />  
+                <Text style={styles.inputImageText}>Select Food Image</Text>
+              </View>
+             ) : (
+              <Image  source={{uri:foodImage}} style={styles.imageContainer} /> 
+             ) } 
+             </TouchableHighlight>
         </View>
         <Separator height={15} />
       <View
@@ -570,7 +570,8 @@ const styles = StyleSheet.create({
     height: Display.setHeight(6),
     justifyContent: "center",
     alignItems: "center",
-    marginTop: 20,
+    marginTop: 15,
+    marginBottom: 15,
   },
   signinButtonText: {
     fontSize: 18,
@@ -582,6 +583,11 @@ const styles = StyleSheet.create({
     fontSize: 18,
     color: Colors.DEFAULT_GREY,
   },
+  imageContainer: {
+    width: 100,
+    height: 100,
+    borderRadius: 8,
+  } ,
   error: {
     backgroundColor: Colors.LIGHT_GREY,
     paddingHorizontal: 10,
