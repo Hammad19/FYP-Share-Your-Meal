@@ -23,7 +23,6 @@ const AddFoodScreen = ({navigation}) => {
     Poppins_700Bold,
   });
 
- 
   const dispatch = useDispatch();
   const state = useSelector((state) => state);
   console.log(state.auth.user.email)
