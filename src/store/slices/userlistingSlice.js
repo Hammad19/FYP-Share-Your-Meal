@@ -54,6 +54,33 @@ export const deleteuserlisting = createAsyncThunk(
     }
 );
 
+export const updateuserlisting = createAsyncThunk(
+    API_ENDPOINTS.FOOD_UPDATE,
+
+    async (requestBody,thunkAPI) => {
+
+        try {
+            const result = await addData(API_ENDPOINTS.FOOD_UPDATE,requestBody);
+            if (result.success == true) {
+                return result;
+            } else {
+                console.log(result, "<-- result");
+                return thunkAPI.rejectWithValue({
+                    status: "error",
+                    message: result.message,
+                });
+            }
+        } catch (e) {
+            return thunkAPI.rejectWithValue({
+                status: "error",
+                message: "Unable to signup",
+            });
+        }
+    }
+);
+
+
+
 const initialState = {
     food: {},
     foodlist: [],
@@ -88,18 +115,18 @@ const userlistingSlice = createSlice({
     builder.addCase(getlistingsofUser.rejected, (state, action) => {
         state.error = action.payload;
         state.isloaded = false;
-        console.log(state.error,"<-- state.error");
+        console.log(state.error,"<-- state.error getlistingsofUser.rejected");
     });
 
     builder.addCase(deleteuserlisting.fulfilled, (state, action) => {
         state.isupdated = !state.isupdated;
-        console.log(action.payload,"<-- state.foodlist fulfiled");
+        console.log(action.payload,"<-- state.foodlist  delete user listing fulfiled");
     });
 
     builder.addCase(deleteuserlisting.rejected, (state, action) => {
         // state.foodlist = action.payload.food;
         // state.isloaded = true;
-        console.log(action.payload,"<-- state.foodlist rejected");
+        console.log(action.payload,"<-- state.foodlist deleteuserlisting rejected");
     });
 },
 });
