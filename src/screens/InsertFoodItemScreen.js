@@ -7,6 +7,7 @@ import {
   TouchableHighlight,
   ToastAndroid,
   ImagePickerIOS,
+  ScrollView,
   Alert,
 } from "react-native";
 import { useValidation } from "react-native-form-validator";
@@ -44,6 +45,7 @@ const InsertFoodItemScreen = ({ navigation }) => {
   const [foodDescription, setfoodDescription] = useState("");
   const [foodImage, setfoodImage] = useState("");
   const [foodCategory, setfoodCategory] = useState("");
+  const [foodType, setFoodType] = useState("");
   const [accounttype, setaccounttype] = useState("");
   const [fieldname, setFieldName] = useState("");
   const [isAllValuesNull, setisAllValuesNull] = useState(false);
@@ -51,8 +53,18 @@ const InsertFoodItemScreen = ({ navigation }) => {
   const [open, setOpen] = useState(false);
   const [value, setValue] = useState(null);
   const [items, setItems] = useState([
-    { label: "Giveaway", value: "Giveaway" },
-    { label: "Sell", value: "sell" },
+    { label: "Giveaway", value: "Free Food" },
+    { label: "Sell", value: "Paid Food" },
+  ]);
+
+  const [open1, setOpen1] = useState(false);
+  const [value1, setValue1] = useState(null);
+  const [items1, setItems1] = useState([
+    { label: "Chinese", value: "Chinese" },
+    { label: "Desi Food", value: "Desi Food" },
+    { label: "Sea Food", value: "Sea Food" },
+    { label: "Fast Food", value: "Fast Food" },
+    { label: "Vegetables", value: "Vegetables" },
   ]);
 
   const [delivery, setDelivery] = useState(true);
@@ -225,10 +237,10 @@ const InsertFoodItemScreen = ({ navigation }) => {
       food_description: foodDescription,
       food_price: foodPrice,
       food_image:foodImage,
-      food_category: "All",
+      food_category: foodCategory,
       food_quantity: foodQuantity,
       food_shared_by: state.auth.user.email,
-      is_free: foodCategory == "Giveaway" ? true : false,
+      is_free: foodType == "Free Food" ? true : false,
     };
 
     if (
@@ -241,13 +253,22 @@ const InsertFoodItemScreen = ({ navigation }) => {
     ) {
       //dispattch the action and then print the state
       dispatch(addFood(requestBody));
-      Alert.alert(state.food.message);
+      // Alert.alert(state.food.message);
     }
   };
 
+  useEffect(() => {
+    if (state.food.error.message == "Food added successfully") {
+       Alert.alert("Success",state.food.error.message);
+      navigation.goBack();
+    }
+  }, [state.food.error.message]);
+
+
+
   return (
     <>
-      <View style={styles.container}>
+      <ScrollView style={styles.container}>
         <StatusBar
           barStyle={"dark-content"}
           backgroundColor={Colors.DEFAULT_WHITE}
@@ -263,7 +284,7 @@ const InsertFoodItemScreen = ({ navigation }) => {
           />
           <Text style={styles.headertitle}>Add Your Food</Text>
         </View>
-        <View style={styles.inputImageContainer}>
+        <View style={styles.inputImageContainer}>   
           <TouchableHighlight
             underlayColor="rgba(0,0,0,0)"
             onPress={() => setImage()}>
@@ -276,7 +297,6 @@ const InsertFoodItemScreen = ({ navigation }) => {
               />
               <Text style={styles.inputImageText}>Select Food Image</Text>
             </View>
-          
           </TouchableHighlight>
         </View>
         <Separator height={15} />
@@ -401,6 +421,30 @@ const InsertFoodItemScreen = ({ navigation }) => {
         setItems={setItems}
         placeholderStyle={styles.dropdownstyles}
         listParentLabelStyle={styles.dropdownstyles}
+        dropDownContainerStyle={styles.dropdowncontainer1style}
+        labelStyle={styles.dropdownstyles}
+        placeholder="Select Food Type"
+        onSelectItem={(item) => {
+          // setError(true);
+          // setFieldName("accounttype");
+          // console.log(item.value);
+          setFoodType(item.value);
+        }}
+      />
+
+      {error && ShowError("foodCategory")}
+      <Separator height={15} />
+
+      <DropDownPicker
+        style={styles.inputContainer}
+        open={open1}
+        value={value1}
+        items={items1}
+        setOpen={setOpen1}
+        setValue={setValue1}
+        setItems={setItems1}
+        placeholderStyle={styles.dropdownstyles}
+        listParentLabelStyle={styles.dropdownstyles}
         dropDownContainerStyle={styles.dropdowncontainerstyle}
         labelStyle={styles.dropdownstyles}
         placeholder="Select Food Category"
@@ -411,8 +455,6 @@ const InsertFoodItemScreen = ({ navigation }) => {
           setfoodCategory(item.value);
         }}
       />
-
-      {error && ShowError("foodCategory")}
       {isAllValuesNull ? (
         <Text style={{ color: "red", fontSize: 15, marginLeft: 25 }}>
           All fields are required
@@ -421,31 +463,7 @@ const InsertFoodItemScreen = ({ navigation }) => {
       <TouchableOpacity onPress={handleonPress} style={styles.signinButton}>
         <Text style={styles.signinButtonText}>Upload Food</Text>
       </TouchableOpacity>
-          <TouchableHighlight
-            underlayColor="rgba(0,0,0,0)"
-            onPress={() => setImage()}>
-            <View style={styles.inputImageSubContainer}>
-              <IonIcons
-                name="image-outline"
-                size={22}
-                color={Colors.DEFAULT_GREY}
-                style={{ marginRight: 10 }}
-              />
-              <Text style={styles.inputImageText}>Select Food Image</Text>
-            </View>
-            {/* <TextInput
-              onChangeText={(text) => {
-                setfoodImage(text);
-              }}
-              // onEndEditing={() => }
-              value={foodImage}
-              placeholder="Select Food Image"
-              placeholderTextColor={Colors.DEFAULT_GREY}
-              selectionColor={Colors.DEFAULT_GREY}
-              style={styles.inputText}
-            /> */}
-          </TouchableHighlight>
-        </View>
+        </ScrollView>
         
       
       
@@ -518,6 +536,7 @@ const styles = StyleSheet.create({
   },
 
   dropdownstyles: {
+    
     fontSize: 18,
     textAlignVertical: "center",
     padding: 0,
@@ -526,10 +545,24 @@ const styles = StyleSheet.create({
     flex: 1,
   },
   dropdowncontainerstyle: {
+
+  
+    marginHorizontal: 20,
     width: Display.setWidth(90),
     marginLeft: 20,
     justifyContent: "center",
   },
+
+  dropdowncontainer1style: {
+   
+    //open this dropdowncontainer on top
+    top: -80,
+    marginHorizontal: 20,
+    width: Display.setWidth(90),
+    marginLeft: 20,
+    justifyContent: "center",
+  },
+ 
   signinButton: {
     backgroundColor: Colors.DEFAULT_GREEN,
     borderRadius: 8,
