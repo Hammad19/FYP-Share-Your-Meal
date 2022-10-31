@@ -2,7 +2,7 @@ import * as React from 'react';
 import { createStackNavigator} from "@react-navigation/stack";
 
 
-import { AddFoodScreen, InsertFoodItemScreen }from '../screens';
+import { AddFoodScreen, InsertFoodItemScreen , UpdateFoodScreen}from '../screens';
 
 const Stack = createStackNavigator();
 const AddFoodNavigator =()=> {
