@@ -1,5 +1,5 @@
 import React from 'react';
-import {View, Text, Image, Pressable,StyleSheet,TouchableOpacity} from 'react-native';  
+import {View, Text, Image, Pressable,StyleSheet,TouchableOpacity, Alert} from 'react-native';  
 import { useNavigation } from '@react-navigation/native';
 import { Entypo as Icon,MaterialIcons } from "@expo/vector-icons";
 import { Colors } from '../content';
@@ -23,13 +23,18 @@ const Post = (props) => {
   const dispatch = useDispatch();
   const state = useSelector((state) => state);
 
+  const handleEditButton = () => {
+    navigation.navigate('InsertFoodItemScreen', {post: post});
+    
+  }
+
   const deleteFood = (id) => 
   {
     console.log("DeleteFood");
     console.log(post);
     let requestBody = {_id: id};
-    console.log(requestBody);
     dispatch(deleteuserlisting(requestBody));
+    Alert.alert("Success","Food Item Deleted Successfully");
   };
   
   return (
@@ -65,8 +70,10 @@ const Post = (props) => {
 
       {/*  Old price & new price */}
       <Text style={styles.prices}>
-        <Text style={styles.oldPrice}>${post.oldPrice}</Text>
-        <Text style={styles.price}>  ${post.newPrice} </Text>
+        <Text style={styles.oldPrice}>{post.food_price
+} RS</Text>
+        <Text style={styles.price}>  {post.food_price
+} RS </Text>
         / Per Serving
       </Text>
 
@@ -78,7 +85,7 @@ const Post = (props) => {
       <View style={{flexDirection: 'row',justifyContent:'space-between',marginTop:10,}}>
       <TouchableOpacity
           style={styles.cartButton}
-          onPress={() => navigation.goBack()}
+          onPress={() => handleEditButton}
           activeOpacity={0.8}>
           <Text style={styles.cartButtonText}><Icon name='edit' size={18}></Icon>Edit Post</Text>
         </TouchableOpacity>
