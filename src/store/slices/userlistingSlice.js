@@ -128,6 +128,15 @@ const userlistingSlice = createSlice({
         // state.isloaded = true;
         console.log(action.payload,"<-- state.foodlist deleteuserlisting rejected");
     });
+    builder.addCase(updateuserlisting.fulfilled, (state, action) => {
+        state.isupdated = !state.isupdated;
+        console.log(action.payload,"<-- state.foodlist updateuserlisting.fulfilled");
+    });
+    builder.addCase(updateuserlisting.rejected, (state, action) => {
+        // state.foodlist = action.payload.food;
+        // state.isloaded = true;
+        console.log(action.payload,"<-- state.foodlist updateuserlisting rejected");
+    } );
 },
 });
 
