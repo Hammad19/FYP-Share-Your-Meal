@@ -127,17 +127,6 @@ const InsertFoodItemScreen = ({ navigation }) => {
     }
   };
 
-  //   expoImagePicker.launchImageLibraryAsync(options, (response) => {
-  //   if (response.didCancel) {
-  //     setToastmsg("User cancelled image picker");
-  //   } else if (response.errorCode == "permission") {
-  //     setToastmsg("Permission not satisfied");
-  //   }  else if (response.errorCode == "others") {
-  //     setToastmsg(response.errorMessage);
-  //   } else {
-  //     setfoodImage(response.assets[0].base64);
-  //   }
-  // // });
 
   const {
     validate,
@@ -146,7 +135,7 @@ const InsertFoodItemScreen = ({ navigation }) => {
     getErrorMessages,
     isFormValid,
   } = useValidation({
-    state: { foodName, foodPrice, foodQuantity, foodDescription, foodCategory },
+    state: { foodName, foodPrice, foodQuantity, foodDescription, foodCategory ,foodType,foodImage},
   });
 
   const validateNull = () => {
@@ -209,6 +198,11 @@ const InsertFoodItemScreen = ({ navigation }) => {
         foodCategory: { required: true },
       });
     }
+    else if (fieldname == "foodType") {
+      validate({
+        foodType: { required: true },
+      });
+    }
   };
 
   const handleonPress = () => {
@@ -224,6 +218,8 @@ const InsertFoodItemScreen = ({ navigation }) => {
       },
       foodDescription: { required: true, minlength: 20, maxlength: 300 },
       foodCategory: { required: true },
+      foodType: { required: true },
+      foodImage: { required: true },
     });
 
     console.log(isFormValid());
@@ -425,14 +421,13 @@ const InsertFoodItemScreen = ({ navigation }) => {
         labelStyle={styles.dropdownstyles}
         placeholder="Select Food Type"
         onSelectItem={(item) => {
-          // setError(true);
-          // setFieldName("accounttype");
-          // console.log(item.value);
+          setError(true);
+          setFieldName("foodType");
           setFoodType(item.value);
         }}
       />
 
-      {error && ShowError("foodCategory")}
+      {error && ShowError("foodType")}
       <Separator height={15} />
 
       <DropDownPicker
@@ -449,12 +444,13 @@ const InsertFoodItemScreen = ({ navigation }) => {
         labelStyle={styles.dropdownstyles}
         placeholder="Select Food Category"
         onSelectItem={(item) => {
-          // setError(true);
-          // setFieldName("accounttype");
+          setError(true);
+          setFieldName("foodCategory");
           // console.log(item.value);
           setfoodCategory(item.value);
         }}
       />
+      {error && ShowError("foodCategory")}
       {isAllValuesNull ? (
         <Text style={{ color: "red", fontSize: 15, marginLeft: 25 }}>
           All fields are required
