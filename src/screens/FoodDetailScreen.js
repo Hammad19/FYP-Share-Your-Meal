@@ -151,7 +151,7 @@ const styles = StyleSheet.create({
   
 });
 
-export default ({route,navigation}) => {
+const FoodDetailScreen =  ({route,navigation}) => {
   const[itemCount,setItemCount]=useState(0);
 
     const { post } = route.params;
@@ -229,4 +229,6 @@ export default ({route,navigation}) => {
     </>
   );
 };
+
+export default FoodDetailScreen;
 
