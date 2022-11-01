@@ -45,7 +45,9 @@ const AddFoodScreen = ({navigation}) => {
   
 
   return (
+    
     fontsLoaded && (
+      <>
       <View style={styles.container}>
         <StatusBar
           barStyle={"dark-content"}
@@ -77,7 +79,10 @@ const AddFoodScreen = ({navigation}) => {
          </Text></>
          )}
 
-<TouchableOpacity
+
+      </View>
+
+      <TouchableOpacity
              onPress={() => {
               navigation.navigate("InsertFoodItemScreen");
             }}
@@ -90,7 +95,7 @@ const AddFoodScreen = ({navigation}) => {
               style={styles.plusbutton}
             ></AntDesign>
           </TouchableOpacity> 
-      </View>
+          </>
     )
   );
 };
