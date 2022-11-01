@@ -81,7 +81,7 @@ const Post = (props) => {
       <View style={{flexDirection: 'row',justifyContent:'space-between',marginTop:10,}}>
       <TouchableOpacity
           style={styles.cartButton}
-          onPress={() => handleEditButton}
+          onPress={() => handleEditButton()}
           activeOpacity={0.8}>
           <Text style={styles.cartButtonText}><Icon name='edit' size={18}></Icon>Edit Post</Text>
         </TouchableOpacity>
