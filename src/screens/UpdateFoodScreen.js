@@ -168,14 +168,14 @@ const UpdateFoodScreen = ({ navigation,route }) => {
   }, [foodName, foodPrice, foodQuantity, foodDescription, foodCategory]);
 
   useEffect(() => {
-    setImage(post.food_image);
+    setfoodImage(post.food_image);
     setfoodName(post.food_name);
     setfoodPrice(post.food_price);
     setfoodQuantity(post.food_quantity);
     setfoodDescription(post.food_description);
     setfoodCategory(post.food_category);
     setFoodType(post.food_type);
-  }, [foodImage , foodType, foodCategory, foodName, foodPrice, foodQuantity, foodDescription]);
+  },[] );
 
   const validateField = () => {
     if (fieldname == "foodName") {
@@ -284,7 +284,7 @@ const UpdateFoodScreen = ({ navigation,route }) => {
               navigation.goBack();
             }}
           />
-          <Text style={styles.headertitle}>Add Your Food</Text>
+          <Text style={styles.headertitle}>Update Your Food</Text>
         </View>
         <View style={styles.inputImageContainer}>
           <TouchableHighlight
@@ -432,6 +432,7 @@ const UpdateFoodScreen = ({ navigation,route }) => {
           dropDownContainerStyle={styles.dropdowncontainer1style}
           labelStyle={styles.dropdownstyles}
           placeholder="Select Food Type"
+          
           onSelectItem={(item) => {
             // setError(true);
             // setFieldName("accounttype");
