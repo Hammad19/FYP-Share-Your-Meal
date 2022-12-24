@@ -95,12 +95,10 @@ const SigninScreen = ({ navigation }) => {
 
   const NavigatetoHome = () => {
     
-
       if(state.auth.isLoggedIn)
     {
       Alert.alert("Success", "User Logged in Successfully ");
       navigation.navigate("CustomTabNavigator");
-      
     }
     else if(state.auth.error.status== "loginerror")
     {

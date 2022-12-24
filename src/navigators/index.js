@@ -1,7 +1,7 @@
 import { NavigationContainer, StackActions } from "@react-navigation/native";
 import { createStackNavigator, Header } from "@react-navigation/stack";
 import { ScreenStackHeaderLeftView } from "react-native-screens";
-import { SplashScreen,WelcomeScreen,SigninScreen, SignupScreen, ForgotPasswordScreen ,RegisterPhoneScreen} from "../screens";
+import { SplashScreen,WelcomeScreen,SigninScreen, SignupScreen, ForgotPasswordScreen ,RegisterPhoneScreen,ChangePasswordScreen} from "../screens";
 import VerificationScreen from "../screens/VerificationScreen";
 import AddFoodNavigator from "./AddFoodNavigator";
 import CustomTabNavigator from "./CustomTabNavigator";
@@ -22,7 +22,7 @@ const Navigators = ()=>
                 <Stack.Screen name = "ForgotPasswordScreen" component ={ForgotPasswordScreen}></Stack.Screen>
                 <Stack.Screen name = "RegisterPhoneScreen" component ={RegisterPhoneScreen}></Stack.Screen>
                 <Stack.Screen name = "VerificationScreen" component ={VerificationScreen}></Stack.Screen>
-             
+                <Stack.Screen name = "ChangePasswordScreen" component ={ChangePasswordScreen}></Stack.Screen>
             </Stack.Navigator> 
         </NavigationContainer>);
     

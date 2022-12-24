@@ -8,6 +8,9 @@ export default API_ENDPOINTS = {
     FOOD_GET_BY_SHARED_BY: "food/getfoodbysharedby",
     FOOD_GET_FOR_CHARITABLE_ORGANIZATION: "food/getfoodforcharitableorganization",
     FOOD_GET_BY_TYPE: "food/getfoodbytype/",
+    OTP_SEND: "users/forgetpassword",
+    OTP_VERIFY: "users/verifyotp",
+    RESET_PASSWORD: "users/resetpassword",
 
 
 

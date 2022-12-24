@@ -6,12 +6,13 @@ import {
   StatusBar,
   TextInput,
   TouchableOpacity,
+  Alert,
 } from "react-native";
 import { Separator } from "../components";
 import Ionicons from "react-native-vector-icons/Ionicons";
 import { Colors } from "../content";
 import { Display } from "../utils";
-
+import {useSelector, useDispatch } from "react-redux";
 import {
   useFonts,
   Poppins_100Thin,
@@ -33,17 +34,52 @@ import {
   Poppins_900Black,
   Poppins_900Black_Italic,
 } from "@expo-google-fonts/poppins";
+import { useEffect } from "react";
+import { resetstatus, verifyOtp } from "../store/slices/authSlice";
 
-const VerificationScreen = ({navigation,
-  route: {
-    params: { phoneNumber },
-  },
+const VerificationScreen = ({navigation
 }) => {
   const firstInput = useRef();
   const secondInput = useRef();
   const thirdInput = useRef();
   const fourthInput = useRef();
-  const [otp, setOtp] = useState({ 1: "", 2: "", 3: "", 4: "" });
+  const fifthInput = useRef();
+  const [otp, setOtp] = useState({ 1: "", 2: "", 3: "", 4: "", 5: ""});
+  const state = useSelector((state) => state);
+  const[checkchanged,setcheckchanged] = useState(false);
+  const dispatch = useDispatch();
+  useEffect(() => {
+    NavigateToChangePasswordScreen();
+  }, [checkchanged])
+
+ 
+
+  const NavigateToChangePasswordScreen = () => {
+    
+    if(state.auth.isOtpVerified)
+    {
+      Alert.alert("Success", state.auth.error.message);
+      navigation.navigate("ChangePasswordScreen");
+    }
+    else if(state.auth.error.status == "otpverifiedError")
+    {
+      Alert.alert("Error", state.auth.error.message);
+    }
+  };
+  const handleVerifyButton = () => 
+  {
+      const value = Object.entries(otp).map(([k, v]) => (`${v}`)).join('')
+      console.log(value)
+
+      console.log(state.auth.verificationemail)
+      let requestBody = {
+        email: state.auth.verificationemail,
+        otp: value,
+      };
+
+      dispatch(verifyOtp(requestBody)).then(() => {setcheckchanged(!checkchanged)});
+      
+  }
 
   let [fontsLoaded] = useFonts({
     Poppins_500Medium,
@@ -62,14 +98,18 @@ const VerificationScreen = ({navigation,
           <Ionicons
             name="chevron-back-outline"
             size={30}
-            onPress={() => navigation.goBack()}
+            onPress={() => {
+              dispatch(resetstatus());
+              navigation.goBack()
+                        
+                          }}
           />
           <Text style={styles.headerTitle}>OTP Verification</Text>
         </View>
         <Text style={styles.title}>OTP Verification</Text>
         <Text style={styles.content}>
           Enter the OTP number just sent you at{" "}
-          <Text style={styles.phoneNumberText}>{phoneNumber}</Text>
+          <Text style={styles.phoneNumberText}>{state.auth.verificationemail}</Text>
         </Text>
         <View style={styles.otpContainer}>
           <View style={styles.otpBox}>
@@ -110,6 +150,7 @@ const VerificationScreen = ({navigation,
               }}
             />
           </View>
+
           <View style={styles.otpBox}>
             <TextInput
               style={styles.otpText}
@@ -118,19 +159,36 @@ const VerificationScreen = ({navigation,
               ref={fourthInput}
               onChangeText={(text) => {
                 setOtp({ ...otp, 4: text });
-                !text && thirdInput.current.focus();
+                text
+                  ? fifthInput.current.focus()
+                  : thirdInput.current.focus();
+              }}
+            />
+          </View>
+
+
+          <View style={styles.otpBox}>
+            <TextInput
+              style={styles.otpText}
+              keyboardType="number-pad"
+              maxLength={1}
+              ref={fifthInput}
+              onChangeText={(text) => {
+                setOtp({ ...otp, 5: text });
+                !text && fourthInput.current.focus();
               }}
             />
           </View>
         </View>
         <TouchableOpacity
           style={styles.signinButton}
-          onPress={() => console.log(otp)}>
+          onPress={handleVerifyButton}>
           <Text style={styles.signinButtonText}>Verify</Text>
         </TouchableOpacity>
       </View>
     )
   );
+  
 };
 
 const styles = StyleSheet.create({

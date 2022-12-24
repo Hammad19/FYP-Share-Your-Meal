@@ -10,7 +10,8 @@ import AddFoodScreen from './AddFoodScreen';
 import FoodDetailScreen from './FoodDetailScreen';
 import InsertFoodItemScreen from './InsertFoodItemScreen';
 import UpdateFoodScreen from './UpdateFoodScreen';
+import ChangePasswordScreen from './ChangePasswordScreen';
 
 
 
-export {SplashScreen,WelcomeScreen,SigninScreen,SignupScreen, ForgotPasswordScreen,RegisterPhoneScreen,HomeScreen ,AddFoodScreen,InsertFoodItemScreen,FoodDetailScreen,UpdateFoodScreen};
+export {SplashScreen,WelcomeScreen,SigninScreen,SignupScreen, ForgotPasswordScreen,RegisterPhoneScreen,HomeScreen ,AddFoodScreen,InsertFoodItemScreen,FoodDetailScreen,UpdateFoodScreen,ChangePasswordScreen};
