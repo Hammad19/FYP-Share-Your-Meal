@@ -119,7 +119,7 @@ const HomeScreen = ({ navigation }) => {
                 color={Colors.DEFAULT_WHITE}
               />
               <Text style={styles.locationText}>Welcome</Text>
-              <Text style={styles.selectedLocationText}>Hammad Waseem</Text>
+              <Text style={styles.selectedLocationText}>{state.auth.user.first_name}</Text>
               {/* <MaterialIcons
                 name="keyboard-arrow-down"
                 size={16}
