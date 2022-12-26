@@ -52,7 +52,7 @@ const Post = (props) => {
       <View style={styles.details}>
 
         <Text style={styles.detailText}>
-        Gives away By Hammad Waseem</Text>
+        Posted By {post.food_shared_by}</Text>
 
         <View style={styles.ratingtext}>
         <Icon name="star" color={Colors.DEFAULT_YELLOW} size={18} />
