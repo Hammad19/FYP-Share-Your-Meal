@@ -181,7 +181,7 @@ const ForgotPasswordScreen = ({navigation}) => {
           </Text>
         ) : null}
         <TouchableOpacity  style={styles.signinButton} onPress= {HandleOnPress} >
-          <Text style={styles.signinButtonText}>Reset Password</Text>
+          <Text style={styles.signinButtonText}>Continue</Text>
         </TouchableOpacity>
       </View>
     )
