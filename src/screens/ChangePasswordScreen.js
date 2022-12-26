@@ -131,7 +131,7 @@ const ChangePasswordScreen = ({navigation}) => {
     if(state.auth.isPasswordChanged)
     {
       Alert.alert("Success", state.auth.error.message );
-      navigation.navigate("ChangePasswordScreen");
+      navigation.navigate("SignInScreen");
     }
     else if(state.auth.error.status == "resetpassworderror")
     {
