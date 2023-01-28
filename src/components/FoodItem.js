@@ -68,10 +68,7 @@ const Post = (props) => {
 
       {/*  Old price & new price */}
       <Text style={styles.prices}>
-        <Text style={styles.oldPrice}>{post.food_price
-} RS</Text>
-        <Text style={styles.price}>  {post.food_price
-} RS </Text>
+        <Text style={styles.price}>{post.is_free?"Free":post.food_price} </Text>
         / Per Serving
       </Text>
 
@@ -127,7 +124,7 @@ const styles = StyleSheet.create({
     container: {
       marginHorizontal: 15,
       paddingBottom: 15,
-
+      
     },
     image: {
       width: '100%',

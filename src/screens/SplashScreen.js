@@ -41,7 +41,7 @@ const SplashScreen = ({ navigation }) => {
   useEffect(() => {
     setTimeout(() => {
       navigation.navigate("WelcomeScreen");
-    }, 2000);
+    }, 3000);
   }, []);
 
   return (

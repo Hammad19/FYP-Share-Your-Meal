@@ -12,7 +12,7 @@ import { Separator } from "../components";
 import IonIcons from "react-native-vector-icons/Ionicons";
 import { Display } from "../utils";
 import { useSelector, useDispatch } from "react-redux";
-import { deleteuserlisting, getlistingsofUser, setissharepage } from "../store/slices/userlistingSlice";
+import { deleteuserlisting, getlistingsofUser, resetupdate, setissharepage } from "../store/slices/userlistingSlice";
 import FoodItem from "../components/FoodItem";
 import { useFocusEffect } from "@react-navigation/native";
 import { resetmessage } from "../store/slices/foodSlice";
@@ -34,6 +34,7 @@ const AddFoodScreen = ({navigation}) => {
       dispatch(resetmessage());
       dispatch(setissharepage(true));
       dispatch(getlistingsofUser(requestBody));
+      dispatch(resetupdate())
       
     }, [])
   );

@@ -62,7 +62,7 @@ const UpdateFoodScreen = ({ navigation,route }) => {
   ]);
 
   const [open1, setOpen1] = useState(false);
-  const [value1, setValue1] = useState(null);
+  const [value1, setValue1] = useState();
   const [items1, setItems1] = useState([
     { label: "Chinese", value: "Chinese" },
     { label: "Desi Food", value: "Desi Food" },
@@ -168,13 +168,16 @@ const UpdateFoodScreen = ({ navigation,route }) => {
   }, [foodName, foodPrice, foodQuantity, foodDescription, foodCategory]);
 
   useEffect(() => {
+    setValue(post.is_free == true?"Free Food":"Paid Food")
+    setValue1(post.food_category)
     setfoodImage(post.food_image);
     setfoodName(post.food_name);
-    setfoodPrice(post.food_price);
-    setfoodQuantity(post.food_quantity);
+    setfoodPrice(post.food_price.toString());
+    setfoodQuantity(post.food_quantity.toString());
     setfoodDescription(post.food_description);
     setfoodCategory(post.food_category);
-    setFoodType(post.food_type);
+    setFoodType(value);
+
   },[] );
 
   const validateField = () => {
@@ -213,18 +216,37 @@ const UpdateFoodScreen = ({ navigation,route }) => {
 
   const handleUpdateFood = () => {
     setError(false);
-    validate({
-      foodName: { required: true, minlength: 2, maxlength: 30 },
-      foodPrice: { required: true, minlength: 1, maxlength: 10, numbers: true },
-      foodQuantity: {
-        required: true,
-        minlength: 1,
-        maxlength: 10,
-        numbers: true,
-      },
-      foodDescription: { required: true, minlength: 20, maxlength: 300 },
-      foodCategory: { required: true },
-    });
+    if(foodType == "Free Food")
+    {
+      validate({
+        foodName: { required: true, minlength: 2, maxlength: 30 },
+        foodPrice: { required: true, minlength: 1, maxlength: 10, numbers: true },
+        foodQuantity: {
+          required: true,
+          minlength: 1,
+          maxlength: 10,
+          numbers: true,
+        },
+        foodDescription: { required: true, minlength: 20, maxlength: 300 },
+        foodCategory: { required: true },
+      });
+    }
+    else if(foodType == "Paid Food")
+    {
+      setfoodPrice("0");
+      validate({
+        foodName: { required: true, minlength: 2, maxlength: 30 },
+        // foodPrice: { required: true, minlength: 1, maxlength: 10, numbers: true },
+        foodQuantity: {
+          required: true,
+          minlength: 1,
+          maxlength: 10,
+          numbers: true,
+        },
+        foodDescription: { required: true, minlength: 20, maxlength: 300 },
+        foodCategory: { required: true },
+      });
+    }
 
     console.log(isFormValid());
     setTimeout(() => {
@@ -242,7 +264,7 @@ const UpdateFoodScreen = ({ navigation,route }) => {
       food_category: foodCategory,
       food_quantity: foodQuantity,
       food_shared_by: state.auth.user.email,
-      is_free: foodType == "Free Food" ? true : false,
+      is_free: value == "Free Food" ? true : false,
     };
 
     if (
@@ -260,12 +282,16 @@ const UpdateFoodScreen = ({ navigation,route }) => {
     }
   };
 
+
+ 
+
+
   useEffect(() => {
-    if (state.food.error.message == "Food added successfully") {
-      Alert.alert("Success", state.food.error.message);
+    if (state.userlisting.error.message == "Food updated successfully") {
+      Alert.alert("Success", state.userlisting.error.message);
       navigation.goBack();
     }
-  }, [state.food.error.message]);
+  }, [state.userlisting.error.message]);
 
   return (
     <>
@@ -347,13 +373,19 @@ const UpdateFoodScreen = ({ navigation,route }) => {
               style={{ marginRight: 10 }}
             />
             <TextInput
+
+              //disable this feild when food type is free
+              editable={value == "Free Food" ? false : true}
+
               onChangeText={(text) => {
                 setError(true);
                 setFieldName("foodPrice");
                 setfoodPrice(text);
               }}
               // onEndEditing={() => }
-              value={foodPrice}
+              value={foodPrice.toString()}
+              
+
               placeholder="Food Price"
               placeholderTextColor={Colors.DEFAULT_GREY}
               selectionColor={Colors.DEFAULT_GREY}
@@ -409,7 +441,7 @@ const UpdateFoodScreen = ({ navigation,route }) => {
                 setfoodQuantity(text);
               }}
               // onEndEditing={() => }
-              value={foodQuantity}
+              value={foodQuantity.toString()}
               placeholder="Food Quantity"
               placeholderTextColor={Colors.DEFAULT_GREY}
               selectionColor={Colors.DEFAULT_GREY}
@@ -438,6 +470,14 @@ const UpdateFoodScreen = ({ navigation,route }) => {
             // setFieldName("accounttype");
             // console.log(item.value);
             setFoodType(item.value);
+            if(item.value == "Free Food")
+            {
+              setfoodPrice("0");
+            }
+            else
+            {
+              setfoodPrice("");
+            }
           }}
         />
 

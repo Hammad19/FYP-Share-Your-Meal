@@ -11,7 +11,10 @@ export default API_ENDPOINTS = {
     OTP_SEND: "users/forgetpassword",
     OTP_VERIFY: "users/verifyotp",
     RESET_PASSWORD: "users/resetpassword",
-
+    //OTP
+    OTP_SEND_FOR_EMAIL_VERIFICATION: "users/sendotpforemail",
+    OTP_VERIFY_EMAIL: "users/verifyotpforemail",
+    FOOD_GET_BY_NAME: "food/"
 
 
 }

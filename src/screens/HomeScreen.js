@@ -26,12 +26,12 @@ import Feather from "react-native-vector-icons/Feather";
 import { Display } from "../utils";
 import MaterialCommunityIcons from "react-native-vector-icons/MaterialCommunityIcons";
 import { useSelector, useDispatch } from "react-redux";
-import { getFood,getfoodbytype,getfoodforcharitableorganization } from "../store/slices/foodSlice";
+import { getFood,getfoodbytype,getfoodforcharitableorganization, getFoodsByName } from "../store/slices/foodSlice";
 import { setissharepage } from "../store/slices/userlistingSlice";
 import { useFocusEffect } from "@react-navigation/native";
 const HomeScreen = ({ navigation }) => {
-  const [foodType, setFoodType] = useState(true);
-  const [delivery, setDelivery] = useState(true);
+  const [foodType, setFoodType] = useState();
+  const [foodSearch, setFoodSearch] = useState(true);
   let [fontsLoaded] = useFonts({
     Poppins_500Medium,
     Poppins_700Bold,
@@ -56,7 +56,7 @@ const HomeScreen = ({ navigation }) => {
 
     if(state.auth.user.accounttype === "User"){
 
-      dispatch(getFood());
+      FetchFoodByType();
     }
     else if(state.auth.user.accounttype === "Charitable Organization")
 
@@ -70,11 +70,24 @@ const HomeScreen = ({ navigation }) => {
 
 
   const FetchFoodByType = () => {
-    if(foodType === "Free Food"){
-      let requestBody = {
-        is_free: "true"
-      }
-      dispatch(getfoodbytype(requestBody));
+
+   if(foodSearch?.length > 0)
+   {
+    let requestBody = {
+      is_free: foodType== "Free Food"?true:false,
+      food_name: foodSearch
+    }
+
+    dispatch(getFoodsByName(requestBody));
+   }
+
+    else if(foodType === "Free Food"){
+        let requestBody = {
+          is_free: "true"
+        }
+        dispatch(getfoodbytype(requestBody));
+
+      
     }
     else if(foodType === "Paid Food"){
       let requestBody = {
@@ -86,8 +99,11 @@ const HomeScreen = ({ navigation }) => {
     
 
   useEffect(() => {
+
+    console.log(foodSearch)
     FetchFoodByType();
-  }, [foodType]);
+  }, [foodType,foodSearch]);
+
 
 
     
@@ -146,6 +162,8 @@ const HomeScreen = ({ navigation }) => {
                   style={styles.searchText}
                   placeholderTextColor={Colors.DEFAULT_GREY}
                   placeholder="Search.."
+                  value={foodSearch}
+                  onChangeText={(text) => setFoodSearch(text)}
                 />
               </View>
               <Feather
@@ -218,6 +236,7 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     backgroundColor: Colors.SECONDARY_WHITE,
+    
   },
   backgroundCurvedContainer: {
     backgroundColor: Colors.DEFAULT_GREEN,

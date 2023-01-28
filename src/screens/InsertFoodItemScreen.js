@@ -22,8 +22,6 @@ import IonIcons from "react-native-vector-icons/Ionicons";
 import MaterialIcons from "react-native-vector-icons/MaterialIcons";
 import Feather from "react-native-vector-icons/Feather";
 import { TextInput } from "react-native-gesture-handler";
-import ImagePicker from "expo-image-picker";
-import expoImagePicker from "expo-image-picker";
 import { launchImageLibrary } from "react-native-image-picker";
 import { PermissionsAndroid } from "react-native";
 import { addFood } from "../store/slices/foodSlice";
@@ -41,7 +39,7 @@ const InsertFoodItemScreen = ({ navigation }) => {
   const state = useSelector((state) => state);
 
   const [foodName, setfoodName] = useState("");
-  const [foodPrice, setfoodPrice] = useState("");
+  const [foodPrice, setfoodPrice] = useState(0);
   const [foodQuantity, setfoodQuantity] = useState("");
   const [foodDescription, setfoodDescription] = useState("");
   const [foodImage, setfoodImage] = useState(null);
@@ -206,6 +204,11 @@ const InsertFoodItemScreen = ({ navigation }) => {
   };
 
   const handleonPress = () => {
+
+    if(foodType == "Free Food"){
+      setfoodPrice("0");
+    }
+
     setError(false);
     validate({
       foodName: { required: true, minlength: 2, maxlength: 30 },
@@ -240,6 +243,7 @@ const InsertFoodItemScreen = ({ navigation }) => {
       is_free: foodType == "Free Food" ? true : false,
     };
 
+    console.log(foodPrice.length)
     if (
       isFormValid() &&
       foodName.length > 0 &&
@@ -296,6 +300,34 @@ const InsertFoodItemScreen = ({ navigation }) => {
              </TouchableHighlight>
         </View>
         <Separator height={15} />
+
+        <DropDownPicker
+        style={styles.inputContainer}
+        open={open1}
+        value={value1}
+        items={items1}
+        setOpen={setOpen1}
+        setValue={setValue1}
+        setItems={setItems1}
+        placeholderStyle={styles.dropdownstyles}
+        listParentLabelStyle={styles.dropdownstyles}
+        dropDownContainerStyle={styles.dropdowncontainerstyle}
+        labelStyle={styles.dropdownstyles}
+        placeholder="Select Food Category"
+        onSelectItem={(item) => {
+          setError(true);
+          setFieldName("foodCategory");
+          // console.log(item.value);
+          setfoodCategory(item.value);
+          
+        }}
+      />
+      {error && ShowError("foodCategory")}
+
+      
+      <Separator height={15} />
+        
+        
       <View
         style={
           isFieldInError("foodName") ? styles.error : styles.inputContainer
@@ -322,36 +354,12 @@ const InsertFoodItemScreen = ({ navigation }) => {
           />
         </View>
       </View>
+
+      
       {error && ShowError("foodName")}
       <Separator height={15} />
-      <View
-        style={
-          isFieldInError("foodPrice") ? styles.error : styles.inputContainer
-        }>
-        <View style={styles.inputSubContainer}>
-          <IonIcons
-            name="pricetags-outline"
-            size={22}
-            color={Colors.DEFAULT_GREY}
-            style={{ marginRight: 10 }}
-          />
-          <TextInput
-            onChangeText={(text) => {
-              setError(true);
-              setFieldName("foodPrice");
-              setfoodPrice(text);
-            }}
-            // onEndEditing={() => }
-            value={foodPrice}
-            placeholder="Food Price"
-            placeholderTextColor={Colors.DEFAULT_GREY}
-            selectionColor={Colors.DEFAULT_GREY}
-            style={styles.inputText}
-          />
-        </View>
-      </View>
-      {error && ShowError("foodPrice")}
-      <Separator height={15} />
+
+      
       <View
         style={
           isFieldInError("foodDescription")
@@ -382,6 +390,71 @@ const InsertFoodItemScreen = ({ navigation }) => {
       </View>
       {error && ShowError("foodDescription")}
       <Separator height={15} />
+      <DropDownPicker
+        style={styles.inputContainer}
+        open={open}
+        value={value}
+        items={items}
+        setOpen={setOpen}
+        setValue={setValue}
+        setItems={setItems}
+        placeholderStyle={styles.dropdownstyles}
+        listParentLabelStyle={styles.dropdownstyles}
+        dropDownContainerStyle={styles.dropdowncontainer1style}
+        labelStyle={styles.dropdownstyles}
+        placeholder="Select Food Type"
+        onSelectItem={(item) => {
+          setError(true);
+          setFieldName("foodType");
+          setFoodType(item.value);
+          if(item.value == "Free Food")
+          {
+            setfoodPrice("0");
+          }
+          else
+          {
+            setfoodPrice();
+          }
+        }}
+      />
+
+      {error && ShowError("foodType")}
+      <Separator height={15} />
+      <View
+        style={
+          isFieldInError("foodPrice") ? styles.error : styles.inputContainer
+        }>
+        <View style={styles.inputSubContainer}>
+          <IonIcons
+            name="pricetags-outline"
+            size={22}
+            color={Colors.DEFAULT_GREY}
+            style={{ marginRight: 10 }}
+          />
+          <TextInput
+
+            keyboardType="numeric"
+
+            // disable food price input when the food type is free
+            editable={foodType == "Free Food" ? false : true}
+
+            onChangeText={(text) => {
+              setError(true);
+              setFieldName("foodPrice");
+              setfoodPrice(text);
+            }}
+            // onEndEditing={() => }
+            value={foodPrice}
+            placeholder="Food Price"
+            placeholderTextColor={Colors.DEFAULT_GREY}
+            selectionColor={Colors.DEFAULT_GREY}
+            style={styles.inputText}
+          />
+        </View>
+      </View>
+      {error && ShowError("foodPrice")}
+      
+      <Separator height={15} />
       <View style={styles.inputContainer}>
         <View style={styles.inputSubContainer}>
           <MaterialIcons
@@ -407,50 +480,9 @@ const InsertFoodItemScreen = ({ navigation }) => {
       </View>
       {error && ShowError("foodQuantity")}
       <Separator height={15} />
-      <DropDownPicker
-        style={styles.inputContainer}
-        open={open}
-        value={value}
-        items={items}
-        setOpen={setOpen}
-        setValue={setValue}
-        setItems={setItems}
-        placeholderStyle={styles.dropdownstyles}
-        listParentLabelStyle={styles.dropdownstyles}
-        dropDownContainerStyle={styles.dropdowncontainer1style}
-        labelStyle={styles.dropdownstyles}
-        placeholder="Select Food Type"
-        onSelectItem={(item) => {
-          setError(true);
-          setFieldName("foodType");
-          setFoodType(item.value);
-        }}
-      />
+      
 
-      {error && ShowError("foodType")}
-      <Separator height={15} />
-
-      <DropDownPicker
-        style={styles.inputContainer}
-        open={open1}
-        value={value1}
-        items={items1}
-        setOpen={setOpen1}
-        setValue={setValue1}
-        setItems={setItems1}
-        placeholderStyle={styles.dropdownstyles}
-        listParentLabelStyle={styles.dropdownstyles}
-        dropDownContainerStyle={styles.dropdowncontainerstyle}
-        labelStyle={styles.dropdownstyles}
-        placeholder="Select Food Category"
-        onSelectItem={(item) => {
-          setError(true);
-          setFieldName("foodCategory");
-          // console.log(item.value);
-          setfoodCategory(item.value);
-        }}
-      />
-      {error && ShowError("foodCategory")}
+      
       {isAllValuesNull ? (
         <Text style={{ color: "red", fontSize: 15, marginLeft: 25 }}>
           All fields are required

@@ -79,6 +79,8 @@ export const getfoodbytype = createAsyncThunk(
     }
 );
 
+
+
 export const getfoodforcharitableorganization = createAsyncThunk(
     API_ENDPOINTS.FOOD_GET_FOR_CHARITABLE_ORGANIZATION,
     async (requestBody,thunkAPI) => {
@@ -101,6 +103,30 @@ export const getfoodforcharitableorganization = createAsyncThunk(
             });
         }
     }
+);
+
+export const getFoodsByName = createAsyncThunk(
+  API_ENDPOINTS.FOOD_GET_BY_NAME,
+  async (requestBody,thunkAPI) => {
+      try {
+          const result = await getData(API_ENDPOINTS.FOOD_GET_BY_NAME+"/"+requestBody.food_name+"/"+requestBody.is_free);
+          if (result.success == true) {
+              return result;
+          } else {
+            return thunkAPI.rejectWithValue({
+              status: "error",
+              message: result.message,
+            });
+          }
+      } catch (e) {
+
+          return thunkAPI.rejectWithValue({
+
+              status: "error",
+              message: "Unable to signup",
+          });
+      }
+  }
 );
 
 
@@ -180,6 +206,17 @@ const foodSlice = createSlice({
       {
         state.error =  action.payload;
         console.log(state.error.message)
+      } );
+
+      builder.addCase(getFoodsByName.fulfilled,(state,action) =>
+      {
+        state.foodlist = action.payload.food;
+      } );
+
+      builder.addCase(getFoodsByName.rejected,(state,action) =>
+      {
+        console.log(action);
+
       } );
   },
 

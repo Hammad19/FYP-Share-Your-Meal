@@ -95,10 +95,18 @@ const SigninScreen = ({ navigation }) => {
 
   const NavigatetoHome = () => {
     
-      if(state.auth.isLoggedIn)
+    if(state.auth.isLoggedIn)
     {
+      if(state.auth.user.emailVerified)
+      {
       Alert.alert("Success", "User Logged in Successfully ");
       navigation.navigate("CustomTabNavigator");
+      }
+      else{
+
+        navigation.navigate("EmailVerificationScreen");
+     
+      }
     }
     else if(state.auth.error.status== "loginerror")
     {

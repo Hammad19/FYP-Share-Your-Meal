@@ -367,8 +367,8 @@ const SignupScreen = ({ navigation }) => {
           <Text style={styles.signinButtonText}>Create Account</Text>
         </TouchableOpacity>
         {/* <Text>{getErrorMessages()}</Text> */}
-        <Text style={styles.orText}>OR</Text>
-        <TouchableOpacity style={styles.facebookButton}>
+        {/* <Text style={styles.orText}>OR</Text> */}
+        {/* <TouchableOpacity style={styles.facebookButton}>
           <View style={styles.socialButtonsContainer}>
             <View style={styles.signinButtonLogoContainer}>
               <Image style={styles.signinButtonLogo} source={Images.FACEBOOK} />
@@ -377,8 +377,8 @@ const SignupScreen = ({ navigation }) => {
               Connect with FaceBook
             </Text>
           </View>
-        </TouchableOpacity>
-        <TouchableOpacity style={styles.googleButton}>
+        </TouchableOpacity> */}
+        {/* <TouchableOpacity style={styles.googleButton}>
           <View style={styles.socialButtonsContainer}>
             <View style={styles.signinButtonLogoContainer}>
               <Image style={styles.signinButtonLogo} source={Images.GOOGLE} />
@@ -387,7 +387,7 @@ const SignupScreen = ({ navigation }) => {
               Connect with Google
             </Text>
           </View>
-        </TouchableOpacity>
+        </TouchableOpacity> */}
       </View>
     )
   );
