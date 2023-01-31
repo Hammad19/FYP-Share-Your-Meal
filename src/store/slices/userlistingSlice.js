@@ -98,9 +98,9 @@ const userlistingSlice = createSlice({
   initialState,
   reducers: {
     //change the initial state when userlogins
-    reset: (state,action) => {
-        state.foodlist = [];
-        state.isloaded = false;
+    resetupdate: (state,action) => {
+        state.error.status = ""
+        state.error.message = ""
     },
     setissharepage: (state,action) => {
         state.isSharePage = action.payload;
@@ -130,6 +130,11 @@ const userlistingSlice = createSlice({
     });
     builder.addCase(updateuserlisting.fulfilled, (state, action) => {
         state.isupdated = !state.isupdated;
+
+        state.error.status = "success";
+        state.error.message = action.payload.message;
+        console.log(action.payload.message,"<--food updated fulfilled");
+
         console.log(action.payload,"<-- state.foodlist updateuserlisting.fulfilled");
     });
     builder.addCase(updateuserlisting.rejected, (state, action) => {
@@ -141,6 +146,6 @@ const userlistingSlice = createSlice({
 });
 
 
-export const { setissharepage,reset } =userlistingSlice.actions;
+export const { setissharepage,resetupdate } =userlistingSlice.actions;
 
 export default userlistingSlice.reducer;

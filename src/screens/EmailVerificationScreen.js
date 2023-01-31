@@ -35,9 +35,9 @@ import {
   Poppins_900Black_Italic,
 } from "@expo-google-fonts/poppins";
 import { useEffect } from "react";
-import { resetstatus, verifyOtp } from "../store/slices/authSlice";
+import { resetstatus, sendOtpforEmailVerification, verifyOtp, verifyOtpforEmailVerification } from "../store/slices/authSlice";
 
-const VerificationScreen = ({navigation
+const EmailVerificationScreen = ({navigation
 }) => {
   const firstInput = useRef();
   const secondInput = useRef();
@@ -48,18 +48,27 @@ const VerificationScreen = ({navigation
   const state = useSelector((state) => state);
   const[checkchanged,setcheckchanged] = useState(false);
   const dispatch = useDispatch();
+
+useEffect(() => {
+    let requestBody = {
+        email: state.auth.user.email,
+        };
+        dispatch(sendOtpforEmailVerification(requestBody));
+    }, [])
+
+
   useEffect(() => {
-    NavigateToChangePasswordScreen();
+    NavigateToHome();
   }, [checkchanged])
 
  
 
-  const NavigateToChangePasswordScreen = () => {
+  const NavigateToHome = () => {
     
     if(state.auth.isOtpVerified)
     {
       Alert.alert("Success", state.auth.error.message);
-      navigation.navigate("ChangePasswordScreen");
+      navigation.navigate("CustomTabNavigator");
     }
     else if(state.auth.error.status == "otpverifiedError")
     {
@@ -71,13 +80,12 @@ const VerificationScreen = ({navigation
       const value = Object.entries(otp).map(([k, v]) => (`${v}`)).join('')
       console.log(value)
 
-      console.log(state.auth.verificationemail)
       let requestBody = {
-        email: state.auth.verificationemail,
+        email: state.auth.user.email,
         otp: value,
       };
 
-      dispatch(verifyOtp(requestBody)).then(() => {setcheckchanged(!checkchanged)});
+      dispatch(verifyOtpforEmailVerification(requestBody)).then(() => {setcheckchanged(!checkchanged)});
       
   }
 
@@ -99,7 +107,7 @@ const VerificationScreen = ({navigation
             name="chevron-back-outline"
             size={30}
             onPress={() => {
-              dispatch(resetstatus());
+              //dispatch(resetstatus());
               navigation.goBack()
                         
                           }}
@@ -108,8 +116,8 @@ const VerificationScreen = ({navigation
         </View>
         <Text style={styles.title}>OTP Verification</Text>
         <Text style={styles.content}>
-          Enter the OTP number just sent you at{" "}
-          <Text style={styles.phoneNumberText}>{state.auth.verificationemail}</Text>
+          For Account Verification We have Just Sent You an OTP. Enter the OTP number just sent you at{" "}
+          <Text style={styles.phoneNumberText}>{state.auth.user.email}</Text>
         </Text>
         <View style={styles.otpContainer}>
           <View style={styles.otpBox}>
@@ -267,4 +275,4 @@ const styles = StyleSheet.create({
   },
 });
 
-export default VerificationScreen;
+export default EmailVerificationScreen;

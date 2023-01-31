@@ -188,8 +188,8 @@ const FoodDetailScreen =  ({route,navigation}) => {
         <View style={styles.host}>
           <View>
             
-            <Text style={styles.mediumText}>Singaporean Rice</Text>
-            <Text style={styles.mediumText}>Givesaway by Hammad</Text>
+            <Text style={styles.mediumText}>{post.food_name}</Text>
+            <Text style={styles.mediumText}>Givesaway by {post.food_shared_by}</Text>
 
           </View>
           <Image style={styles.avatar} source={{uri: "https://preview.keenthemes.com/metronic-v4/theme/assets/pages/media/profile/people19.png"}} />
@@ -222,7 +222,7 @@ const FoodDetailScreen =  ({route,navigation}) => {
           style={styles.cartButton}
           onPress={() => navigation.navigate('Cart')}
           activeOpacity={0.8}>
-          <Text style={styles.cartButtonText}>Go to Cart</Text>
+          <Text style={styles.cartButtonText}>{post.is_free?"Request":"Add To Cart"}</Text>
         </TouchableOpacity>
       </View>
     

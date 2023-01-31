@@ -9,8 +9,6 @@ import {
   Image,
   TouchableOpacity,
 } from "react-native";
-import { NavigationContainer } from "@react-navigation/native";
-import { createNativeStackNavigator } from "@react-navigation/native-stack";
 import { Display } from "../utils";
 import { Colors, Images } from "../content";
 import {
@@ -43,7 +41,7 @@ const SplashScreen = ({ navigation }) => {
   useEffect(() => {
     setTimeout(() => {
       navigation.navigate("WelcomeScreen");
-    }, 2000);
+    }, 3000);
   }, []);
 
   return (

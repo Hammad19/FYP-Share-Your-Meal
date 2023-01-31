@@ -52,7 +52,7 @@ const Post = (props) => {
       <View style={styles.details}>
 
         <Text style={styles.detailText}>
-        Gives away By Hammad Waseem</Text>
+        Posted By {post.food_shared_by}</Text>
 
         <View style={styles.ratingtext}>
         <Icon name="star" color={Colors.DEFAULT_YELLOW} size={18} />
@@ -68,10 +68,7 @@ const Post = (props) => {
 
       {/*  Old price & new price */}
       <Text style={styles.prices}>
-        <Text style={styles.oldPrice}>{post.food_price
-} RS</Text>
-        <Text style={styles.price}>  {post.food_price
-} RS </Text>
+        <Text style={styles.price}>{post.is_free?"Free":post.food_price} </Text>
         / Per Serving
       </Text>
 
@@ -127,7 +124,7 @@ const styles = StyleSheet.create({
     container: {
       marginHorizontal: 15,
       paddingBottom: 15,
-
+      
     },
     image: {
       width: '100%',

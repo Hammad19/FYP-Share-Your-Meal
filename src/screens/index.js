@@ -12,18 +12,14 @@ import InsertFoodItemScreen from "./InsertFoodItemScreen";
 import UpdateFoodScreen from "./UpdateFoodScreen";
 import GoogleMapScreen from "./GoogleMapScreen";
 
-export {
-  SplashScreen,
-  WelcomeScreen,
-  SigninScreen,
-  SignupScreen,
-  ForgotPasswordScreen,
-  RegisterPhoneScreen,
-  HomeScreen,
-  AddFoodScreen,
-  InsertFoodItemScreen,
-  FoodDetailScreen,
-  UpdateFoodScreen,
-  FilterScreen,
-  GoogleMapScreen,
+import FoodDetailScreen from './FoodDetailScreen';
+import InsertFoodItemScreen from './InsertFoodItemScreen';
+import UpdateFoodScreen from './UpdateFoodScreen';
+import ChangePasswordScreen from './ChangePasswordScreen';
+import EmailVerificationScreen from './EmailVerificationScreen';
+import ProfileScreen from './ProfileScreen';
+import EditProfileScreen from './EditProfileScreen';
+
+
+export {SplashScreen,WelcomeScreen,SigninScreen,SignupScreen, ForgotPasswordScreen,RegisterPhoneScreen,HomeScreen ,AddFoodScreen,InsertFoodItemScreen,FoodDetailScreen,UpdateFoodScreen,ChangePasswordScreen,EmailVerificationScreen,ProfileScreen,EditProfileScreen
 };
