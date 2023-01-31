@@ -1,5 +1,5 @@
 import { createStackNavigator, Header } from "@react-navigation/stack";
-import {HomeScreen,FoodDetailScreen,UpdateFoodScreen} from "../screens";
+import {HomeScreen,FoodDetailScreen,FilterScreen ,GoogleMapScreen} from "../screens";
 
 
 
@@ -13,7 +13,8 @@ const HomeTabNavigator = ()=>
             <Stack.Navigator initialRouteName="HomeScreen" screenOptions={{headerShown:false}}>
                 <Stack.Screen name = "HomeScreen" component ={HomeScreen}></Stack.Screen>
                 <Stack.Screen name = "FoodDetailScreen" component ={FoodDetailScreen}></Stack.Screen>
-                {/* <Stack.Screen name = "UpdateFoodScreen" component ={UpdateFoodScreen}></Stack.Screen> */}
+                <Stack.Screen name = "FilterScreen" component ={FilterScreen}></Stack.Screen>
+                <Stack.Screen name = "GoogleMapScreen" component ={GoogleMapScreen}></Stack.Screen>
             </Stack.Navigator> 
        );
     
