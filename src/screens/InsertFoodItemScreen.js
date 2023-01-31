@@ -73,10 +73,6 @@ const InsertFoodItemScreen = ({ navigation }) => {
     Poppins_500Medium,
     Poppins_700Bold,
   });
-  const setToastmsg = (msg) => {
-    ToastAndroid.showWithGravity(msg, ToastAndroid.SHORT, ToastAndroid.CENTER);
-  };
-
   const requestExternalWritePermission = async () => {
     if (Platform.OS === "android") {
       try {
