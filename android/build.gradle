@@ -8,6 +8,9 @@ buildscript {
         minSdkVersion = Integer.parseInt(findProperty('android.minSdkVersion') ?: '21')
         compileSdkVersion = Integer.parseInt(findProperty('android.compileSdkVersion') ?: '31')
         targetSdkVersion = Integer.parseInt(findProperty('android.targetSdkVersion') ?: '31')
+        supportLibVersion = findProperty('android.supportLibVersion') ?: '31.0.0'
+        googlePlayServicesVersion = findProperty('android.googlePlayServicesVersion') ?: '18.1.0'
+        androidMapsUtilsVersion = findProperty('android.androidMapsUtilsVersion') ?: '3.0.0'
         if (findProperty('android.kotlinVersion')) {
             kotlinVersion = findProperty('android.kotlinVersion')
         }
