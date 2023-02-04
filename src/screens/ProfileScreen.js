@@ -11,7 +11,6 @@ import {
 
 import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
 
-import Share from 'react-native-share';
 import { useSelector } from 'react-redux';
 import { Colors } from '../content';
 
@@ -21,20 +20,20 @@ const ProfileScreen = ({navigation}) => {
 
 
   const auth = useSelector(state => state.auth);
-  const myCustomShare = async() => {
-    const shareOptions = {
-      message: 'Order your next meal from FoodFinder App. I\'ve already ordered more than 10 meals on it.',
-      url: files.appLogo,
-      // urls: [files.image1, files.image2]
-    }
+  // const myCustomShare = async() => {
+  //   // const shareOptions = {
+  //   //   message: 'Order your next meal from FoodFinder App. I\'ve already ordered more than 10 meals on it.',
+  //   //   url: files.appLogo,
+  //   //   // urls: [files.image1, files.image2]
+  //   // }
 
-    try {
-      const ShareResponse = await Share.open(shareOptions);
-      console.log(JSON.stringify(ShareResponse));
-    } catch(error) {
-      console.log('Error => ', error);
-    }
-  };
+  //   try {
+  //    // const ShareResponse = await Share.open(shareOptions);
+  //     //console.log(JSON.stringify(ShareResponse));
+  //   } catch(error) {
+  //     console.log('Error => ', error);
+  //   }
+  // };
 
   return (
 
@@ -118,12 +117,12 @@ const ProfileScreen = ({navigation}) => {
             <Text style={styles.menuItemText}>Your Reviews</Text>
           </View>
         </TouchableRipple>
-        <TouchableRipple onPress={myCustomShare}>
+        {/* <TouchableRipple onPress={myCustomShare}>
           <View style={styles.menuItem}>
             <Icon name="share-outline" color={Colors.DEFAULT_GREEN} size={25}/>
             <Text style={styles.menuItemText}>Tell Your Friends</Text>
           </View>
-        </TouchableRipple>
+        </TouchableRipple> */}
         <TouchableRipple onPress={() => {}}>
           <View style={styles.menuItem}>
             <Icon name="account-check-outline" color={Colors.DEFAULT_GREEN} size={25}/>

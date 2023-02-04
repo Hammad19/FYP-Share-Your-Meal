@@ -129,8 +129,7 @@ const HomeScreen = ({ navigation }) => {
   return (
     fontsLoaded && (
       <>
-        <View style={styles.container}>
-        <BottomSheet 
+      <BottomSheet 
             ref={bs}
             snapPoints={[0, 280]}
             renderContent={renderInner}
@@ -139,6 +138,8 @@ const HomeScreen = ({ navigation }) => {
             callbackNode={fall}
             enabledGestureInteraction={true}
           />
+        <View style={styles.container}>
+        
           <StatusBar
             barStyle="light-content"
             backgroundColor="transparent"
