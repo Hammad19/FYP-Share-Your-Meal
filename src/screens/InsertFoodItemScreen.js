@@ -96,6 +96,20 @@ const InsertFoodItemScreen = ({ navigation }) => {
   };
 
 
+  //convert base64 to image file
+
+  
+  
+  
+  
+  var base64Img;
+
+  
+
+
+
+
+
   const setImage = async () => {
     let options = {
       mediaType: "photo",
@@ -111,12 +125,17 @@ const InsertFoodItemScreen = ({ navigation }) => {
         allowsEditing: true,
         aspect: [4, 3],
         quality: 1,
+        base64: true,
       }).catch((error) => console.log(error));
 
   
      if(!result.cancelled)
      {
-       setfoodImage(result.uri);
+      
+      
+
+       console.log(result.base64);
+       setfoodImage(result.base64);
      }
      else
       {
@@ -296,7 +315,8 @@ const InsertFoodItemScreen = ({ navigation }) => {
                 <Text style={styles.inputImageText}>Select Food Image</Text>
               </View>
              ) : (
-              <Image  source={{uri:foodImage}} style={styles.imageContainer} /> 
+              <Image source={{uri:foodImage }
+              } style={styles.imageContainer} /> 
              ) } 
              </TouchableHighlight>
         </View>
@@ -616,6 +636,7 @@ const styles = StyleSheet.create({
     width: 100,
     height: 100,
     borderRadius: 8,
+    imageSizeMode: "cover",
   } ,
   error: {
     backgroundColor: Colors.LIGHT_GREY,

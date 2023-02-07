@@ -26,6 +26,31 @@ export const userSignup = createAsyncThunk(
   }
 );
 
+
+
+export const addLocation = createAsyncThunk(
+  API_ENDPOINTS.LOCATION,
+  async (requestBody, thunkAPI) => {
+    try {
+      const result = await addData(API_ENDPOINTS.LOCATION, requestBody);
+      if (result.success == true) {
+        return result;
+      } else {
+        console.log(result, "<-- result");
+        return thunkAPI.rejectWithValue({
+          status: "error",
+          message: result.message,
+        });
+      }
+    } catch (e) {
+      thunkAPI.rejectWithValue({
+        status: "error",
+        message: "Unable to signup",
+      });
+    }
+  }
+);
+
 /// Verify OTP
 export const verifyOtp = createAsyncThunk(
   API_ENDPOINTS.OTP_VERIFY,
@@ -328,6 +353,14 @@ const authSlice = createSlice({
       state.token = action.payload.token;
       console.log(state,  "<-- state userlogin fulfilled");
     }),
+
+    builder.addCase(addLocation.fulfilled, (state, action) => {
+      state.error.status = "locationsuccess";
+      state.user = action.payload.user;
+      console.log(state,  "<-- state userlogin fulfilled");
+    }),
+
+
     builder.addCase(userLogin.rejected, (state, action) => {
         // console.log(action.payload, "<-- Login rejected");
         state.error.status = "loginerror";
@@ -335,6 +368,15 @@ const authSlice = createSlice({
         state.isLoggedIn = false;
       
     });
+
+
+    builder.addCase(addLocation.rejected, (state, action) => {
+      // console.log(action.payload, "<-- Login rejected");
+      state.error.status = "locationerror";
+      state.error.message = action.payload.message;
+      state.isLoggedIn = false;
+    
+  });
 
     //create a builder for verifyotpforemailverification
    

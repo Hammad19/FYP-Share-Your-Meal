@@ -60,7 +60,13 @@ const SigninScreen = ({ navigation }) => {
   const state = useSelector((state) => state);
 
   useEffect(() => {
+    dispatch(reset());
+  }, []);
+
+
+  useEffect(() => {
     validateField();
+    
   }, [email, password]);
 
 
@@ -117,6 +123,12 @@ const SigninScreen = ({ navigation }) => {
   
   const Login = () => 
   {
+
+    
+    dispatch(reset());
+
+
+
     setError(false);
 
     validate({
