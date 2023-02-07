@@ -9,6 +9,7 @@ import Geocoder from 'react-native-geocoding';
 import { Colors, Images } from "../content";
 import { StyleSheet, Text, View, TouchableOpacity } from "react-native";
 import * as Location from "expo-location";
+import { addLocation } from "../store/slices/authSlice";
 const styles = StyleSheet.create({
   container: {
     ...StyleSheet.absoluteFillObject,
@@ -37,10 +38,47 @@ const styles = StyleSheet.create({
   },
 });
 const GoogleMapScreen = () => {
+
+  const [address, setAddress] = React.useState("");
   const [coordinate, setCoordinate] = React.useState({
     latitude: 37.78825,
     longitude: -122.4324,
   });
+
+  const dispatch = useDispatch();
+
+  const sendLocation = () => {
+
+    const requestBody = {
+      coord : {
+        latitude: coordinate.latitude,
+        longitude: coordinate.longitude,
+      },
+      location_name: address,
+
+    }
+
+    dispatch(addLocation(requestBody));
+
+    if(state.auth.error.status === "locationsuccess")
+    {
+      Alert.alert("Location Added Successfully");
+    }
+    else
+    {
+      Alert.alert("Error",state.auth.error.message);
+    }
+
+    
+
+
+  }
+
+  useEffect(() => {
+    sendLocation();
+  }, [address]);
+
+
 
 
   const [marginBottom, setMarginBottom] = React.useState({
@@ -107,6 +145,7 @@ const getUserLocation = () => {
   Geocoder.from(coordinate.latitude, coordinate.longitude)
     .then(json => {
       var addressComponent = json.results[0].formatted_address;
+      setAddress(addressComponent);
       console.log(addressComponent);
     })
     .catch(error => console.warn(error));
