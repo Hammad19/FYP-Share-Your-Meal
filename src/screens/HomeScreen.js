@@ -104,7 +104,11 @@ const HomeScreen = ({ navigation }) => {
 
   const renderInner = () => (
     <View style={styles.panel}>
-      <TouchableOpacity style={styles.panelLocationButton}>
+      <View style={{alignItems: 'center'}}>
+        <Text style={styles.panelTitle}>Location</Text>
+        <Text style={styles.panelSubtitle}>Choose Your Current Location</Text>
+      </View>
+      <TouchableOpacity style={styles.panelButton}>
         <Text
           style={styles.panelButtonTitle}
           onPress={() => navigation.navigate("GoogleMapScreen")}>
@@ -135,7 +139,8 @@ const HomeScreen = ({ navigation }) => {
   return (
     fontsLoaded && (
       <>
-        <BottomSheet
+      <View style={styles.container}>
+      <BottomSheet
           ref={bs}
           snapPoints={[0, 280]}
           renderContent={renderInner}
@@ -144,7 +149,8 @@ const HomeScreen = ({ navigation }) => {
           callbackNode={fall}
           enabledGestureInteraction={true}
         />
-        <View style={styles.container}>
+        {/* <Animated.View style={{margin: 20,
+        opacity: Animated.add(0.5, Animated.multiply(fall, 1.0)),}}> */}
           <StatusBar
             barStyle="light-content"
             backgroundColor="transparent"
@@ -201,6 +207,9 @@ const HomeScreen = ({ navigation }) => {
                 style={{ marginRight: 10 }}
                 onPress={() => navigation.navigate("FilterScreen")}
               />
+            </View>
+            <View>
+              
             </View>
             {state.auth.user.accounttype === "User" && (
               <View
@@ -270,6 +279,7 @@ const HomeScreen = ({ navigation }) => {
               //
             />
           )}
+        {/* </Animated.View> */}
         </View>
       </>
     )
@@ -371,59 +381,58 @@ const styles = StyleSheet.create({
     color: Colors.DEFAULT_WHITE,
     opacity: isActive ? 1 : 0.5,
   }),
+  panel: {
+    padding: 20,
+    backgroundColor: '#FFFFFF',
+    paddingTop: 20,
+    // borderTopLeftRadius: 20,
+    // borderTopRightRadius: 20,
+    // shadowColor: '#000000',
+    // shadowOffset: {width: 0, height: 0},
+    // shadowRadius: 5,
+    // shadowOpacity: 0.4,
+  },
   header: {
-    backgroundColor: Colors.LIGHT_YELLOW,
-    shadowColor: "#333333",
-    shadowOffset: { width: -1, height: -3 },
+    backgroundColor: '#FFFFFF',
+    shadowColor: '#333333',
+    shadowOffset: {width: -1, height: -3},
     shadowRadius: 2,
     shadowOpacity: 0.4,
     // elevation: 5,
-    //paddingTop: 10,
-    borderTopLeftRadius: 30,
-    borderTopRightRadius: 30,
-    height: 30,
+    paddingTop: 20,
+    borderTopLeftRadius: 20,
+    borderTopRightRadius: 20,
   },
   panelHeader: {
-    alignItems: "center",
+    alignItems: 'center',
   },
   panelHandle: {
-    width: 50,
-    height: 6,
+    width: 40,
+    height: 8,
     borderRadius: 4,
-    backgroundColor: '#00000060',
-    marginTop: 10,
+    backgroundColor: '#00000040',
+    marginBottom: 10,
+  },
+  panelTitle: {
+    fontSize: 27,
+    height: 35,
+  },
+  panelSubtitle: {
+    fontSize: 14,
+    color: 'gray',
+    height: 30,
+    marginBottom: 10,
   },
   panelButton: {
-    padding: 10,
+    padding: 13,
     borderRadius: 10,
-    backgroundColor: Colors.DEFAULT_YELLOW,
+    backgroundColor: Colors.DEFAULT_GREEN,
     alignItems: 'center',
-    marginTop: 130,
-  },
-  panelLocationButton: {
-    padding: 10,
-    borderRadius: 10,
-    marginTop: -10,
-    backgroundColor: Colors.DEFAULT_YELLOW,
-    borderLeftColor: "black",
-    alignItems: "center",
+    marginVertical: 7,
   },
   panelButtonTitle: {
     fontSize: 17,
-    fontWeight: "bold",
-    color: "white",
-  },
-  panel: {
-    padding: 10,
-    backgroundColor: Colors.LIGHT_YELLOW,
-    paddingTop: 20,
-    paddingBottom: 0,
-    height: 265,
-    // borderTopLeftRadius: 20,
-    // borderTopRightRadius: 20,
-    shadowColor: '#000000',
-    // shadowOffset: {width: 0, height: 0},
-    // shadowRadius: 5,
-    shadowOpacity: 0.4,
+    fontWeight: 'bold',
+    color: 'white',
   },
 });

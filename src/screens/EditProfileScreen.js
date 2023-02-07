@@ -100,7 +100,7 @@ const EditProfileScreen = ({navigation}) => {
     setImagee();
   }
 
-  renderInner = () => (
+ const renderInner = () => (
     <View style={styles.panel}>
       <View style={{alignItems: 'center'}}>
         <Text style={styles.panelTitle}>Upload Photo</Text>
@@ -124,7 +124,7 @@ const EditProfileScreen = ({navigation}) => {
     </View>
   );
 
-  renderHeader = () => (
+  const renderHeader = () => (
     <View style={styles.header}>
       <View style={styles.panelHeader}>
         <View style={styles.panelHandle} />
@@ -132,8 +132,8 @@ const EditProfileScreen = ({navigation}) => {
     </View>
   );
 
-  bs = React.createRef();
-  fall = new Animated.Value(1);
+ const bs = React.createRef();
+ const fall = new Animated.Value(1);
 
   return (
     <View style={styles.container}>
