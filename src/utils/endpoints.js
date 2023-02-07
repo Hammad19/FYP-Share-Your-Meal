@@ -14,7 +14,8 @@ export default API_ENDPOINTS = {
     //OTP
     OTP_SEND_FOR_EMAIL_VERIFICATION: "users/sendotpforemail",
     OTP_VERIFY_EMAIL: "users/verifyotpforemail",
-    FOOD_GET_BY_NAME: "food/"
+    FOOD_GET_BY_NAME: "food/",
+    ADD_LOCATION: "users/location",
 
 
 }

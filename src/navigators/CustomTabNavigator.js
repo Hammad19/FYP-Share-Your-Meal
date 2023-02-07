@@ -10,6 +10,7 @@ import AddFoodScreen from '../screens/AddFoodScreen';
 import AddFoodNavigator from './AddFoodNavigator';
 import { ProfileScreen } from '../screens';
 import ProfileNavigator from './ProfileNavigator';
+import { useSelector } from 'react-redux';
 
 function Orders() {
   return (
@@ -24,9 +25,12 @@ const profileName = "Profile";
 const settingsName = "Share";
 const ordersName = "Orders";
 
+
 const Tab = createBottomTabNavigator();
 
 export default function  CustomTabNavigator() {
+
+  const state = useSelector((state) => state);
   return (
     <Tab.Navigator 
         initialRouteName={homeName}
@@ -61,9 +65,12 @@ export default function  CustomTabNavigator() {
        >
 
         <Tab.Screen name={homeName} component={HomeTabNavigator} /> 
-        <Tab.Screen name={settingsName} component={AddFoodNavigator} />
-        <Tab.Screen name={ordersName} component={Orders} />
+        {state.auth.user.accounttype=== "User"?(<Tab.Screen name={settingsName} component={AddFoodNavigator} />):(<></>)}
+        {state.auth.user.accounttype=== "User"?(<Tab.Screen name={ordersName} component={Orders} />):(<></>)}
         <Tab.Screen name={profileName} component={ProfileNavigator} />
+
+
+
 
       </Tab.Navigator>
   );

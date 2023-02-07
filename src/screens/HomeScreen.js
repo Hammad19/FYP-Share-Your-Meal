@@ -26,15 +26,20 @@ import Feather from "react-native-vector-icons/Feather";
 import { Display } from "../utils";
 import MaterialCommunityIcons from "react-native-vector-icons/MaterialCommunityIcons";
 import { useSelector, useDispatch } from "react-redux";
-import { getFood,getfoodbytype,getfoodforcharitableorganization, getFoodsByName } from "../store/slices/foodSlice";
+import {
+  getFood,
+  getfoodbytype,
+  getfoodforcharitableorganization,
+  getFoodsByName,
+} from "../store/slices/foodSlice";
 import { setissharepage } from "../store/slices/userlistingSlice";
 import { useFocusEffect } from "@react-navigation/native";
-import Animated, { color } from 'react-native-reanimated';
-import BottomSheet from 'reanimated-bottom-sheet';
+import Animated, { color } from "react-native-reanimated";
+import BottomSheet from "reanimated-bottom-sheet";
 //import { black } from "react-native-paper/lib/typescript/styles/colors";
 
 const HomeScreen = ({ navigation }) => {
-  const [foodType, setFoodType] = useState();
+  const [foodType, setFoodType] = useState("Free Food");
   const [foodSearch, setFoodSearch] = useState(true);
   let [fontsLoaded] = useFonts({
     Poppins_500Medium,
@@ -42,8 +47,8 @@ const HomeScreen = ({ navigation }) => {
     Poppins_600SemiBold,
   });
 
-    bs = React.createRef();
-    fall = new Animated.Value(1);
+  const bs = React.createRef();
+  const fall = new Animated.Value(1);
   //whenever the user comes in this page set issharepage to false
   const dispatch = useDispatch();
   const state = useSelector((state) => state);
@@ -56,42 +61,36 @@ const HomeScreen = ({ navigation }) => {
 
     console.log(requestBody);
 
-    if(state.auth.user.accounttype === "User"){
-
+    if (state.auth.user.accounttype === "User") {
       FetchFoodByType();
-    }
-    else if(state.auth.user.accounttype === "Charitable Organization")
-
-    {
-
-      console.log("Hello in charitable")
+    } else if (state.auth.user.accounttype === "Charitable Organization") {
+      console.log("Hello in charitable");
 
       dispatch(getfoodforcharitableorganization(requestBody));
     }
   };
 
   const FetchFoodByType = () => {
+    if (foodSearch?.length > 0) {
+      let requestBody = {
+        is_free: foodType == "Free Food" ? true : false,
+        food_name: foodSearch,
+      };
 
-   if(foodSearch?.length > 0)
-   {
-    let requestBody = {
-      is_free: foodType== "Free Food"?true:false,
-      food_name: foodSearch
-    }
-
-    dispatch(getFoodsByName(requestBody));
-   }
-
-    else if(foodType === "Free Food"){
-        let requestBody = {
-          is_free: "true"
-        }
-        dispatch(getfoodbytype(requestBody));
-
-      
+      dispatch(getFoodsByName(requestBody));
+    } else if (foodType === "Free Food") {
+      let requestBody = {
+        is_free: "true",
+      };
+      dispatch(getfoodbytype(requestBody));
+    } else if (foodType === "Paid Food") {
+      let requestBody = {
+        is_free: "false",
+      };
+      dispatch(getfoodbytype(requestBody));
     }
   };
-  renderHeader = () => (
+  const renderHeader = () => (
     <View style={styles.header}>
       <View style={styles.panelHeader}>
         <View style={styles.panelHandle} />
@@ -99,10 +98,14 @@ const HomeScreen = ({ navigation }) => {
     </View>
   );
 
-  renderInner = () => (
+  const renderInner = () => (
     <View style={styles.panel}>
-      <TouchableOpacity style={styles.panelLocationButton} >
-        <Text style={styles.panelButtonTitle} onPress={() => navigation.navigate("GoogleMapScreen")}>+ Add location</Text>
+      <TouchableOpacity style={styles.panelLocationButton}>
+        <Text
+          style={styles.panelButtonTitle}
+          onPress={() => navigation.navigate("GoogleMapScreen")}>
+          + Add location
+        </Text>
       </TouchableOpacity>
       <TouchableOpacity
         style={styles.panelButton}
@@ -113,11 +116,9 @@ const HomeScreen = ({ navigation }) => {
   );
 
   useEffect(() => {
-
-    console.log(foodSearch)
+    console.log(foodSearch);
     FetchFoodByType();
-  }, [foodType,foodSearch]);
-
+  }, [foodType, foodSearch]);
 
   useFocusEffect(
     useCallback(() => {
@@ -129,17 +130,16 @@ const HomeScreen = ({ navigation }) => {
   return (
     fontsLoaded && (
       <>
-      <BottomSheet 
-            ref={bs}
-            snapPoints={[0, 280]}
-            renderContent={renderInner}
-            renderHeader={renderHeader}
-            initialSnap={1}
-            callbackNode={fall}
-            enabledGestureInteraction={true}
-          />
+        <BottomSheet
+          ref={bs}
+          snapPoints={[0, 280]}
+          renderContent={renderInner}
+          renderHeader={renderHeader}
+          initialSnap={1}
+          callbackNode={fall}
+          enabledGestureInteraction={true}
+        />
         <View style={styles.container}>
-        
           <StatusBar
             barStyle="light-content"
             backgroundColor="transparent"
@@ -155,7 +155,9 @@ const HomeScreen = ({ navigation }) => {
                 color={Colors.DEFAULT_WHITE}
               />
               <Text style={styles.locationText}>Welcome</Text>
-              <Text style={styles.selectedLocationText}>{state.auth.user.first_name}</Text>
+              <Text style={styles.selectedLocationText}>
+                {state.auth.user.first_name}
+              </Text>
               {/* <MaterialIcons
                 name="keyboard-arrow-down"
                 size={16}
@@ -202,12 +204,10 @@ const HomeScreen = ({ navigation }) => {
                   alignItems: "center",
                   justifyContent: "space-evenly",
                   width: Display.setWidth(100),
-                }}
-              >
+                }}>
                 <TouchableOpacity
                   onPress={() => setFoodType("Free Food")}
-                  style={styles.category()}
-                >
+                  style={styles.category()}>
                   <Ionicons
                     name={
                       foodType == "Free Food"
@@ -227,8 +227,7 @@ const HomeScreen = ({ navigation }) => {
                 </TouchableOpacity>
                 <TouchableOpacity
                   onPress={() => setFoodType("Paid Food")}
-                  style={styles.category()}
-                >
+                  style={styles.category()}>
                   <MaterialCommunityIcons
                     name={foodType == "Paid Food" ? "food" : "food-outline"}
                     size={35}
@@ -245,12 +244,26 @@ const HomeScreen = ({ navigation }) => {
               </View>
             )}
           </View>
-          <FlatList
-            style={{ flex: 1, zIndex: -1, paddingTop: 55 }}
-            data={state.food.foodlist}
-            renderItem={({ item }) => <FoodItem post={item} />}
-            //
-          />
+
+          {state.food.foodlist.length === 0 ? (
+            <View
+              style={{
+                flex: 1,
+                justifyContent: "center",
+                alignItems: "center",
+              }}>
+              <Text style={{ fontSize: 20, color: Colors.DEFAULT_GREY }}>
+                No Food Available
+              </Text>
+            </View>
+          ) : (
+            <FlatList
+              style={{ flex: 1, zIndex: -1, paddingTop: 55 }}
+              data={state.food.foodlist}
+              renderItem={({ item }) => <FoodItem post={item} />}
+              //
+            />
+          )}
         </View>
       </>
     )
@@ -263,7 +276,6 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     backgroundColor: Colors.SECONDARY_WHITE,
-    
   },
   backgroundCurvedContainer: {
     backgroundColor: Colors.DEFAULT_GREEN,
@@ -355,8 +367,8 @@ const styles = StyleSheet.create({
   }),
   header: {
     backgroundColor: Colors.LIGHT_YELLOW,
-    shadowColor: '#333333',
-    shadowOffset: {width: -1, height: -3},
+    shadowColor: "#333333",
+    shadowOffset: { width: -1, height: -3 },
     shadowRadius: 2,
     shadowOpacity: 0.4,
     // elevation: 5,
@@ -366,33 +378,33 @@ const styles = StyleSheet.create({
     height: 30,
   },
   panelHeader: {
-    alignItems: 'center',
+    alignItems: "center",
   },
   panelHandle: {
     width: 40,
     height: 8,
     borderRadius: 4,
-    backgroundColor: '#00000040',
+    backgroundColor: "#00000040",
     marginTop: 20,
   },
   panelButton: {
     padding: 15,
     borderRadius: 10,
     backgroundColor: Colors.DEFAULT_YELLOW,
-    alignItems: 'center',
+    alignItems: "center",
     marginTop: 120,
   },
   panelLocationButton: {
     padding: 15,
     borderRadius: 10,
     backgroundColor: Colors.DEFAULT_YELLOW,
-    borderLeftColor: 'black',
-    alignItems: 'center',
+    borderLeftColor: "black",
+    alignItems: "center",
   },
   panelButtonTitle: {
     fontSize: 17,
-    fontWeight: 'bold',
-    color: 'white',
+    fontWeight: "bold",
+    color: "white",
   },
   panel: {
     padding: 10,
@@ -407,5 +419,4 @@ const styles = StyleSheet.create({
     // shadowRadius: 5,
     // shadowOpacity: 0.4,
   },
-
 });

@@ -135,6 +135,19 @@ const ProfileScreen = ({navigation}) => {
             <Text style={styles.menuItemText}>Settings</Text>
           </View>
         </TouchableRipple>
+
+        <TouchableRipple onPress={() => {
+          navigation.navigate("SigninScreen")
+        }}>
+          <View style={styles.menuItem}>
+            <Icon name="exit-to-app" color={Colors.DEFAULT_GREEN} size={25}/>
+            <Text style={styles.menuItemText}>Sign Out</Text>
+
+            </View>
+        </TouchableRipple>
+
+
+
       </View>
     </SafeAreaView>
   );
