@@ -45,7 +45,7 @@ const Post = (props) => {
       {/* Image  */}
       <Image
         style={styles.image}
-        source={{uri: `data:image/png;base64,${post.food_image}`}}
+        source={{uri:post.food_image}}
       />
 
       {/* Bed & Bedroom  */}

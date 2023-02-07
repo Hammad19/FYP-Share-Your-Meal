@@ -132,10 +132,7 @@ const InsertFoodItemScreen = ({ navigation }) => {
      if(!result.cancelled)
      {
       
-      
-
-       console.log(result.base64);
-       setfoodImage(result.base64);
+       setfoodImage(result.uri);
      }
      else
       {
@@ -315,7 +312,7 @@ const InsertFoodItemScreen = ({ navigation }) => {
                 <Text style={styles.inputImageText}>Select Food Image</Text>
               </View>
              ) : (
-              <Image source={{uri:foodImage }
+              <Image source={{uri:foodImage  }
               } style={styles.imageContainer} /> 
              ) } 
              </TouchableHighlight>
