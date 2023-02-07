@@ -22,7 +22,7 @@ import IonIcons from "react-native-vector-icons/Ionicons";
 import MaterialIcons from "react-native-vector-icons/MaterialIcons";
 import Feather from "react-native-vector-icons/Feather";
 import { TextInput } from "react-native-gesture-handler";
-import { launchImageLibrary } from "react-native-image-picker";
+import * as ImagePicker from 'expo-image-picker';
 import { PermissionsAndroid } from "react-native";
 import { addFood } from "../store/slices/foodSlice";
 
@@ -72,26 +72,29 @@ const InsertFoodItemScreen = ({ navigation }) => {
     Poppins_700Bold,
   });
   const requestExternalWritePermission = async () => {
-    if (Platform.OS === "android") {
+    if (Platform.OS === 'android') {
       try {
         const granted = await PermissionsAndroid.request(
           PermissionsAndroid.PERMISSIONS.WRITE_EXTERNAL_STORAGE,
           {
-            title: "External Storage Write Permission",
-            message: "App needs write permission",
-          }
+            title: 'Share Your Meal App Camera Permission',
+            message:  'App needs access to your camera ' + 'so you can upload awesome food.',
+            buttonNeutral: 'Ask Me Later',
+            buttonNegative: 'Cancel',
+            buttonPositive: 'OK',
+            
+          },
         );
         // If WRITE_EXTERNAL_STORAGE Permission is granted
         return granted === PermissionsAndroid.RESULTS.GRANTED;
       } catch (err) {
         console.warn(err);
-        alert("Write permission err", err);
+        alert('Write permission err', err);
       }
       return false;
-    } else {
-      return true;
-    }
+    } else return true;
   };
+
 
   const setImage = async () => {
     let options = {
@@ -99,25 +102,27 @@ const InsertFoodItemScreen = ({ navigation }) => {
       quality: 1,
       includeBase64: true,
     };
+    
     let isCameraPermitted = await requestExternalWritePermission();
-    if (isCameraPermitted) {
-      launchImageLibrary(options, (response) => {
-        console.log("Response = ", response.assets[0].uri);
-        if (response.didCancel) {
-          alert("User cancelled image picker");
-          return;
-        } else if (response.errorCode == "camera_unavailable") {
-          alert("Camera not available on device");
-          return;
-        } else if (response.errorCode == "permission") {
-          alert("Permission not satisfied");
-          return;
-        } else if (response.errorCode == "others") {
-          alert(response.errorMessage);
-          return;
-        }
-        setfoodImage(response.assets[0].uri);
-      });
+    if (isCameraPermitted) 
+    {
+      let result = await ImagePicker.launchImageLibraryAsync({
+        mediaTypes: ImagePicker.MediaTypeOptions.All,
+        allowsEditing: true,
+        aspect: [4, 3],
+        quality: 1,
+      }).catch((error) => console.log(error));
+
+  
+     if(!result.cancelled)
+     {
+       setfoodImage(result.uri);
+     }
+     else
+      {
+        Alert.alert("You Cancelled an Image");
+      }
+
     }
   };
 
