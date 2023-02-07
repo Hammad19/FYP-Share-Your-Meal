@@ -7,6 +7,7 @@ import {
   StatusBar,
   TextInput,
   Image,
+  PermissionsAndroid
 } from "react-native";
 import React, { useCallback, useEffect, useState } from "react";
 import { Colors, Images } from "../content";
@@ -31,6 +32,9 @@ import { setissharepage } from "../store/slices/userlistingSlice";
 import { useFocusEffect } from "@react-navigation/native";
 import Animated, { color } from 'react-native-reanimated';
 import BottomSheet from 'reanimated-bottom-sheet';
+// import {request, PERMISSIONS} from 'react-native-permissions';
+// import Geolocation from 'react-native-geolocation-service';
+// import { Alert } from "react-native-web";
 //import { black } from "react-native-paper/lib/typescript/styles/colors";
 
 const HomeScreen = ({ navigation }) => {
@@ -42,7 +46,7 @@ const HomeScreen = ({ navigation }) => {
     Poppins_600SemiBold,
   });
 
-    bs = React.createRef();
+   const bs = React.createRef();
     fall = new Animated.Value(1);
   //whenever the user comes in this page set issharepage to false
   const dispatch = useDispatch();
@@ -125,6 +129,7 @@ const HomeScreen = ({ navigation }) => {
       FetchFoodData();
     }, [])
   );
+ //use effect to get the location
 
   return (
     fontsLoaded && (
@@ -154,6 +159,7 @@ const HomeScreen = ({ navigation }) => {
                 size={15}
                 color={Colors.DEFAULT_WHITE}
               />
+
               <Text style={styles.locationText}>Welcome</Text>
               <Text style={styles.selectedLocationText}>{state.auth.user.first_name}</Text>
               {/* <MaterialIcons
@@ -369,22 +375,23 @@ const styles = StyleSheet.create({
     alignItems: 'center',
   },
   panelHandle: {
-    width: 40,
-    height: 8,
+    width: 50,
+    height: 6,
     borderRadius: 4,
-    backgroundColor: '#00000040',
-    marginTop: 20,
+    backgroundColor: '#00000060',
+    marginTop: 10,
   },
   panelButton: {
-    padding: 15,
+    padding: 10,
     borderRadius: 10,
     backgroundColor: Colors.DEFAULT_YELLOW,
     alignItems: 'center',
-    marginTop: 120,
+    marginTop: 130,
   },
   panelLocationButton: {
-    padding: 15,
+    padding: 10,
     borderRadius: 10,
+    marginTop: -10,
     backgroundColor: Colors.DEFAULT_YELLOW,
     borderLeftColor: 'black',
     alignItems: 'center',
@@ -402,10 +409,10 @@ const styles = StyleSheet.create({
     height: 265,
     // borderTopLeftRadius: 20,
     // borderTopRightRadius: 20,
-    // shadowColor: '#000000',
+    shadowColor: '#000000',
     // shadowOffset: {width: 0, height: 0},
     // shadowRadius: 5,
-    // shadowOpacity: 0.4,
+    shadowOpacity: 0.4,
   },
 
 });
