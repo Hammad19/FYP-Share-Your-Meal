@@ -38,9 +38,9 @@ import {
 } from "@expo-google-fonts/poppins";
 import { useEffect } from "react";
 import { Display } from "../utils";
-import {reset ,userLogin} from "../store/slices/authSlice";
+import { reset, userLogin } from "../store/slices/authSlice";
 import { useValidation } from "react-native-form-validator";
-
+import { navigateToCustomTabNavigator } from "../utils/authservice";
 
 const SigninScreen = ({ navigation }) => {
   const [isPasswordShown, setisPasswordShown] = useState(false);
@@ -54,21 +54,18 @@ const SigninScreen = ({ navigation }) => {
   const [isAllValuesNull, setisAllValuesNull] = useState(false);
   const [fieldname, setFieldName] = useState("");
   const [error, setError] = useState("");
-  
+
   const dispatch = useDispatch();
-  
+
   const state = useSelector((state) => state);
 
   useEffect(() => {
     dispatch(reset());
   }, []);
 
-
   useEffect(() => {
     validateField();
-    
   }, [email, password]);
-
 
   const validateField = () => {
     if (fieldname == "email") {
@@ -96,38 +93,23 @@ const SigninScreen = ({ navigation }) => {
 
   useEffect(() => {
     NavigatetoHome();
-  }, [state.auth])
-  
+  }, [state.auth]);
 
   const NavigatetoHome = () => {
-    
-    if(state.auth.isLoggedIn)
-    {
-      if(state.auth.user.emailVerified)
-      {
-      Alert.alert("Success", "User Logged in Successfully ");
-      navigation.navigate("CustomTabNavigator");
-      }
-      else{
-
+    if (state.auth.isLoggedIn) {
+      if (state.auth.user.emailVerified) {
+        Alert.alert("Success", "User Logged in Successfully ");
+        navigateToCustomTabNavigator(navigation);
+      } else {
         navigation.navigate("EmailVerificationScreen");
-     
       }
-    }
-    else if(state.auth.error.status== "loginerror")
-    {
+    } else if (state.auth.error.status == "loginerror") {
       Alert.alert("Error", state.auth.error.message);
     }
   };
 
-  
-  const Login = () => 
-  {
-
-    
+  const Login = () => {
     dispatch(reset());
-
-
 
     setError(false);
 
@@ -151,15 +133,9 @@ const SigninScreen = ({ navigation }) => {
       dispatch(userLogin(requestBody)).then(() => {
         console.log(state, "<--state");
         //wait for the state to change
-        
-
-        
-      }
-      );
+      });
     }
   };
-
-  
 
   const {
     validate,
@@ -284,11 +260,10 @@ const SigninScreen = ({ navigation }) => {
         <View style={styles.signupContainer}>
           <Text style={styles.accountText}>Don't have an Account ?</Text>
           <Text
-            onPress={() => 
-              {
-                
-                dispatch(reset());
-                navigation.navigate("SignupScreen")}}
+            onPress={() => {
+              dispatch(reset());
+              navigation.navigate("SignupScreen");
+            }}
             style={styles.signupText}>
             Sign Up
           </Text>
