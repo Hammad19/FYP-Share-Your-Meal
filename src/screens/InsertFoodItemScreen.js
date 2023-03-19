@@ -22,7 +22,7 @@ import IonIcons from "react-native-vector-icons/Ionicons";
 import MaterialIcons from "react-native-vector-icons/MaterialIcons";
 import Feather from "react-native-vector-icons/Feather";
 import { TextInput } from "react-native-gesture-handler";
-import * as ImagePicker from 'expo-image-picker';
+import * as ImagePicker from "expo-image-picker";
 import { PermissionsAndroid } from "react-native";
 import { addFood } from "../store/slices/foodSlice";
 
@@ -33,11 +33,12 @@ import {
 } from "@expo-google-fonts/poppins";
 import AntDesign from "react-native-vector-icons/AntDesign";
 import { Avatar } from "react-native-paper";
+import axios from "axios";
 
 const InsertFoodItemScreen = ({ navigation }) => {
   const dispatch = useDispatch();
   const state = useSelector((state) => state);
-
+  const [imageToSend, setImageToSend] = useState(null);
   const [foodName, setfoodName] = useState("");
   const [foodPrice, setfoodPrice] = useState(0);
   const [foodQuantity, setfoodQuantity] = useState("");
@@ -72,43 +73,33 @@ const InsertFoodItemScreen = ({ navigation }) => {
     Poppins_700Bold,
   });
   const requestExternalWritePermission = async () => {
-    if (Platform.OS === 'android') {
+    if (Platform.OS === "android") {
       try {
         const granted = await PermissionsAndroid.request(
           PermissionsAndroid.PERMISSIONS.WRITE_EXTERNAL_STORAGE,
           {
-            title: 'Share Your Meal App Camera Permission',
-            message:  'App needs access to your camera ' + 'so you can upload awesome food.',
-            buttonNeutral: 'Ask Me Later',
-            buttonNegative: 'Cancel',
-            buttonPositive: 'OK',
-            
-          },
+            title: "Share Your Meal App Camera Permission",
+            message:
+              "App needs access to your camera " +
+              "so you can upload awesome food.",
+            buttonNeutral: "Ask Me Later",
+            buttonNegative: "Cancel",
+            buttonPositive: "OK",
+          }
         );
         // If WRITE_EXTERNAL_STORAGE Permission is granted
         return granted === PermissionsAndroid.RESULTS.GRANTED;
       } catch (err) {
         console.warn(err);
-        alert('Write permission err', err);
+        alert("Write permission err", err);
       }
       return false;
     } else return true;
   };
 
-
   //convert base64 to image file
 
-  
-  
-  
-  
   var base64Img;
-
-  
-
-
-
-
 
   const setImage = async () => {
     let options = {
@@ -116,10 +107,9 @@ const InsertFoodItemScreen = ({ navigation }) => {
       quality: 1,
       includeBase64: true,
     };
-    
+
     let isCameraPermitted = await requestExternalWritePermission();
-    if (isCameraPermitted) 
-    {
+    if (isCameraPermitted) {
       let result = await ImagePicker.launchImageLibraryAsync({
         mediaTypes: ImagePicker.MediaTypeOptions.All,
         allowsEditing: true,
@@ -128,20 +118,14 @@ const InsertFoodItemScreen = ({ navigation }) => {
         base64: true,
       }).catch((error) => console.log(error));
 
-  
-     if(!result.cancelled)
-     {
-      
-       setfoodImage(result.uri);
-     }
-     else
-      {
+      if (!result.cancelled) {
+        setImageToSend(result);
+        setfoodImage(result.uri);
+      } else {
         Alert.alert("You Cancelled an Image");
       }
-
     }
   };
-
 
   const {
     validate,
@@ -150,7 +134,15 @@ const InsertFoodItemScreen = ({ navigation }) => {
     getErrorMessages,
     isFormValid,
   } = useValidation({
-    state: { foodName, foodPrice, foodQuantity, foodDescription, foodCategory ,foodType,foodImage},
+    state: {
+      foodName,
+      foodPrice,
+      foodQuantity,
+      foodDescription,
+      foodCategory,
+      foodType,
+      foodImage,
+    },
   });
 
   const validateNull = () => {
@@ -212,8 +204,7 @@ const InsertFoodItemScreen = ({ navigation }) => {
       validate({
         foodCategory: { required: true },
       });
-    }
-    else if (fieldname == "foodType") {
+    } else if (fieldname == "foodType") {
       validate({
         foodType: { required: true },
       });
@@ -221,8 +212,7 @@ const InsertFoodItemScreen = ({ navigation }) => {
   };
 
   const handleonPress = () => {
-
-    if(foodType == "Free Food"){
+    if (foodType == "Free Food") {
       setfoodPrice("0");
     }
 
@@ -253,14 +243,14 @@ const InsertFoodItemScreen = ({ navigation }) => {
       food_name: foodName,
       food_description: foodDescription,
       food_price: foodPrice,
-      food_image:foodImage,
+      food_image: foodImage,
       food_category: foodCategory,
       food_quantity: foodQuantity,
       food_shared_by: state.auth.user.email,
       is_free: foodType == "Free Food" ? true : false,
     };
 
-    console.log(foodPrice.length)
+    console.log(foodPrice.length);
     if (
       isFormValid() &&
       foodName.length > 0 &&
@@ -269,20 +259,48 @@ const InsertFoodItemScreen = ({ navigation }) => {
       foodQuantity.length > 0 &&
       foodCategory.length > 0
     ) {
+      var name = foodImage.split("/").pop();
+      console.log("name", name);
+      var type = "image/" + name.split(".").pop();
+      console.log("type", type);
       //dispattch the action and then print the state
-      dispatch(addFood(requestBody));
+      const formData = new FormData();
+
+      formData.append("profileImg", {
+        uri: foodImage,
+        type: type,
+        name: name,
+      });
+      axios
+        .post("http://192.168.0.104:8080/api/images/food-image", formData, {
+          headers: { "Content-Type": "multipart/form-data" },
+        })
+        .then((res) => {
+          let requestBody = {
+            food_name: foodName,
+            food_description: foodDescription,
+            food_price: foodPrice,
+            food_image: res.data.userCreated.profileImg,
+            food_category: foodCategory,
+            food_quantity: foodQuantity,
+            food_shared_by: state.auth.user.email,
+            is_free: foodType == "Free Food" ? true : false,
+          };
+          dispatch(addFood(requestBody));
+        })
+        .catch((err) => {
+          console.log(err);
+        });
       // Alert.alert(state.food.message);
     }
   };
 
   useEffect(() => {
     if (state.food.error.message == "Food added successfully") {
-       Alert.alert("Success",state.food.error.message);
+      Alert.alert("Success", state.food.error.message);
       navigation.goBack();
     }
   }, [state.food.error.message]);
-
-
 
   return (
     <>
@@ -302,217 +320,203 @@ const InsertFoodItemScreen = ({ navigation }) => {
           />
           <Text style={styles.headertitle}>Add Your Food</Text>
         </View>
-        <View style={styles.inputImageContainer}>   
+        <View style={styles.inputImageContainer}>
           <TouchableHighlight
             underlayColor="rgba(0,0,0,0)"
-            onPress={() => setImage()} >
+            onPress={() => setImage()}>
             {foodImage == null ? (
-              <View style={styles.inputImageSubContainer}>  
-                <IonIcons name="image-outline" size={50} color="grey" />  
+              <View style={styles.inputImageSubContainer}>
+                <IonIcons name="image-outline" size={50} color="grey" />
                 <Text style={styles.inputImageText}>Select Food Image</Text>
               </View>
-             ) : (
-              <Image source={{uri:foodImage  }
-              } style={styles.imageContainer} /> 
-             ) } 
-             </TouchableHighlight>
+            ) : (
+              <Image
+                source={{ uri: foodImage }}
+                style={styles.imageContainer}
+              />
+            )}
+          </TouchableHighlight>
         </View>
         <Separator height={15} />
 
         <DropDownPicker
-        style={styles.inputContainer}
-        open={open1}
-        value={value1}
-        items={items1}
-        setOpen={setOpen1}
-        setValue={setValue1}
-        setItems={setItems1}
-        placeholderStyle={styles.dropdownstyles}
-        listParentLabelStyle={styles.dropdownstyles}
-        dropDownContainerStyle={styles.dropdowncontainerstyle}
-        labelStyle={styles.dropdownstyles}
-        placeholder="Select Food Category"
-        onSelectItem={(item) => {
-          setError(true);
-          setFieldName("foodCategory");
-          // console.log(item.value);
-          setfoodCategory(item.value);
-          
-        }}
-      />
-      {error && ShowError("foodCategory")}
+          style={styles.inputContainer}
+          open={open1}
+          value={value1}
+          items={items1}
+          setOpen={setOpen1}
+          setValue={setValue1}
+          setItems={setItems1}
+          placeholderStyle={styles.dropdownstyles}
+          listParentLabelStyle={styles.dropdownstyles}
+          dropDownContainerStyle={styles.dropdowncontainerstyle}
+          labelStyle={styles.dropdownstyles}
+          placeholder="Select Food Category"
+          onSelectItem={(item) => {
+            setError(true);
+            setFieldName("foodCategory");
+            // console.log(item.value);
+            setfoodCategory(item.value);
+          }}
+        />
+        {error && ShowError("foodCategory")}
 
-      
-      <Separator height={15} />
-        
-        
-      <View
-        style={
-          isFieldInError("foodName") ? styles.error : styles.inputContainer
-        }>
-        <View style={styles.inputSubContainer}>
-          <IonIcons
-            name="md-fast-food-outline"
-            size={22}
-            color={Colors.DEFAULT_GREY}
-            style={{ marginRight: 10 }}
-          />
-          <TextInput
-            onChangeText={(text) => {
-              setError(true);
-              setFieldName("foodName");
-              setfoodName(text);
-            }}
-            // onEndEditing={() => }
-            value={foodName}
-            placeholder="Food Name"
-            placeholderTextColor={Colors.DEFAULT_GREY}
-            selectionColor={Colors.DEFAULT_GREY}
-            style={styles.inputText}
-          />
+        <Separator height={15} />
+
+        <View
+          style={
+            isFieldInError("foodName") ? styles.error : styles.inputContainer
+          }>
+          <View style={styles.inputSubContainer}>
+            <IonIcons
+              name="md-fast-food-outline"
+              size={22}
+              color={Colors.DEFAULT_GREY}
+              style={{ marginRight: 10 }}
+            />
+            <TextInput
+              onChangeText={(text) => {
+                setError(true);
+                setFieldName("foodName");
+                setfoodName(text);
+              }}
+              // onEndEditing={() => }
+              value={foodName}
+              placeholder="Food Name"
+              placeholderTextColor={Colors.DEFAULT_GREY}
+              selectionColor={Colors.DEFAULT_GREY}
+              style={styles.inputText}
+            />
+          </View>
         </View>
-      </View>
 
-      
-      {error && ShowError("foodName")}
-      <Separator height={15} />
+        {error && ShowError("foodName")}
+        <Separator height={15} />
 
-      
-      <View
-        style={
-          isFieldInError("foodDescription")
-            ? styles.error
-            : styles.inputContainer
-        }>
-        <View style={styles.inputSubContainer}>
-          <MaterialIcons
-            name="details"
-            size={22}
-            color={Colors.DEFAULT_GREY}
-            style={{ marginRight: 10 }}
-          />
-          <TextInput
-            onChangeText={(text) => {
-              setError(true);
-              setFieldName("foodDescription");
-              setfoodDescription(text);
-            }}
-            // onEndEditing={() => }
-            value={foodDescription}
-            placeholder="Food Description"
-            placeholderTextColor={Colors.DEFAULT_GREY}
-            selectionColor={Colors.DEFAULT_GREY}
-            style={styles.inputText}
-          />
+        <View
+          style={
+            isFieldInError("foodDescription")
+              ? styles.error
+              : styles.inputContainer
+          }>
+          <View style={styles.inputSubContainer}>
+            <MaterialIcons
+              name="details"
+              size={22}
+              color={Colors.DEFAULT_GREY}
+              style={{ marginRight: 10 }}
+            />
+            <TextInput
+              onChangeText={(text) => {
+                setError(true);
+                setFieldName("foodDescription");
+                setfoodDescription(text);
+              }}
+              // onEndEditing={() => }
+              value={foodDescription}
+              placeholder="Food Description"
+              placeholderTextColor={Colors.DEFAULT_GREY}
+              selectionColor={Colors.DEFAULT_GREY}
+              style={styles.inputText}
+            />
+          </View>
         </View>
-      </View>
-      {error && ShowError("foodDescription")}
-      <Separator height={15} />
-      <DropDownPicker
-        style={styles.inputContainer}
-        open={open}
-        value={value}
-        items={items}
-        setOpen={setOpen}
-        setValue={setValue}
-        setItems={setItems}
-        placeholderStyle={styles.dropdownstyles}
-        listParentLabelStyle={styles.dropdownstyles}
-        dropDownContainerStyle={styles.dropdowncontainer1style}
-        labelStyle={styles.dropdownstyles}
-        placeholder="Select Food Type"
-        onSelectItem={(item) => {
-          setError(true);
-          setFieldName("foodType");
-          setFoodType(item.value);
-          if(item.value == "Free Food")
-          {
-            setfoodPrice("0");
-          }
-          else
-          {
-            setfoodPrice();
-          }
-        }}
-      />
+        {error && ShowError("foodDescription")}
+        <Separator height={15} />
+        <DropDownPicker
+          style={styles.inputContainer}
+          open={open}
+          value={value}
+          items={items}
+          setOpen={setOpen}
+          setValue={setValue}
+          setItems={setItems}
+          placeholderStyle={styles.dropdownstyles}
+          listParentLabelStyle={styles.dropdownstyles}
+          dropDownContainerStyle={styles.dropdowncontainer1style}
+          labelStyle={styles.dropdownstyles}
+          placeholder="Select Food Type"
+          onSelectItem={(item) => {
+            setError(true);
+            setFieldName("foodType");
+            setFoodType(item.value);
+            if (item.value == "Free Food") {
+              setfoodPrice("0");
+            } else {
+              setfoodPrice();
+            }
+          }}
+        />
 
-      {error && ShowError("foodType")}
-      <Separator height={15} />
-      <View
-        style={
-          isFieldInError("foodPrice") ? styles.error : styles.inputContainer
-        }>
-        <View style={styles.inputSubContainer}>
-          <IonIcons
-            name="pricetags-outline"
-            size={22}
-            color={Colors.DEFAULT_GREY}
-            style={{ marginRight: 10 }}
-          />
-          <TextInput
-
-            keyboardType="numeric"
-
-            // disable food price input when the food type is free
-            editable={foodType == "Free Food" ? false : true}
-
-            onChangeText={(text) => {
-              setError(true);
-              setFieldName("foodPrice");
-              setfoodPrice(text);
-            }}
-            // onEndEditing={() => }
-            value={foodPrice}
-            placeholder="Food Price"
-            placeholderTextColor={Colors.DEFAULT_GREY}
-            selectionColor={Colors.DEFAULT_GREY}
-            style={styles.inputText}
-          />
+        {error && ShowError("foodType")}
+        <Separator height={15} />
+        <View
+          style={
+            isFieldInError("foodPrice") ? styles.error : styles.inputContainer
+          }>
+          <View style={styles.inputSubContainer}>
+            <IonIcons
+              name="pricetags-outline"
+              size={22}
+              color={Colors.DEFAULT_GREY}
+              style={{ marginRight: 10 }}
+            />
+            <TextInput
+              keyboardType="numeric"
+              // disable food price input when the food type is free
+              editable={foodType == "Free Food" ? false : true}
+              onChangeText={(text) => {
+                setError(true);
+                setFieldName("foodPrice");
+                setfoodPrice(text);
+              }}
+              // onEndEditing={() => }
+              value={foodPrice}
+              placeholder="Food Price"
+              placeholderTextColor={Colors.DEFAULT_GREY}
+              selectionColor={Colors.DEFAULT_GREY}
+              style={styles.inputText}
+            />
+          </View>
         </View>
-      </View>
-      {error && ShowError("foodPrice")}
-      
-      <Separator height={15} />
-      <View style={styles.inputContainer}>
-        <View style={styles.inputSubContainer}>
-          <MaterialIcons
-            name="format-list-numbered"
-            size={22}
-            color={Colors.DEFAULT_GREY}
-            style={{ marginRight: 10 }}
-          />
-          <TextInput
-            onChangeText={(text) => {
-              setError(true);
-              setFieldName("foodQuantity");
-              setfoodQuantity(text);
-            }}
-            // onEndEditing={() => }
-            value={foodQuantity}
-            placeholder="Food Quantity"
-            placeholderTextColor={Colors.DEFAULT_GREY}
-            selectionColor={Colors.DEFAULT_GREY}
-            style={styles.inputText}
-          />
-        </View>
-      </View>
-      {error && ShowError("foodQuantity")}
-      <Separator height={15} />
-      
+        {error && ShowError("foodPrice")}
 
-      
-      {isAllValuesNull ? (
-        <Text style={{ color: "red", fontSize: 15, marginLeft: 25 }}>
-          All fields are required
-        </Text>
-      ) : null}
-      <TouchableOpacity onPress={handleonPress} style={styles.signinButton}>
-        <Text style={styles.signinButtonText}>Upload Food</Text>
-      </TouchableOpacity>
-        </ScrollView>
-        
-      
-      
+        <Separator height={15} />
+        <View style={styles.inputContainer}>
+          <View style={styles.inputSubContainer}>
+            <MaterialIcons
+              name="format-list-numbered"
+              size={22}
+              color={Colors.DEFAULT_GREY}
+              style={{ marginRight: 10 }}
+            />
+            <TextInput
+              onChangeText={(text) => {
+                setError(true);
+                setFieldName("foodQuantity");
+                setfoodQuantity(text);
+              }}
+              // onEndEditing={() => }
+              value={foodQuantity}
+              placeholder="Food Quantity"
+              placeholderTextColor={Colors.DEFAULT_GREY}
+              selectionColor={Colors.DEFAULT_GREY}
+              style={styles.inputText}
+            />
+          </View>
+        </View>
+        {error && ShowError("foodQuantity")}
+        <Separator height={15} />
+
+        {isAllValuesNull ? (
+          <Text style={{ color: "red", fontSize: 15, marginLeft: 25 }}>
+            All fields are required
+          </Text>
+        ) : null}
+        <TouchableOpacity onPress={handleonPress} style={styles.signinButton}>
+          <Text style={styles.signinButtonText}>Upload Food</Text>
+        </TouchableOpacity>
+      </ScrollView>
     </>
   );
 };
@@ -582,7 +586,6 @@ const styles = StyleSheet.create({
   },
 
   dropdownstyles: {
-    
     fontSize: 18,
     textAlignVertical: "center",
     padding: 0,
@@ -591,8 +594,6 @@ const styles = StyleSheet.create({
     flex: 1,
   },
   dropdowncontainerstyle: {
-
-  
     marginHorizontal: 20,
     width: Display.setWidth(90),
     marginLeft: 20,
@@ -600,7 +601,6 @@ const styles = StyleSheet.create({
   },
 
   dropdowncontainer1style: {
-   
     //open this dropdowncontainer on top
     top: -80,
     marginHorizontal: 20,
@@ -608,7 +608,7 @@ const styles = StyleSheet.create({
     marginLeft: 20,
     justifyContent: "center",
   },
- 
+
   signinButton: {
     backgroundColor: Colors.DEFAULT_GREEN,
     borderRadius: 8,
@@ -634,7 +634,7 @@ const styles = StyleSheet.create({
     height: 100,
     borderRadius: 8,
     imageSizeMode: "cover",
-  } ,
+  },
   error: {
     backgroundColor: Colors.LIGHT_GREY,
     paddingHorizontal: 10,
