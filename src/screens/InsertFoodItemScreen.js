@@ -212,6 +212,14 @@ const InsertFoodItemScreen = ({ navigation }) => {
   };
 
   const handleonPress = () => {
+    if (
+      state.auth.user.location_name == "" ||
+      state.auth.user.location_name == null
+    ) {
+      Alert.alert("Please Add Your Location First");
+      return;
+    }
+
     if (foodType == "Free Food") {
       setfoodPrice("0");
     }
@@ -272,7 +280,7 @@ const InsertFoodItemScreen = ({ navigation }) => {
         name: name,
       });
       axios
-        .post("http://192.168.0.104:8080/api/images/food-image", formData, {
+        .post("http://192.168.0.106:8080/api/images/food-image", formData, {
           headers: { "Content-Type": "multipart/form-data" },
         })
         .then((res) => {

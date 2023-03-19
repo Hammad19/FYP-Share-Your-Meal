@@ -7,7 +7,6 @@ import {
   StatusBar,
   TextInput,
   Image,
-  PermissionsAndroid,
 } from "react-native";
 import React, { useCallback, useEffect, useState } from "react";
 import { Colors, Images } from "../content";
@@ -46,7 +45,7 @@ import * as Location from "expo-location";
 const HomeScreen = ({ navigation }) => {
   const [foodType, setFoodType] = useState("Free Food");
   const [foodSearch, setFoodSearch] = useState(true);
-  let [fontsLoaded] = useFonts({
+  const [fontsLoaded] = useFonts({
     Poppins_500Medium,
     Poppins_700Bold,
     Poppins_600SemiBold,
@@ -285,7 +284,7 @@ const HomeScreen = ({ navigation }) => {
           ) : (
             <FlatList
               style={{ flex: 1, zIndex: -1, paddingTop: 55 }}
-              data={state.food.foodlist.reverse()}
+              data={state.food.foodlist}
               renderItem={({ item }) => <FoodItem post={item} />}
               //
             />
