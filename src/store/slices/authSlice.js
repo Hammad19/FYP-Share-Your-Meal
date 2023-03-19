@@ -26,13 +26,11 @@ export const userSignup = createAsyncThunk(
   }
 );
 
-
-
 export const addLocation = createAsyncThunk(
-  API_ENDPOINTS.LOCATION,
+  API_ENDPOINTS.ADD_LOCATION,
   async (requestBody, thunkAPI) => {
     try {
-      const result = await addData(API_ENDPOINTS.LOCATION, requestBody);
+      const result = await addData(API_ENDPOINTS.ADD_LOCATION, requestBody);
       if (result.success == true) {
         return result;
       } else {
@@ -73,7 +71,6 @@ export const verifyOtp = createAsyncThunk(
     }
   }
 );
-
 
 export const verifyOtpforEmailVerification = createAsyncThunk(
   API_ENDPOINTS.OTP_VERIFY_EMAIL,
@@ -128,7 +125,6 @@ export const sendOtp = createAsyncThunk(
       if (result.success == true) {
         return result;
       } else {
-        
         return thunkAPI.rejectWithValue({
           status: "error",
           message: result.message,
@@ -173,7 +169,7 @@ export const sendOtpforEmailVerification = createAsyncThunk(
     try {
       const result = await addData(
         API_ENDPOINTS.OTP_SEND_FOR_EMAIL_VERIFICATION,
-        requestBody 
+        requestBody
       );
       if (result.success == true) {
         return result;
@@ -192,8 +188,6 @@ export const sendOtpforEmailVerification = createAsyncThunk(
   }
 );
 
-
-
 const initialState = {
   user: {},
   verificationemail: "",
@@ -202,7 +196,7 @@ const initialState = {
   token: "",
   isOtpVerified: false,
   isOtpSent: false,
-  otp : "",
+  otp: "",
   error: {
     status: "idle",
     message: "",
@@ -218,24 +212,22 @@ const authSlice = createSlice({
       state.isLoggedIn = true;
       state.user = action.payload;
     },
-    reset: (state,action) => {
+    reset: (state, action) => {
       state.user = {};
       state.isLoggedIn = false;
       state.token = "";
       state.error.status = "idle";
       state.error.message = "";
-      console.log(state,"<-- state")
+      console.log(state, "<-- state");
     },
 
-    resetstatus: (state,action) => 
-    {
+    resetstatus: (state, action) => {
       state.error.status = "idle";
       state.error.message = "";
     },
     //change the initial state when userlogouts
 
     userLoggedOut: (state) => {
-      
       state.isLoggedIn = false;
       state.user = {};
     },
@@ -247,147 +239,133 @@ const authSlice = createSlice({
     },
   },
   extraReducers: (builder) => {
-
-
     //buildercase for verifyotpforemail
-    
 
-    builder.addCase(verifyOtpforEmailVerification.fulfilled, (state, action) => {
-      state.error.status = "otpverified";
-      state.otp = action.payload.otp;
-      // verificationemail = action.payload.email;
-      state.error.message = action.payload.message;
-      state.isOtpVerified = true;
-      console.log(state.error.message, "<--state verifyOtp fulfilled");
-    }),
-
-
-    builder.addCase(verifyOtpforEmailVerification.rejected, (state, action) => {
-      state.error.message = action.payload.message;
-      state.error.status = "otpverifiedError";
-      state.isOtpVerified = false;
-      console.log(action.payload, "<--state verify rejected");
-  }),
-
-
-    builder.addCase(userSignup.fulfilled, (state, action) => {
-      state.error.status = "signupsuccess";
-      state.isLoggedIn = false;
-      console.log(state, "<--state usersignup fulfilled");
-    }),
-
-
-
-    builder.addCase(sendOtp.fulfilled, (state, action) => {
-      state.error.status = "otpsent";
-      state.verificationemail = action.payload.email;
-      state.error.message = action.payload.message;
-      state.isOtpSent = true;
-      console.log(action.payload, "<--state sendotp fulfilled");
-    }),
-
-    builder.addCase(sendOtpforEmailVerification.fulfilled, (state, action) => {
-      state.error.status = "otpsent";
-      state.error.message = action.payload.message;
-      state.isOtpSent = true;
-      console.log(action.payload, "<--state sendotp fulfilled");
-    }),
-
-    builder.addCase(resetPassword.fulfilled, (state, action) => {
-      state.error.status = "passwordreset";
-      state.error.message = action.payload.message;
-      state.isPasswordChanged = true;
-      state.verificationemail = "";
-      state.otp = "";
-      state.isOtpSent = false;
-      console.log(action.payload, "<--state sendotp fulfilled");
-    }),
-    
-    builder.addCase(verifyOtp.fulfilled, (state, action) => {
-      state.error.status = "otpverified";
-      state.otp = action.payload.otp;
-      // verificationemail = action.payload.email;
-      state.error.message = action.payload.message;
-      state.isOtpVerified = true;
-      console.log(state.error.message, "<--state verifyOtp fulfilled");
-    }),
-
-
+    builder.addCase(
+      verifyOtpforEmailVerification.fulfilled,
+      (state, action) => {
+        state.error.status = "otpverified";
+        state.otp = action.payload.otp;
+        // verificationemail = action.payload.email;
+        state.error.message = action.payload.message;
+        state.isOtpVerified = true;
+        console.log(state.error.message, "<--state verifyOtp fulfilled");
+      }
+    ),
+      builder.addCase(
+        verifyOtpforEmailVerification.rejected,
+        (state, action) => {
+          state.error.message = action.payload.message;
+          state.error.status = "otpverifiedError";
+          state.isOtpVerified = false;
+          console.log(action.payload, "<--state verify rejected");
+        }
+      ),
+      builder.addCase(userSignup.fulfilled, (state, action) => {
+        state.error.status = "signupsuccess";
+        state.isLoggedIn = false;
+        console.log(state, "<--state usersignup fulfilled");
+      }),
+      builder.addCase(sendOtp.fulfilled, (state, action) => {
+        state.error.status = "otpsent";
+        state.verificationemail = action.payload.email;
+        state.error.message = action.payload.message;
+        state.isOtpSent = true;
+        console.log(action.payload, "<--state sendotp fulfilled");
+      }),
+      builder.addCase(
+        sendOtpforEmailVerification.fulfilled,
+        (state, action) => {
+          state.error.status = "otpsent";
+          state.error.message = action.payload.message;
+          state.isOtpSent = true;
+          console.log(action.payload, "<--state sendotp fulfilled");
+        }
+      ),
+      builder.addCase(resetPassword.fulfilled, (state, action) => {
+        state.error.status = "passwordreset";
+        state.error.message = action.payload.message;
+        state.isPasswordChanged = true;
+        state.verificationemail = "";
+        state.otp = "";
+        state.isOtpSent = false;
+        console.log(action.payload, "<--state sendotp fulfilled");
+      }),
+      builder.addCase(verifyOtp.fulfilled, (state, action) => {
+        state.error.status = "otpverified";
+        state.otp = action.payload.otp;
+        // verificationemail = action.payload.email;
+        state.error.message = action.payload.message;
+        state.isOtpVerified = true;
+        console.log(state.error.message, "<--state verifyOtp fulfilled");
+      }),
       builder.addCase(userSignup.rejected, (state, action) => {
         state.error = action.payload;
       }),
-
       builder.addCase(sendOtp.rejected, (state, action) => {
         state.error = action.payload;
         state.error.status = "otpsenterror";
         state.isOtpSent = false;
         console.log(action, "<--state sendotp rejected");
       }),
-
       builder.addCase(sendOtpforEmailVerification.rejected, (state, action) => {
         state.error = action.payload;
         state.error.status = "otpsenterror";
         state.isOtpSent = false;
         console.log(action, "<--state sendotp rejected");
       }),
-
       builder.addCase(resetPassword.rejected, (state, action) => {
         state.error.status = "resetpassworderror";
         state.error.message = action.payload.message;
         state.isPasswordChanged = false;
         console.log(state.error.message, "<--state resetpassword rejected");
       }),
-
-    builder.addCase(verifyOtp.rejected, (state, action) => {
+      builder.addCase(verifyOtp.rejected, (state, action) => {
         state.error.message = action.payload.message;
         state.error.status = "otpverifiedError";
         state.isOtpVerified = false;
         console.log(state.error, "<--state verify rejected");
-    }),
-
-  
-    builder.addCase(userLogin.fulfilled, (state, action) => {
-      state.error.status = "loginsuccess";
-      state.isLoggedIn = true;
-      state.user = action.payload.user;
-      state.token = action.payload.token;
-      console.log(state,  "<-- state userlogin fulfilled");
-    }),
-
-    builder.addCase(addLocation.fulfilled, (state, action) => {
-      state.error.status = "locationsuccess";
-      state.user = action.payload.user;
-      console.log(state,  "<-- state userlogin fulfilled");
-    }),
-
-
-    builder.addCase(userLogin.rejected, (state, action) => {
+      }),
+      builder.addCase(userLogin.fulfilled, (state, action) => {
+        state.error.status = "loginsuccess";
+        state.isLoggedIn = true;
+        state.user = action.payload.user;
+        state.token = action.payload.token;
+        console.log(state, "<-- state userlogin fulfilled");
+      }),
+      builder.addCase(addLocation.fulfilled, (state, action) => {
+        console.log("<-- Location success");
+        //state.error.status = "locationsuccess";
+        state.user = action.payload.user;
+        console.log(state, "<-- state location fulfilled");
+      }),
+      builder.addCase(userLogin.rejected, (state, action) => {
         // console.log(action.payload, "<-- Login rejected");
         state.error.status = "loginerror";
         state.error.message = action.payload.message;
         state.isLoggedIn = false;
-      
-    });
-
+      });
 
     builder.addCase(addLocation.rejected, (state, action) => {
+      console.log("<-- Location rejected");
       // console.log(action.payload, "<-- Login rejected");
       state.error.status = "locationerror";
       state.error.message = action.payload.message;
       state.isLoggedIn = false;
-    
-  });
+      console.log(state, "<-- state location rejected");
+    });
 
     //create a builder for verifyotpforemailverification
-   
-
-
-
   },
-
 });
 
-export const { updateUserData, updateToken, userLoggedIn, userLoggedOut,reset ,resetstatus} =
-  authSlice.actions;
+export const {
+  updateUserData,
+  updateToken,
+  userLoggedIn,
+  userLoggedOut,
+  reset,
+  resetstatus,
+} = authSlice.actions;
 
 export default authSlice.reducer;
