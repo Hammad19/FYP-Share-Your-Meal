@@ -1,5 +1,13 @@
 import React, { useState } from "react";
-import {ScrollView ,Dimensions, Image, StyleSheet, Text, View,TouchableOpacity } from "react-native";
+import {
+  ScrollView,
+  Dimensions,
+  Image,
+  StyleSheet,
+  Text,
+  View,
+  TouchableOpacity,
+} from "react-native";
 import { Entypo as Icon } from "@expo/vector-icons";
 import { Colors, Images } from "../content";
 import { Display } from "../utils";
@@ -26,10 +34,12 @@ import {
   Poppins_900Black,
   Poppins_900Black_Italic,
 } from "@expo-google-fonts/poppins";
+import { axiosInstance } from "../utils/api/axiosInstance";
+import { useSelector } from "react-redux";
 const { width } = Dimensions.get("window");
 const styles = StyleSheet.create({
   container: {
-    marginTop:-132,
+    marginTop: -132,
     overflow: "hidden",
   },
 
@@ -40,10 +50,9 @@ const styles = StyleSheet.create({
     justifyContent: "space-between",
     alignItems: "center",
     paddingHorizontal: 20,
-    paddingVertical:50,
-  
+    paddingVertical: 50,
+
     backgroundColor: "transparent",
-    
   },
   title: {
     fontSize: 32,
@@ -54,7 +63,7 @@ const styles = StyleSheet.create({
   },
   text: {
     fontSize: 16,
-   lineHeight: 16 * 1.4,
+    lineHeight: 16 * 1.4,
     fontFamily: "Poppins_400Regular ",
     overflow: "hidden",
   },
@@ -97,31 +106,31 @@ const styles = StyleSheet.create({
     fontFamily: "Poppins_500Medium",
   },
 
-  image: { 
+  image: {
     //lie image in between the headercontainer
-  
-   height:Display.setHeight(40),
-   width : Display.setWidth(100),
+
+    height: Display.setHeight(40),
+    width: Display.setWidth(100),
     resizeMode: "cover",
     top: 0,
   },
   buttonsContainer: {
-    position: 'absolute',
+    position: "absolute",
     bottom: 0,
-    flexDirection: 'row',
+    flexDirection: "row",
     paddingHorizontal: Display.setWidth(5),
-    justifyContent: 'space-between',
-    backgroundColor: 'transparent',
+    justifyContent: "space-between",
+    backgroundColor: "transparent",
     width: Display.setWidth(100),
     paddingVertical: Display.setWidth(2.5),
   },
   itemAddContainer: {
-    flexDirection: 'row',
-    alignItems: 'center',
+    flexDirection: "row",
+    alignItems: "center",
     backgroundColor: Colors.LIGHT_GREY2,
     height: Display.setHeight(6),
     width: Display.setWidth(30),
-    justifyContent: 'center',
+    justifyContent: "center",
     borderRadius: 8,
   },
   itemCountText: {
@@ -135,8 +144,8 @@ const styles = StyleSheet.create({
     backgroundColor: Colors.DEFAULT_GREEN,
     height: Display.setHeight(6),
     width: Display.setWidth(58),
-    justifyContent: 'center',
-    alignItems: 'center',
+    justifyContent: "center",
+    alignItems: "center",
     borderRadius: 8,
   },
   cartButtonText: {
@@ -145,64 +154,81 @@ const styles = StyleSheet.create({
     lineHeight: 14 * 1.4,
     fontFamily: "Poppins_500Medium",
   },
-  
-
-
-  
 });
 
-const FoodDetailScreen =  ({route,navigation}) => {
-  const[itemCount,setItemCount]=useState(0);
+const FoodDetailScreen = ({ route, navigation }) => {
+  const state = useSelector((state) => state);
+  const [itemCount, setItemCount] = useState(0);
 
-    const { post } = route.params;
- 
+  const { post } = route.params;
+
+  const OrderFood = async () => {
+    try {
+      console.log(post._id);
+      let requestBody = {
+        order_food_id: post._id,
+        order_quantity: itemCount,
+        ordered_by: state.auth.user.email,
+      };
+
+      console.log(requestBody);
+      //post request to the backend
+      const response = await axiosInstance.post(
+        "/orders/orderfood",
+        requestBody
+      );
+      if (response.data.success) {
+        alert(response.data.message);
+      }
+    } catch (error) {
+      console.log(error.response.data);
+      alert(error.response.data.message);
+    }
+  };
+
   return (
-<>
-
-    <View style={styles.headerContainer}>
-    <Icon
-      name="chevron-left"
-      size={30}
-      color={Colors.DEFAULT_WHITE}
-      onPress={() => {
-        navigation.goBack();
-      }}
-    />
-    
-  </View>
-    <ScrollView style={styles.container}>
-        <Image
-              style={styles.image}
-              
-              source={{uri:post.food_image}}
-            />
-      <Text style={styles.title}>{post.food_name}</Text>
-      <View style={styles.details}>
-        <Icon name="star" color="rgb(255, 56, 92)" size={18} />
-        <Text style={styles.detailText}>4.93 (891)</Text>
-        <Icon name="medal" color="rgb(255, 56, 92)" size={18} />
-        <Text style={styles.detailText}>4.93 (891)</Text>
+    <>
+      <View style={styles.headerContainer}>
+        <Icon
+          name="chevron-left"
+          size={30}
+          color={Colors.DEFAULT_WHITE}
+          onPress={() => {
+            navigation.goBack();
+          }}
+        />
       </View>
-      <View>
-        <View style={styles.smallDivider} />
-        <View style={styles.host}>
-          <View>
-            
-            <Text style={styles.mediumText}>{post.food_name}</Text>
-            <Text style={styles.mediumText}>Givesaway by {post.food_shared_by}</Text>
-
-          </View>
-          <Image style={styles.avatar} source={{uri: "https://preview.keenthemes.com/metronic-v4/theme/assets/pages/media/profile/people19.png"}} />
+      <ScrollView style={styles.container}>
+        <Image style={styles.image} source={{ uri: post.food_image }} />
+        <Text style={styles.title}>{post.food_name}</Text>
+        <View style={styles.details}>
+          <Icon name="star" color="rgb(255, 56, 92)" size={18} />
+          <Text style={styles.detailText}>4.93 (891)</Text>
+          <Icon name="medal" color="rgb(255, 56, 92)" size={18} />
+          <Text style={styles.detailText}>4.93 (891)</Text>
         </View>
-        <View style={styles.divider} />
-        <Text style={styles.text}>
-        {post.food_description} </Text>
-      </View>
+        <View>
+          <View style={styles.smallDivider} />
+          <View style={styles.host}>
+            <View>
+              <Text style={styles.mediumText}>{post.food_name}</Text>
+              <Text style={styles.mediumText}>
+                Givesaway by {post.food_shared_by}
+              </Text>
+            </View>
+            <Image
+              style={styles.avatar}
+              source={{
+                uri: "https://preview.keenthemes.com/metronic-v4/theme/assets/pages/media/profile/people19.png",
+              }}
+            />
+          </View>
+          <View style={styles.divider} />
+          <Text style={styles.text}>{post.food_description} </Text>
+        </View>
+      </ScrollView>
 
-
-    </ScrollView>
-
-    <View style={styles.buttonsContainer}>
+      <View style={styles.buttonsContainer}>
         <View style={styles.itemAddContainer}>
           <AntDesign
             name="minus"
@@ -220,15 +246,17 @@ const FoodDetailScreen =  ({route,navigation}) => {
         </View>
         <TouchableOpacity
           style={styles.cartButton}
-          onPress={() => navigation.navigate('Cart')}
+          onPress={() => {
+            OrderFood(post, itemCount);
+          }}
           activeOpacity={0.8}>
-          <Text style={styles.cartButtonText}>{post.is_free?"Request":"Add To Cart"}</Text>
+          <Text style={styles.cartButtonText}>
+            {post.is_free ? "Request" : "Order"}
+          </Text>
         </TouchableOpacity>
       </View>
-    
     </>
   );
 };
 
 export default FoodDetailScreen;
-
