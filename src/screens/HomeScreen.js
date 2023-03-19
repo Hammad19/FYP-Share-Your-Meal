@@ -7,7 +7,7 @@ import {
   StatusBar,
   TextInput,
   Image,
-  PermissionsAndroid
+  PermissionsAndroid,
 } from "react-native";
 import React, { useCallback, useEffect, useState } from "react";
 import { Colors, Images } from "../content";
@@ -35,8 +35,9 @@ import {
 } from "../store/slices/foodSlice";
 import { setissharepage } from "../store/slices/userlistingSlice";
 import { useFocusEffect } from "@react-navigation/native";
-import Animated, { color } from 'react-native-reanimated';
-import BottomSheet from 'reanimated-bottom-sheet';
+import Animated, { color } from "react-native-reanimated";
+import BottomSheet from "reanimated-bottom-sheet";
+import * as Location from "expo-location";
 // import {request, PERMISSIONS} from 'react-native-permissions';
 // import Geolocation from 'react-native-geolocation-service';
 // import { Alert } from "react-native-web";
@@ -74,6 +75,16 @@ const HomeScreen = ({ navigation }) => {
     }
   };
 
+  const NavigateToGoogleMap = async () => {
+    const grantedFurther = await Location.requestForegroundPermissionsAsync();
+
+    if (grantedFurther.granted) {
+      navigation.navigate("GoogleMapScreen");
+    } else {
+      Alert.alert("Location Permission Denied");
+    }
+  };
+
   const FetchFoodByType = () => {
     if (foodSearch?.length > 0) {
       let requestBody = {
@@ -104,14 +115,16 @@ const HomeScreen = ({ navigation }) => {
 
   const renderInner = () => (
     <View style={styles.panel}>
-      <View style={{alignItems: 'center'}}>
+      <View style={{ alignItems: "center" }}>
         <Text style={styles.panelTitle}>Location</Text>
         <Text style={styles.panelSubtitle}>Choose Your Current Location</Text>
       </View>
       <TouchableOpacity style={styles.panelButton}>
         <Text
           style={styles.panelButtonTitle}
-          onPress={() => navigation.navigate("GoogleMapScreen")}>
+          onPress={() => {
+            NavigateToGoogleMap();
+          }}>
           + Add location
         </Text>
       </TouchableOpacity>
@@ -134,22 +147,22 @@ const HomeScreen = ({ navigation }) => {
       FetchFoodData();
     }, [])
   );
- //use effect to get the location
+  //use effect to get the location
 
   return (
     fontsLoaded && (
       <>
-      <View style={styles.container}>
-      <BottomSheet
-          ref={bs}
-          snapPoints={[0, 280]}
-          renderContent={renderInner}
-          renderHeader={renderHeader}
-          initialSnap={1}
-          callbackNode={fall}
-          enabledGestureInteraction={true}
-        />
-        {/* <Animated.View style={{margin: 20,
+        <View style={styles.container}>
+          <BottomSheet
+            ref={bs}
+            snapPoints={[0, 280]}
+            renderContent={renderInner}
+            renderHeader={renderHeader}
+            initialSnap={1}
+            callbackNode={fall}
+            enabledGestureInteraction={true}
+          />
+          {/* <Animated.View style={{margin: 20,
         opacity: Animated.add(0.5, Animated.multiply(fall, 1.0)),}}> */}
           <StatusBar
             barStyle="light-content"
@@ -208,9 +221,7 @@ const HomeScreen = ({ navigation }) => {
                 onPress={() => navigation.navigate("FilterScreen")}
               />
             </View>
-            <View>
-              
-            </View>
+            <View></View>
             {state.auth.user.accounttype === "User" && (
               <View
                 style={{
@@ -274,12 +285,12 @@ const HomeScreen = ({ navigation }) => {
           ) : (
             <FlatList
               style={{ flex: 1, zIndex: -1, paddingTop: 55 }}
-              data={state.food.foodlist}
+              data={state.food.foodlist.reverse()}
               renderItem={({ item }) => <FoodItem post={item} />}
               //
             />
           )}
-        {/* </Animated.View> */}
+          {/* </Animated.View> */}
         </View>
       </>
     )
@@ -383,7 +394,7 @@ const styles = StyleSheet.create({
   }),
   panel: {
     padding: 20,
-    backgroundColor: '#FFFFFF',
+    backgroundColor: "#FFFFFF",
     paddingTop: 20,
     // borderTopLeftRadius: 20,
     // borderTopRightRadius: 20,
@@ -393,9 +404,9 @@ const styles = StyleSheet.create({
     // shadowOpacity: 0.4,
   },
   header: {
-    backgroundColor: '#FFFFFF',
-    shadowColor: '#333333',
-    shadowOffset: {width: -1, height: -3},
+    backgroundColor: "#FFFFFF",
+    shadowColor: "#333333",
+    shadowOffset: { width: -1, height: -3 },
     shadowRadius: 2,
     shadowOpacity: 0.4,
     // elevation: 5,
@@ -404,13 +415,13 @@ const styles = StyleSheet.create({
     borderTopRightRadius: 20,
   },
   panelHeader: {
-    alignItems: 'center',
+    alignItems: "center",
   },
   panelHandle: {
     width: 40,
     height: 8,
     borderRadius: 4,
-    backgroundColor: '#00000040',
+    backgroundColor: "#00000040",
     marginBottom: 10,
   },
   panelTitle: {
@@ -419,7 +430,7 @@ const styles = StyleSheet.create({
   },
   panelSubtitle: {
     fontSize: 14,
-    color: 'gray',
+    color: "gray",
     height: 30,
     marginBottom: 10,
   },
@@ -427,12 +438,12 @@ const styles = StyleSheet.create({
     padding: 13,
     borderRadius: 10,
     backgroundColor: Colors.DEFAULT_GREEN,
-    alignItems: 'center',
+    alignItems: "center",
     marginVertical: 7,
   },
   panelButtonTitle: {
     fontSize: 17,
-    fontWeight: 'bold',
-    color: 'white',
+    fontWeight: "bold",
+    color: "white",
   },
 });
