@@ -5,11 +5,14 @@ import React from "react";
 import { useEffect } from "react";
 import { Alert, PermissionsAndroid } from "react-native";
 import { Display } from "../utils";
-import Geocoder from 'react-native-geocoding';
+import Geocoder from "react-native-geocoding";
 import { Colors, Images } from "../content";
 import { StyleSheet, Text, View, TouchableOpacity } from "react-native";
-import * as Location from "expo-location";
+
 import { addLocation } from "../store/slices/authSlice";
+import { useDispatch, useSelector } from "react-redux";
+import { navigateToCustomTabNavigator } from "../utils/authservice";
+import * as Location from "expo-location";
 const styles = StyleSheet.create({
   container: {
     ...StyleSheet.absoluteFillObject,
@@ -37,9 +40,9 @@ const styles = StyleSheet.create({
     fontFamily: "Poppins_700Bold",
   },
 });
-const GoogleMapScreen = () => {
-
+const GoogleMapScreen = ({ navigation }) => {
   const [address, setAddress] = React.useState("");
+  const state = useSelector((state) => state);
   const [coordinate, setCoordinate] = React.useState({
     latitude: 37.78825,
     longitude: -122.4324,
@@ -48,38 +51,30 @@ const GoogleMapScreen = () => {
   const dispatch = useDispatch();
 
   const sendLocation = () => {
-
     const requestBody = {
-      coord : {
+      user_id: state.auth.user.id,
+      coord: {
         latitude: coordinate.latitude,
         longitude: coordinate.longitude,
       },
       location_name: address,
+    };
 
-    }
-
-    dispatch(addLocation(requestBody));
-
-    if(state.auth.error.status === "locationsuccess")
-    {
-      Alert.alert("Location Added Successfully");
-    }
-    else
-    {
-      Alert.alert("Error",state.auth.error.message);
-    }
-
-    
-
-
-  }
+    console.log(requestBody);
+    dispatch(addLocation(requestBody)).then((res) => {
+      if (res.payload.success) {
+        console.log(res.payload.success, "success");
+        alert(res.payload.message);
+        navigation.navigate("HomeScreen");
+      }
+    });
+  };
 
   useEffect(() => {
-    sendLocation();
+    if (address !== "") {
+      sendLocation();
+    }
   }, [address]);
-
-
-
 
   const [marginBottom, setMarginBottom] = React.useState({
     marginBottom: 1,
@@ -87,70 +82,53 @@ const GoogleMapScreen = () => {
   useEffect(() => {
     requestLocationPermission();
   }, []);
-// async function requestLocationPermission() { 
-//   var response = await request(PERMISSIONS.ANDROID.ACCESS_FINE_LOCATION);
-//   if (response === 'granted') {
-//       Geolocation.getCurrentPosition(
-//       ({ coords }) => {
-//         setLocation(coords);
-//  },
-//       (error) => {
-//         Alert.alert(error.message.toString());
-//       },
-//       { enableHighAccuracy: true, timeout: 15000, maximumAge: 10000 }
-//     );
-//   }
-// }
 
-const requestLocationPermission = async () => {
-  try {
-    const granted = await PermissionsAndroid.request(
-      PermissionsAndroid.PERMISSIONS.ACCESS_FINE_LOCATION,
-      {
-        title: 'App Location Permission',
-        message:
-          'ShareYourMeal App needs access to your Location ' +
-          'For the sake of google Map.',
-        buttonNeutral: 'Ask Me Later',
-        buttonNegative: 'Cancel',
-        buttonPositive: 'OK',
-      },
-    );
-    if (granted === PermissionsAndroid.RESULTS.GRANTED) {
-
-      // Geolocation.getCurrentPosition(
-      //   ( coords ) => {
-      //     setCoordinate({ longitude: coords.longitude, latitude: coords.latitude });
-      //     console.log('Location', coords);
-      //   },
-      //   (error) => {
-      //     Alert.alert(error.message.toString());
-      //   },
-      //   { enableHighAccuracy: true, timeout: 15000, maximumAge: 10000 }
-      // );
-      let location = await Location.getCurrentPositionAsync({});
-      setCoordinate({ longitude: location.coords.longitude, latitude: location.coords.latitude });
-      console.log('You can use the Location');
-    } else {
-      console.log('Location permission denied');
+  const requestLocationPermission = async () => {
+    try {
+      const granted = await PermissionsAndroid.request(
+        PermissionsAndroid.PERMISSIONS.ACCESS_FINE_LOCATION,
+        {
+          title: "App Location Permission",
+          message:
+            "ShareYourMeal App needs access to your Location " +
+            "For the sake of google Map.",
+          buttonNeutral: "Ask Me Later",
+          buttonNegative: "Cancel",
+          buttonPositive: "OK",
+        }
+      );
+      if (granted === PermissionsAndroid.RESULTS.GRANTED) {
+        const grantedFurther =
+          await Location.requestForegroundPermissionsAsync();
+        if (grantedFurther.granted) {
+          console.log("You can use the Location");
+          console.log(grantedFurther);
+          const location = await Location.getCurrentPositionAsync({});
+          setCoordinate({
+            longitude: location.coords.longitude,
+            latitude: location.coords.latitude,
+          });
+        }
+        console.log("You can use the Location");
+      } else {
+        console.log("Location permission denied");
+      }
+    } catch (err) {
+      console.warn(err);
     }
-  } catch (err) {
-    console.warn(err);
-  }
-};
+  };
 
-const getUserLocation = () => {
-  Geocoder.init("AIzaSyCJxL86Z7TURNorRd1wnZ0ZvnN4Mc4Xfic"); // use a valid API key
+  const getUserLocation = () => {
+    Geocoder.init("AIzaSyCJxL86Z7TURNorRd1wnZ0ZvnN4Mc4Xfic"); // use a valid API key
 
-  Geocoder.from(coordinate.latitude, coordinate.longitude)
-    .then(json => {
-      var addressComponent = json.results[0].formatted_address;
-      setAddress(addressComponent);
-      console.log(addressComponent);
-    })
-    .catch(error => console.warn(error));
-
-}
+    Geocoder.from(coordinate.latitude, coordinate.longitude)
+      .then((json) => {
+        var addressComponent = json.results[0].formatted_address;
+        setAddress(addressComponent);
+        console.log(addressComponent);
+      })
+      .catch((error) => console.warn(error));
+  };
 
   enableLatestRenderer();
   return (
@@ -158,16 +136,16 @@ const getUserLocation = () => {
       <View style={styles.container}>
         <MapView
           provider={PROVIDER_GOOGLE} // remove if not using Google Maps
-          style={[styles.map,{marginBottom: marginBottom.marginBottom}]}
+          style={[styles.map, { marginBottom: marginBottom.marginBottom }]}
           region={{
             latitude: coordinate.latitude,
             longitude: coordinate.longitude,
             latitudeDelta: 0.015,
             longitudeDelta: 0.0121,
           }}
+          showsMyLocationButton={true}
           showsUserLocation={true}
-         showsMyLocationButton={true}
-         // onMapReady={() => {setMarginBottom({ marginBottom: 0 })}}
+          // onMapReady={() => {setMarginBottom({ marginBottom: 0 })}}
           onRegionChangeComplete={(region) => {
             console.log("region", region);
             setCoordinate({
@@ -175,8 +153,9 @@ const getUserLocation = () => {
               latitude: region.latitude,
             });
           }}
-          onMapReady={() => { setMarginBottom({ marginBottom: 0 }) }}
-        >
+          onMapReady={() => {
+            setMarginBottom({ marginBottom: 0 });
+          }}>
           <Marker
             coordinate={{
               latitude: coordinate.latitude,
