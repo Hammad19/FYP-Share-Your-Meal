@@ -7,20 +7,41 @@ import { Alert, PermissionsAndroid } from "react-native";
 import { Display } from "../utils";
 import Geocoder from "react-native-geocoding";
 import { Colors, Images } from "../content";
-import { StyleSheet, Text, View, TouchableOpacity } from "react-native";
+import {
+  StyleSheet,
+  Text,
+  View,
+  TouchableOpacity,
+  TextInput,
+} from "react-native";
 
 import { addLocation } from "../store/slices/authSlice";
 import { useDispatch, useSelector } from "react-redux";
 import { navigateToCustomTabNavigator } from "../utils/authservice";
+import { GooglePlacesAutocomplete } from "react-native-google-places-autocomplete";
+
 import * as Location from "expo-location";
 const styles = StyleSheet.create({
   container: {
     ...StyleSheet.absoluteFillObject,
     justifyContent: "flex-end",
     alignItems: "center",
+    //flex: 1,
+  },
+  searchContainer: {
+    //zIndex: 1,
+    flex: 1,
+    padding: 10,
+    paddingTop: 20,
+    // backgroundColor: Colors.DEFAULT_GREEN,
+    // backgroundColor: "red",
+    marginTop: 30,
+    width: Display.setWidth(100),
+    height: Display.setHeight(10),
   },
   map: {
     ...StyleSheet.absoluteFillObject,
+    marginTop: 100,
   },
   signinButton: {
     backgroundColor: Colors.DEFAULT_GREEN,
@@ -134,6 +155,23 @@ const GoogleMapScreen = ({ navigation }) => {
   return (
     <>
       <View style={styles.container}>
+        <View style={styles.searchContainer}>
+          <GooglePlacesAutocomplete
+            //styles={{ width: 50 }}
+            placeholder="Search"
+            // query={{
+            //   key: GOOGLE_PLACES_API_KEY,
+            //   language: "en", // language of the results
+            // }}
+            onPress={(data, details = null) => console.log(data)}
+            onFail={(error) => console.error(error)}
+            requestUrl={{
+              url: "https://cors-anywhere.herokuapp.com/https://maps.googleapis.com/maps/api",
+              useOnPlatform: "web",
+            }} // this in only required for use on the web. See https://git.io/JflFv more for details.
+          />
+        </View>
+
         <MapView
           provider={PROVIDER_GOOGLE} // remove if not using Google Maps
           style={[styles.map, { marginBottom: marginBottom.marginBottom }]}
@@ -155,7 +193,8 @@ const GoogleMapScreen = ({ navigation }) => {
           }}
           onMapReady={() => {
             setMarginBottom({ marginBottom: 0 });
-          }}>
+          }}
+        >
           <Marker
             coordinate={{
               latitude: coordinate.latitude,
