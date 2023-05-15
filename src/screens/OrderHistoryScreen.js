@@ -67,7 +67,8 @@ const OrderHistoryScreen = ({ navigation }) => {
       {type === "ACTIVE" ? (
         activeOrders.length === 0 ? (
           <View
-            style={{ flex: 1, justifyContent: "center", alignItems: "center" }}>
+            style={{ flex: 1, justifyContent: "center", alignItems: "center" }}
+          >
             <Text style={{ fontSize: 20, fontWeight: "bold" }}>
               No Active Orders
             </Text>
@@ -79,7 +80,8 @@ const OrderHistoryScreen = ({ navigation }) => {
         )
       ) : pastOrders.length === 0 ? (
         <View
-          style={{ flex: 1, justifyContent: "center", alignItems: "center" }}>
+          style={{ flex: 1, justifyContent: "center", alignItems: "center" }}
+        >
           <Text style={{ fontSize: 20, fontWeight: "bold" }}>
             No Past Orders
           </Text>
@@ -98,6 +100,6 @@ export default OrderHistoryScreen;
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    marginTop: 20,
+    marginTop: 40,
   },
 });
