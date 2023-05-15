@@ -217,7 +217,6 @@ const InsertFoodItemScreen = ({ navigation }) => {
       state.auth.user.location_name == null
     ) {
       Alert.alert("Please Add Your Location First");
-      return;
     }
 
     if (foodType == "Free Food") {
@@ -280,7 +279,7 @@ const InsertFoodItemScreen = ({ navigation }) => {
         name: name,
       });
       axios
-        .post("http://192.168.0.106:8080/api/images/food-image", formData, {
+        .post("http://192.168.10.16:8080/api/images/food-image", formData, {
           headers: { "Content-Type": "multipart/form-data" },
         })
         .then((res) => {
@@ -316,7 +315,8 @@ const InsertFoodItemScreen = ({ navigation }) => {
         <StatusBar
           barStyle={"dark-content"}
           backgroundColor={Colors.DEFAULT_WHITE}
-          translucent></StatusBar>
+          translucent
+        ></StatusBar>
         <Separator height={StatusBar.currentHeight} />
         <View style={styles.headerContainer}>
           <IonIcons
@@ -331,7 +331,8 @@ const InsertFoodItemScreen = ({ navigation }) => {
         <View style={styles.inputImageContainer}>
           <TouchableHighlight
             underlayColor="rgba(0,0,0,0)"
-            onPress={() => setImage()}>
+            onPress={() => setImage()}
+          >
             {foodImage == null ? (
               <View style={styles.inputImageSubContainer}>
                 <IonIcons name="image-outline" size={50} color="grey" />
@@ -374,7 +375,8 @@ const InsertFoodItemScreen = ({ navigation }) => {
         <View
           style={
             isFieldInError("foodName") ? styles.error : styles.inputContainer
-          }>
+          }
+        >
           <View style={styles.inputSubContainer}>
             <IonIcons
               name="md-fast-food-outline"
@@ -406,7 +408,8 @@ const InsertFoodItemScreen = ({ navigation }) => {
             isFieldInError("foodDescription")
               ? styles.error
               : styles.inputContainer
-          }>
+          }
+        >
           <View style={styles.inputSubContainer}>
             <MaterialIcons
               name="details"
@@ -461,7 +464,8 @@ const InsertFoodItemScreen = ({ navigation }) => {
         <View
           style={
             isFieldInError("foodPrice") ? styles.error : styles.inputContainer
-          }>
+          }
+        >
           <View style={styles.inputSubContainer}>
             <IonIcons
               name="pricetags-outline"
