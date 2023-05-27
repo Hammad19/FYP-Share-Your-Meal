@@ -17,6 +17,8 @@ import EmailVerificationScreen from "./EmailVerificationScreen";
 import ProfileScreen from "./ProfileScreen";
 import EditProfileScreen from "./EditProfileScreen";
 import OrderHistoryScreen from "./OrderHistoryScreen";
+import NotificationScreen from "./NotificationScreen";
+import ReviewScreen from "./ReviewScreen";
 
 export {
   SplashScreen,
@@ -37,4 +39,6 @@ export {
   FilterScreen,
   GoogleMapScreen,
   OrderHistoryScreen,
+  NotificationScreen,
+  ReviewScreen,
 };

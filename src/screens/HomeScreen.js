@@ -123,13 +123,15 @@ const HomeScreen = ({ navigation }) => {
           style={styles.panelButtonTitle}
           onPress={() => {
             NavigateToGoogleMap();
-          }}>
+          }}
+        >
           + Add location
         </Text>
       </TouchableOpacity>
       <TouchableOpacity
         style={styles.panelButton}
-        onPress={() => bs.current.snapTo(0)}>
+        onPress={() => bs.current.snapTo(0)}
+      >
         <Text style={styles.panelButtonTitle}>Confirm</Text>
       </TouchableOpacity>
     </View>
@@ -192,6 +194,7 @@ const HomeScreen = ({ navigation }) => {
                 size={24}
                 color={Colors.DEFAULT_WHITE}
                 style={{ position: "absolute", right: 0 }}
+                onPress={() => navigation.navigate("NotificationScreen")}
               />
               <View style={styles.alertBadge}>
                 <Text style={styles.alertBadgeText}>12</Text>
@@ -229,10 +232,12 @@ const HomeScreen = ({ navigation }) => {
                   alignItems: "center",
                   justifyContent: "space-evenly",
                   width: Display.setWidth(100),
-                }}>
+                }}
+              >
                 <TouchableOpacity
                   onPress={() => setFoodType("Free Food")}
-                  style={styles.category()}>
+                  style={styles.category()}
+                >
                   <Ionicons
                     name={
                       foodType == "Free Food"
@@ -252,7 +257,8 @@ const HomeScreen = ({ navigation }) => {
                 </TouchableOpacity>
                 <TouchableOpacity
                   onPress={() => setFoodType("Paid Food")}
-                  style={styles.category()}>
+                  style={styles.category()}
+                >
                   <MaterialCommunityIcons
                     name={foodType == "Paid Food" ? "food" : "food-outline"}
                     size={35}
@@ -276,7 +282,8 @@ const HomeScreen = ({ navigation }) => {
                 flex: 1,
                 justifyContent: "center",
                 alignItems: "center",
-              }}>
+              }}
+            >
               <Text style={{ fontSize: 20, color: Colors.DEFAULT_GREY }}>
                 No Food Available
               </Text>

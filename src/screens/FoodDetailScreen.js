@@ -41,6 +41,7 @@ const styles = StyleSheet.create({
   container: {
     marginTop: -132,
     overflow: "hidden",
+    // padding: 16,
   },
 
   // headercontainer code
@@ -60,17 +61,20 @@ const styles = StyleSheet.create({
     fontFamily: "Poppins_600SemiBold",
     marginTop: 20,
     marginBottom: 16,
+    paddingLeft: 10,
   },
   text: {
     fontSize: 16,
     lineHeight: 16 * 1.4,
     fontFamily: "Poppins_400Regular ",
     overflow: "hidden",
+    paddingLeft: 10,
   },
   details: {
     flexDirection: "row",
     alignItems: "center",
     marginBottom: 16,
+    paddingLeft: 10,
   },
   detailText: {
     fontFamily: "Poppins_500Medium",
@@ -104,6 +108,7 @@ const styles = StyleSheet.create({
     fontSize: 16,
     lineHeight: 16 * 1.4,
     fontFamily: "Poppins_500Medium",
+    paddingLeft: 10,
   },
 
   image: {
@@ -249,7 +254,8 @@ const FoodDetailScreen = ({ route, navigation }) => {
           onPress={() => {
             OrderFood(post, itemCount);
           }}
-          activeOpacity={0.8}>
+          activeOpacity={0.8}
+        >
           <Text style={styles.cartButtonText}>
             {post.is_free ? "Request" : "Order"}
           </Text>

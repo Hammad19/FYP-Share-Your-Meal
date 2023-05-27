@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useEffect } from "react";
 import {
   View,
   Text,
@@ -14,11 +14,14 @@ import { Colors } from "../content";
 import { Display } from "../utils";
 import { useDispatch, useSelector } from "react-redux";
 import { deleteuserlisting } from "../store/slices/userlistingSlice";
+import axios from "axios";
+import { axiosInstance } from "../utils/api/axiosInstance";
 const days = 7;
 
 const Post = (props) => {
   const post = props.post;
   const [isSharePage, setIsSharePage] = React.useState(false);
+  const [rating, setRating] = React.useState(0);
   const navigation = useNavigation();
 
   const goToPostPage = () => {
@@ -40,6 +43,8 @@ const Post = (props) => {
     Alert.alert("Success", "Food Item Deleted Successfully");
   };
 
+  // get rewies by user id
+
   return (
     <>
       <Pressable onPress={goToPostPage} style={styles.container}>
@@ -60,7 +65,7 @@ const Post = (props) => {
 
           <View style={styles.ratingtext}>
             <Icon name="star" color={Colors.DEFAULT_YELLOW} size={18} />
-            <Text>4.93 (891)</Text>
+            <Text>{post.food_rating}</Text>
           </View>
         </View>
 
@@ -87,11 +92,13 @@ const Post = (props) => {
               flexDirection: "row",
               justifyContent: "space-between",
               marginTop: 10,
-            }}>
+            }}
+          >
             <TouchableOpacity
               style={styles.cartButton}
               onPress={() => handleEditButton()}
-              activeOpacity={0.8}>
+              activeOpacity={0.8}
+            >
               <Text style={styles.cartButtonText}>
                 <Icon name="edit" size={18}></Icon>Edit Post
               </Text>
@@ -99,7 +106,8 @@ const Post = (props) => {
             <TouchableOpacity
               style={styles.cartButton}
               onPress={() => deleteFood(post._id)}
-              activeOpacity={0.8}>
+              activeOpacity={0.8}
+            >
               <Text style={styles.cartButtonText}>
                 <MaterialIcons name="delete" size={20} />
                 Delete post
