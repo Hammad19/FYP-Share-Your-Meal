@@ -8,11 +8,11 @@ import {
   View,
   TouchableOpacity,
 } from "react-native";
-import { Entypo as Icon } from "@expo/vector-icons";
+
 import { Colors, Images } from "../content";
 import { Display } from "../utils";
 import AntDesign from "react-native-vector-icons/AntDesign";
-
+import Icon from "react-native-vector-icons/FontAwesome";
 import {
   useFonts,
   Poppins_100Thin,
@@ -75,6 +75,12 @@ const styles = StyleSheet.create({
     alignItems: "center",
     marginBottom: 16,
     paddingLeft: 10,
+  },
+  whatsappButton: {
+    backgroundColor: "#fff",
+    borderRadius: 50,
+    padding: 10,
+    elevation: 2,
   },
   detailText: {
     fontFamily: "Poppins_500Medium",
@@ -167,6 +173,22 @@ const FoodDetailScreen = ({ route, navigation }) => {
 
   const { post } = route.params;
 
+  const openWhatsAppChat = () => {
+    // Replace the "XXXXXXXXXXXX" with the phone number of the person you want to chat with
+    const phoneNumber = post.phone_number;
+    const url = `whatsapp://send?phone=${phoneNumber}`;
+
+    Linking.canOpenURL(url)
+      .then((supported) => {
+        if (!supported) {
+          console.log(`WhatsApp is not installed on the device.`);
+        } else {
+          return Linking.openURL(url);
+        }
+      })
+      .catch((err) => console.error("An error occurred", err));
+  };
+
   const OrderFood = async () => {
     try {
       console.log(post._id);
@@ -254,11 +276,16 @@ const FoodDetailScreen = ({ route, navigation }) => {
           onPress={() => {
             OrderFood(post, itemCount);
           }}
-          activeOpacity={0.8}
-        >
+          activeOpacity={0.8}>
           <Text style={styles.cartButtonText}>
             {post.is_free ? "Request" : "Order"}
           </Text>
+        </TouchableOpacity>
+
+        <TouchableOpacity
+          onPress={openWhatsAppChat}
+          style={styles.whatsappButton}>
+          <Icon name="whatsapp" size={40} color="#25D366" />
         </TouchableOpacity>
       </View>
     </>
