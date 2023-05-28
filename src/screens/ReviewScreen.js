@@ -88,15 +88,6 @@ const ReviewScreen = ({ navigation }) => {
       const response = await axiosInstance.get(
         `reviews/` + state.auth.user.email
       );
-      // get user name where email = response.data.reviews.ratedBy_email
-      // getUserName(response.data.reviews.ratedBy_email);
-      // var name = getUserName(response.data.reviews.ratedBy_email);
-      //make new object with name
-
-      // var newObject = { ...response.data.reviews, name: name };
-      //set reviews
-
-      //setReviews(newObject);
       setReviews(response.data.reviews);
       console.log(reviews, "reviews");
     } catch (error) {
