@@ -131,6 +131,41 @@ export const getFoodsByName = createAsyncThunk(
   }
 );
 
+//get filtered food
+export const getFilteredFood = createAsyncThunk(
+  API_ENDPOINTS.FOOD_GET_FILTERED,
+  async (requestBody, thunkAPI) => {
+    try {
+      const result = await getData(
+        API_ENDPOINTS.FOOD_GET_FILTERED +
+          "/" +
+          requestBody.food_category +
+          "/" +
+          requestBody.is_free +
+          "/" +
+          requestBody.food_price +
+          "/" +
+          requestBody.food_rating +
+          "/" +
+          requestBody.food_quantity
+      );
+      if (result.success == true) {
+        return result;
+      } else {
+        return thunkAPI.rejectWithValue({
+          status: "error",
+          message: result.message,
+        });
+      }
+    } catch (e) {
+      return thunkAPI.rejectWithValue({
+        status: "error",
+        message: "Unable to get filtered food",
+      });
+    }
+  }
+);
+
 const initialState = {
   food: {},
   foodlist: [],
@@ -210,6 +245,12 @@ const foodSlice = createSlice({
     });
 
     builder.addCase(getFoodsByName.rejected, (state, action) => {
+      console.log(action);
+    });
+    builder.addCase(getFilteredFood.fulfilled, (state, action) => {
+      state.foodlist = action.payload.food.reverse();
+    });
+    builder.addCase(getFilteredFood.rejected, (state, action) => {
       console.log(action);
     });
   },
