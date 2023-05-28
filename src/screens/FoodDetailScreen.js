@@ -7,6 +7,7 @@ import {
   Text,
   View,
   TouchableOpacity,
+  Linking,
 } from "react-native";
 
 import { Colors, Images } from "../content";
@@ -77,8 +78,15 @@ const styles = StyleSheet.create({
     paddingLeft: 10,
   },
   whatsappButton: {
-    backgroundColor: "#fff",
+    backgroundColor: "lightgray",
     borderRadius: 50,
+    width: Display.setWidth(11),
+    height: Display.setHeight(6),
+    //height: Display.setWidth(13),
+    marginTop: Display.setHeight(1),
+    marginRight: Display.setWidth(3),
+    justifyContent: "center",
+
     padding: 10,
     elevation: 2,
   },
@@ -176,6 +184,7 @@ const FoodDetailScreen = ({ route, navigation }) => {
   const openWhatsAppChat = () => {
     // Replace the "XXXXXXXXXXXX" with the phone number of the person you want to chat with
     const phoneNumber = post.phone_number;
+    console.log(phoneNumber, "phone number");
     const url = `whatsapp://send?phone=${phoneNumber}`;
 
     Linking.canOpenURL(url)
@@ -227,15 +236,21 @@ const FoodDetailScreen = ({ route, navigation }) => {
       </View>
       <ScrollView style={styles.container}>
         <Image style={styles.image} source={{ uri: post.food_image }} />
-        <Text style={styles.title}>{post.food_name}</Text>
+        <View style={{ flexDirection: "row", justifyContent: "space-between" }}>
+          <Text style={styles.title}>{post.food_name}</Text>
+          <TouchableOpacity
+            onPress={openWhatsAppChat}
+            style={styles.whatsappButton}
+          >
+            <Icon name="whatsapp" size={30} color="#25D366" />
+          </TouchableOpacity>
+        </View>
         <View style={styles.details}>
           <Icon name="star" color="rgb(255, 56, 92)" size={18} />
-          <Text style={styles.detailText}>4.93 (891)</Text>
-          <Icon name="medal" color="rgb(255, 56, 92)" size={18} />
-          <Text style={styles.detailText}>4.93 (891)</Text>
+          <Text style={styles.detailText}>{post.food_rating}</Text>
         </View>
         <View>
-          <View style={styles.smallDivider} />
+          <View style={styles.divider} />
           <View style={styles.host}>
             <View>
               <Text style={styles.mediumText}>{post.food_name}</Text>
@@ -254,7 +269,6 @@ const FoodDetailScreen = ({ route, navigation }) => {
           <Text style={styles.text}>{post.food_description} </Text>
         </View>
       </ScrollView>
-
       <View style={styles.buttonsContainer}>
         <View style={styles.itemAddContainer}>
           <AntDesign
@@ -276,16 +290,11 @@ const FoodDetailScreen = ({ route, navigation }) => {
           onPress={() => {
             OrderFood(post, itemCount);
           }}
-          activeOpacity={0.8}>
+          activeOpacity={0.8}
+        >
           <Text style={styles.cartButtonText}>
             {post.is_free ? "Request" : "Order"}
           </Text>
-        </TouchableOpacity>
-
-        <TouchableOpacity
-          onPress={openWhatsAppChat}
-          style={styles.whatsappButton}>
-          <Icon name="whatsapp" size={40} color="#25D366" />
         </TouchableOpacity>
       </View>
     </>

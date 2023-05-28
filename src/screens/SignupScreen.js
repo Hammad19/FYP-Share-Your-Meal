@@ -8,15 +8,12 @@ import {
   TouchableOpacity,
   Image,
   Alert,
+  FlatList,
 } from "react-native";
 import { useValidation } from "react-native-form-validator";
 import DropDownPicker from "react-native-dropdown-picker";
 import { useDispatch, useSelector } from "react-redux";
 import { React, useEffect, useState } from "react";
-import { Colors, Images } from "../content";
-import { Separator } from "../components";
-import { Display } from "../utils";
-import IonIcons from "react-native-vector-icons/Ionicons";
 import Feather from "react-native-vector-icons/Feather";
 import { TextInput } from "react-native-gesture-handler";
 import {
@@ -25,6 +22,14 @@ import {
   Poppins_700Bold,
 } from "@expo-google-fonts/poppins";
 import { reset, userSignup } from "../store/slices/authSlice";
+import { Colors, CountryCode } from "../content";
+import { FlagItem, Separator } from "../components";
+import { Display } from "../utils";
+import IonIcons from "react-native-vector-icons/Ionicons";
+import MaterialIcons from "react-native-vector-icons/MaterialIcons";
+import CountryFlag from "react-native-country-flag";
+
+const getDropdownStyle = (y) => ({ ...styles.countryDropdown, top: y + 60 });
 const SignupScreen = ({ navigation }) => {
   const [email, setEmail] = useState("");
   const [userName, setUserName] = useState("");
@@ -41,10 +46,28 @@ const SignupScreen = ({ navigation }) => {
     { label: "Charitable Organization", value: "Charitable Organization" },
   ]);
 
+  const [selectedCountry, setSelectedCountry] = useState(
+    CountryCode.find((country) => country.name === "Pakistan")
+  );
+
+  const [inputsContainerY, setInputsContainerY] = useState(0);
+  const [isDropdownOpen, setIsDropdownOpen] = useState(false);
+  const [dropdownLayout, setDropdownLayout] = useState({});
+  const [phoneNumber, setPhoneNumber] = useState("");
+  const closeDropdown = (pageX, pageY) => {
+    if (isDropdownOpen) {
+      if (
+        pageX < dropdownLayout?.x ||
+        pageX > dropdownLayout?.x + dropdownLayout?.width ||
+        pageY < dropdownLayout?.y ||
+        pageY > dropdownLayout?.y + dropdownLayout?.height
+      ) {
+        setIsDropdownOpen(false);
+      }
+    }
+  };
   const dispatch = useDispatch();
   const state = useSelector((state) => state);
-  
-
 
   const {
     validate,
@@ -53,7 +76,14 @@ const SignupScreen = ({ navigation }) => {
     getErrorMessages,
     isFormValid,
   } = useValidation({
-    state: { userName, email, password, confirmPassword, accounttype },
+    state: {
+      userName,
+      email,
+      password,
+      confirmPassword,
+      accounttype,
+      phoneNumber,
+    },
   });
 
   const validateNull = () => {
@@ -62,7 +92,8 @@ const SignupScreen = ({ navigation }) => {
       email?.length < 1 ||
       password?.length < 1 ||
       confirmPassword?.length < 1 ||
-      accounttype?.length < 1
+      accounttype?.length < 1 ||
+      phoneNumber?.length < 1
     ) {
       setisAllValuesNull(true);
     } else {
@@ -81,24 +112,28 @@ const SignupScreen = ({ navigation }) => {
   }
   useEffect(() => {
     NavigatetoSignInScreen();
+  }, [state]);
 
-  }, [state])
-
-  const NavigatetoSignInScreen= () => {
-    if(state.auth.error.status== "error")
-        {
-          Alert.alert("Error", state.auth.error.message);
-        }
-        else if(state.auth.error.status== "signupsuccess")
-        {
-          Alert.alert("Success", "Account Created Successfully Please Login");
-          navigation.navigate("SigninScreen");
-        }
-      }
+  const NavigatetoSignInScreen = () => {
+    if (state.auth.error.status == "error") {
+      Alert.alert("Error", state.auth.error.message);
+    } else if (state.auth.error.status == "signupsuccess") {
+      Alert.alert("Success", "Account Created Successfully Please Login");
+      navigation.navigate("SigninScreen");
+    }
+  };
 
   useEffect(() => {
     validateField();
-  }, [userName, email, password, confirmPassword, accounttype, fieldname]);
+  }, [
+    userName,
+    email,
+    password,
+    confirmPassword,
+    accounttype,
+    fieldname,
+    phoneNumber,
+  ]);
 
   //function which takes field name and validates it
   const validateField = () => {
@@ -121,6 +156,10 @@ const SignupScreen = ({ navigation }) => {
       validate({
         accounttype: { required: true },
       });
+    } else if (fieldname == "phoneNumber") {
+      validate({
+        phoneNumber: { minlength: 10, maxlength: 10, required: true },
+      });
     }
   };
 
@@ -137,9 +176,12 @@ const SignupScreen = ({ navigation }) => {
         required: true,
       },
       accounttype: { required: true },
+      phoneNumber: { minlength: 13, maxlength: 13, required: true },
     });
 
-    console.log(isFormValid());
+    console.log(phoneNumber);
+
+    console.log(isFormValid(), "isFormValid()");
     setTimeout(() => {
       setisAllValuesNull(false);
     }, 2000);
@@ -152,6 +194,7 @@ const SignupScreen = ({ navigation }) => {
       password,
       confirm_password: confirmPassword,
       accounttype: accounttype,
+      phone_number: phoneNumber,
     };
     //if i dont get any errors then i will dispatch the action
     if (
@@ -160,16 +203,13 @@ const SignupScreen = ({ navigation }) => {
       userName.length > 0 &&
       email.length > 0 &&
       password.length > 0 &&
-      confirmPassword.length > 0
+      confirmPassword.length > 0 &&
+      phoneNumber.length > 0
     ) {
       //dispattch the action and then print the state
       console.log(state, "state");
-      dispatch(userSignup(requestBody))
-      
-
-
-      
-    
+      console.log(requestBody, "requestBody");
+      dispatch(userSignup(requestBody));
     }
   };
 
@@ -184,14 +224,14 @@ const SignupScreen = ({ navigation }) => {
         <StatusBar
           barStyle={"dark-content"}
           backgroundColor={Colors.DEFAULT_WHITE}
-          translucent></StatusBar>
+          translucent
+        ></StatusBar>
         <Separator height={StatusBar.currentHeight} />
         <View style={styles.headerContainer}>
           <IonIcons
             name="chevron-back-outline"
             size={30}
             onPress={() => {
-
               dispatch(reset());
               navigation.goBack();
             }}
@@ -205,7 +245,8 @@ const SignupScreen = ({ navigation }) => {
         <View
           style={
             isFieldInError("userName") ? styles.error : styles.inputContainer
-          }>
+          }
+        >
           <View style={styles.inputSubContainer}>
             <Feather
               name="user"
@@ -232,9 +273,8 @@ const SignupScreen = ({ navigation }) => {
         {error && ShowError("userName")}
         <Separator height={15} />
         <View
-          style={
-            isFieldInError("email") ? styles.error : styles.inputContainer
-          }>
+          style={isFieldInError("email") ? styles.error : styles.inputContainer}
+        >
           <View style={styles.inputSubContainer}>
             <Feather
               name="mail"
@@ -262,7 +302,8 @@ const SignupScreen = ({ navigation }) => {
         <View
           style={
             isFieldInError("password") ? styles.error : styles.inputContainer
-          }>
+          }
+        >
           <View style={styles.inputSubContainer}>
             <Feather
               name="lock"
@@ -301,7 +342,8 @@ const SignupScreen = ({ navigation }) => {
             isFieldInError("confirmPassword")
               ? styles.error
               : styles.inputContainer
-          }>
+          }
+        >
           <View style={styles.inputSubContainer}>
             <Feather
               name="lock"
@@ -335,6 +377,70 @@ const SignupScreen = ({ navigation }) => {
           </View>
         </View>
         {error && ShowError("confirmPassword")}
+        <Separator height={15} />
+        <View
+          style={styles.inputsContainer}
+          onLayout={({
+            nativeEvent: {
+              layout: { y },
+            },
+          }) => setInputsContainerY(y)}
+        >
+          <TouchableOpacity
+            style={styles.countryListContainer}
+            onPress={() => setIsDropdownOpen(!isDropdownOpen)}
+          >
+            <CountryFlag
+              isoCode={selectedCountry.code}
+              size={12}
+              style={styles.flagIcon}
+            />
+            <Text style={styles.countryCodeText}>
+              {selectedCountry.dial_code}
+            </Text>
+            <MaterialIcons name="keyboard-arrow-down" size={18} />
+          </TouchableOpacity>
+          <View style={styles.phoneInputContainer}>
+            <TextInput
+              placeholder="Phone Number"
+              placeholderTextColor={Colors.DEFAULT_GREY}
+              selectionColor={Colors.DEFAULT_GREY}
+              keyboardType="number-pad"
+              onFocus={() => setIsDropdownOpen(false)}
+              style={styles.inputText}
+              onChangeText={(text) => {
+                setPhoneNumber(selectedCountry?.dial_code + text);
+                console.log(selectedCountry?.dial_code + text);
+              }}
+            />
+          </View>
+        </View>
+        {isDropdownOpen && (
+          <View
+            style={getDropdownStyle(inputsContainerY)}
+            onLayout={({
+              nativeEvent: {
+                layout: { x, y, height, width },
+              },
+            }) => setDropdownLayout({ x, y, height, width })}
+          >
+            <FlatList
+              data={CountryCode}
+              keyExtractor={(item) => item.code}
+              renderItem={({ item }) => (
+                // <Text>{item.name}</Text>
+                <FlagItem
+                  {...item}
+                  onPress={(country) => {
+                    setSelectedCountry(country);
+                    setIsDropdownOpen(false);
+                  }}
+                />
+              )}
+            />
+          </View>
+        )}
+        {error && ShowError("phoneNumber")}
         <Separator height={15} />
         <DropDownPicker
           style={styles.inputContainer}
@@ -526,7 +632,62 @@ const styles = StyleSheet.create({
     lineHeight: 13 * 1.4,
     fontFamily: "Poppins_500Medium",
   },
-
+  inputsContainer: {
+    flexDirection: "row",
+    alignItems: "center",
+    marginHorizontal: 20,
+  },
+  countryCodeText: {
+    fontSize: 13,
+    lineHeight: 13 * 1.3,
+    color: Colors.DEFAULT_BLACK,
+    fontFamily: "Poppins_500Medium",
+  },
+  countryListContainer: {
+    backgroundColor: Colors.LIGHT_GREY,
+    width: Display.setWidth(22),
+    marginRight: 10,
+    borderRadius: 8,
+    height: Display.setHeight(6),
+    justifyContent: "space-evenly",
+    alignItems: "center",
+    borderWidth: 0.5,
+    borderColor: Colors.LIGHT_GREY2,
+    flexDirection: "row",
+  },
+  phoneInputContainer: {
+    backgroundColor: Colors.LIGHT_GREY,
+    height: Display.setHeight(6),
+    paddingHorizontal: 10,
+    borderRadius: 8,
+    justifyContent: "center",
+    borderWidth: 0.5,
+    borderColor: Colors.LIGHT_GREY2,
+    flex: 1,
+  },
+  flagIcon: {
+    height: 18,
+    width: 27,
+    marginLeft: 4,
+  },
+  inputText: {
+    fontSize: 18,
+    textAlignVertical: "center",
+    padding: 0,
+    height: Display.setHeight(6),
+    color: Colors.DEFAULT_BLACK,
+  },
+  countryDropdown: {
+    backgroundColor: Colors.LIGHT_GREY,
+    position: "absolute",
+    width: Display.setWidth(80),
+    height: Display.setHeight(50),
+    marginLeft: 20,
+    borderRadius: 10,
+    borderWidth: 0.5,
+    borderColor: Colors.LIGHT_GREY2,
+    zIndex: 3,
+  },
   dropdownstyles: {
     fontSize: 18,
     textAlignVertical: "center",
