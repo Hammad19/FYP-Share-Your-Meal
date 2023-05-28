@@ -220,7 +220,9 @@ const HomeScreen = ({ navigation }) => {
                 size={20}
                 color={Colors.DEFAULT_YELLOW}
                 style={{ marginRight: 10 }}
-                onPress={() => navigation.navigate("FilterScreen")}
+                onPress={() =>
+                  navigation.navigate("FilterScreen", { foodType: foodType })
+                }
               />
             </View>
             <View></View>
