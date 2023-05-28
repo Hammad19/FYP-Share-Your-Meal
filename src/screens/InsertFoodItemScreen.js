@@ -279,7 +279,7 @@ const InsertFoodItemScreen = ({ navigation }) => {
         name: name,
       });
       axios
-        .post("http://192.168.10.9:8080/api/images/food-image", formData, {
+        .post("http://192.168.10.10:8080/api/images/food-image", formData, {
           headers: { "Content-Type": "multipart/form-data" },
         })
         .then((res) => {
