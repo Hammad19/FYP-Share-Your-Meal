@@ -56,6 +56,7 @@ const RequestOrderCard = (props) => {
         order_id: props.order._id,
         order_food_id: props.order.order_food_id,
         order_quantity: props.order.order_quantity,
+        ordered_by: props.order.ordered_by,
       })
       .then((res) => {
         console.log(res.data, "order accepted");
@@ -76,6 +77,7 @@ const RequestOrderCard = (props) => {
         order_id: props.order._id,
         order_food_id: props.order.order_food_id,
         order_quantity: props.order.order_quantity,
+        ordered_by: props.order.ordered_by,
       })
       .then((res) => {
         console.log(res.data, "order rejected");
