@@ -246,16 +246,17 @@ const InsertFoodItemScreen = ({ navigation }) => {
 
     validateNull();
 
-    let requestBody = {
-      food_name: foodName,
-      food_description: foodDescription,
-      food_price: foodPrice,
-      food_image: foodImage,
-      food_category: foodCategory,
-      food_quantity: foodQuantity,
-      food_shared_by: state.auth.user.email,
-      is_free: foodType == "Free Food" ? true : false,
-    };
+    // let requestBody = {
+    //   food_name: foodName,
+    //   food_description: foodDescription,
+    //   food_price: foodPrice,
+    //   food_image: foodImage,
+    //   food_category: foodCategory,
+    //   food_quantity: foodQuantity,
+    //   food_shared_by: state.auth.user.email,
+    //   phone_number: state.auth.user.phone_number,
+    //   is_free: foodType == "Free Food" ? true : false,
+    // };
 
     console.log(foodPrice.length);
     if (
@@ -291,6 +292,7 @@ const InsertFoodItemScreen = ({ navigation }) => {
             food_category: foodCategory,
             food_quantity: foodQuantity,
             food_shared_by: state.auth.user.email,
+            phone_number: state.auth.user.phone_number,
             is_free: foodType == "Free Food" ? true : false,
           };
           dispatch(addFood(requestBody));
