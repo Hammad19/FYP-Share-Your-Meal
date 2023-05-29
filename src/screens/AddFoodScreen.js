@@ -1,4 +1,11 @@
-import { StyleSheet, Text, View, TouchableOpacity,StatusBar ,FlatList} from "react-native";
+import {
+  StyleSheet,
+  Text,
+  View,
+  TouchableOpacity,
+  StatusBar,
+  FlatList,
+} from "react-native";
 import React, { useCallback, useEffect, useState } from "react";
 import { Colors } from "../content";
 
@@ -12,11 +19,16 @@ import { Separator } from "../components";
 import IonIcons from "react-native-vector-icons/Ionicons";
 import { Display } from "../utils";
 import { useSelector, useDispatch } from "react-redux";
-import { deleteuserlisting, getlistingsofUser, resetupdate, setissharepage } from "../store/slices/userlistingSlice";
+import {
+  deleteuserlisting,
+  getlistingsofUser,
+  resetupdate,
+  setissharepage,
+} from "../store/slices/userlistingSlice";
 import FoodItem from "../components/FoodItem";
 import { useFocusEffect } from "@react-navigation/native";
 import { resetmessage } from "../store/slices/foodSlice";
-const AddFoodScreen = ({navigation}) => {
+const AddFoodScreen = ({ navigation }) => {
   const [delivery, setDelivery] = useState(true);
   let [fontsLoaded] = useFonts({
     Poppins_500Medium,
@@ -25,66 +37,63 @@ const AddFoodScreen = ({navigation}) => {
 
   const dispatch = useDispatch();
   const state = useSelector((state) => state);
-  console.log(state.auth.user.email)
-  let requestBody = {food_shared_by: "/"+state.auth.user.email};
- //dispatch the function only once
-  
+  console.log(state.auth.user.email);
+  let requestBody = { food_shared_by: "/" + state.auth.user.email };
+  //dispatch the function only once
+
   useFocusEffect(
     useCallback(() => {
       dispatch(resetmessage());
       dispatch(setissharepage(true));
       dispatch(getlistingsofUser(requestBody));
-      dispatch(resetupdate())
-      
+      dispatch(resetupdate());
     }, [])
   );
 
-  
   useEffect(() => {
     dispatch(getlistingsofUser(requestBody));
   }, [state.userlisting.isupdated]);
-  
 
   return (
-    
     fontsLoaded && (
       <>
-      <View style={styles.container}>
-        <StatusBar
-          barStyle={"dark-content"}
-          backgroundColor="transparent"
-          translucent></StatusBar>
-        <Separator height={StatusBar.currentHeight} />
-        <View style={styles.headerContainer}>
-          <IonIcons
-            name="chevron-back-outline"
-            size={30}
+        <View style={styles.container}>
+          <StatusBar
+            barStyle={"dark-content"}
+            backgroundColor="transparent"
+            translucent
+          ></StatusBar>
+          <Separator height={StatusBar.currentHeight} />
+          <View style={styles.headerContainer}>
+            <IonIcons
+              name="chevron-back-outline"
+              size={30}
+              onPress={() => {
+                dispatch(setissharepage(false));
+                navigation.goBack();
+              }}
+            />
+            <Text style={styles.headertitle}>Add Listings</Text>
+          </View>
+
+          {state.userlisting.foodlist.length > 0 ? (
+            <FlatList
+              style={{ flex: 1 }}
+              data={state.userlisting.foodlist}
+              renderItem={({ item }) => <FoodItem post={item} />}
+            />
+          ) : (
+            <>
+              <Separator height={50} />
+              <Text style={styles.content}>
+                You Currently Have No Listings Please Click on Plus Button to
+                Add Listings
+              </Text>
+            </>
+          )}
+
+          <TouchableOpacity
             onPress={() => {
-              dispatch(setissharepage(false));
-              navigation.goBack();
-            }}
-          />
-          <Text style={styles.headertitle}>Add Listings</Text>
-        </View>
-      
-        
-         {state.userlisting.foodlist.length > 0 ? (
-          <FlatList
-          style={{ flex: 1 }}
-          data={state.userlisting.foodlist}
-          renderItem={({ item }) => <FoodItem post={item} />}
-        />):(
-          <><Separator height={50} />
-          <Text style={styles.content}>
-           You Currently Have No Listings Please Click on Plus Button to Add Listings
-         </Text></>
-         )}
-
-
-      </View>
-
-      <TouchableOpacity
-             onPress={() => {
               navigation.navigate("InsertFoodItemScreen");
             }}
             activeOpacity={0.8}
@@ -95,8 +104,9 @@ const AddFoodScreen = ({navigation}) => {
               color={Colors.DEFAULT_YELLOW}
               style={styles.plusbutton}
             ></AntDesign>
-          </TouchableOpacity> 
-          </>
+          </TouchableOpacity>
+        </View>
+      </>
     )
   );
 };
@@ -148,22 +158,19 @@ const styles = StyleSheet.create({
     fontFamily: "Poppins_500Medium",
   },
   plusbutton: {
-   
     //plus button at the bottom right corner
     position: "absolute",
     bottom: 20,
     right: 20,
+    backgroundColor: Colors.DEFAULT_WHITE,
+    borderRadius: 50,
 
     //shadow
-    shadowColor: "#000",
-    shadowOffset: {
-      width: 0,
-      height: 2,
-    },
-      //shadow opacity
-      shadowOpacity: 0.25,
-      shadowRadius: 3.84,
-      elevation: 20,
+    shadowColor: "#E7EAE0",
 
+    //shadow opacity
+    shadowOpacity: 0.25,
+    shadowRadius: 3.84,
+    elevation: 20,
   },
 });
