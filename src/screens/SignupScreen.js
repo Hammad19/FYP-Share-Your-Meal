@@ -331,7 +331,7 @@ const SignupScreen = ({ navigation }) => {
               name={isPasswordShown ? "eye" : "eye-off"}
               size={22}
               color={Colors.DEFAULT_GREY}
-              style={{ marginRight: 10 }}
+              style={{ marginRight: 100 }}
             />
           </View>
         </View>
@@ -670,13 +670,13 @@ const styles = StyleSheet.create({
     width: 27,
     marginLeft: 4,
   },
-  inputText: {
-    fontSize: 18,
-    textAlignVertical: "center",
-    padding: 0,
-    height: Display.setHeight(6),
-    color: Colors.DEFAULT_BLACK,
-  },
+  // inputText: {
+  //   fontSize: 18,
+  //   textAlignVertical: "center",
+  //   padding: 0,
+  //   height: Display.setHeight(6),
+  //   color: Colors.DEFAULT_BLACK,
+  // },
   countryDropdown: {
     backgroundColor: Colors.LIGHT_GREY,
     position: "absolute",
