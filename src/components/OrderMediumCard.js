@@ -14,7 +14,12 @@ import { Display } from "../utils";
 import { Rating, AirbnbRating } from "react-native-ratings";
 import { useState } from "react";
 import { axiosInstance } from "../utils/api/axiosInstance";
-
+import {
+  Entypo as Icon,
+  MaterialIcons,
+  Ionicons,
+  AntDesign,
+} from "@expo/vector-icons";
 const OrderMediumCard = (props) => {
   const reviews = ["Worst", "Bad", "Average", "Good", "Excellent"];
   const handleRating = (value) => {
@@ -47,6 +52,28 @@ const OrderMediumCard = (props) => {
         }
       });
   };
+
+  // handlecancel button
+  const handleCancelButton = () => {
+    axiosInstance
+      .put("/orders/cancelorder", {
+        order_id: props.order._id,
+        order_food_id: props.order.order_food_id,
+        order_quantity: props.order.order_quantity,
+        order_shared_by: props.order.order_shared_by,
+      })
+      .then((res) => {
+        console.log(res.data, "order cancelled");
+        FetchRequestedOrders();
+        alert("Order Cancelled");
+      })
+      .catch((err) => {
+        console.log(err.response.data, "order not cancelled");
+        if (err.response.data.success === false) {
+          alert(err.response.data.message);
+        }
+      });
+  };
   const [modalVisible, setModalVisible] = useState(false);
 
   const [rating, setRating] = useState(0);
@@ -61,29 +88,46 @@ const OrderMediumCard = (props) => {
         />
         <View style={styles.nameView}>
           <Text style={styles.nameText}>{props.order.order_name}</Text>
-          <Text style={styles.descText}>{props.order.order_quantity}</Text>
+          <Text style={styles.descText}>
+            Quantity : {props.order.order_quantity}
+          </Text>
+          <Text style={styles.descText}>
+            Status : {props.order.order_status}
+          </Text>
           <View style={styles.priceView}>
             {/* <Text style={styles.priceText}>{"$" + item.data.discountPrice}</Text> */}
             <Text style={styles.priceText}>{props.order.created_at}</Text>
           </View>
-        </View>
-        <View style={styles.addRemoveView}>
-          <TouchableOpacity
-            style={[
-              styles.addToCartBtn,
-              {
-                width: 80,
-                justifyContent: "center",
-                alignItems: "center",
-                marginRight: 15,
-              },
-            ]}
-            onPress={() => setModalVisible(true)}
-          >
-            <Text style={{ color: "#fff", fontSize: 20, fontWeight: "700" }}>
-              Rate
-            </Text>
-          </TouchableOpacity>
+          {props.order.is_active == true ? (
+            <View
+              style={{
+                flexDirection: "row",
+                justifyContent: "space-between",
+                marginTop: 10,
+              }}
+            >
+              <TouchableOpacity
+                style={styles.cartAcceptButton}
+                onPress={() => setModalVisible(true)}
+                activeOpacity={0.8}
+              >
+                <Text style={styles.cartButtonText}>
+                  <AntDesign name="star" size={20} color="white" />
+                  Rate
+                </Text>
+              </TouchableOpacity>
+              <TouchableOpacity
+                style={styles.cartRejectButton}
+                onPress={() => handleCancelButton()}
+                activeOpacity={0.8}
+              >
+                <Text style={styles.cartButtonText}>
+                  <AntDesign name="closecircle" size={20} color="white" />
+                  Cancel
+                </Text>
+              </TouchableOpacity>
+            </View>
+          ) : null}
         </View>
       </View>
       <Modal
@@ -98,27 +142,47 @@ const OrderMediumCard = (props) => {
             <AirbnbRating
               count={5}
               reviews={reviews}
-              defaultRating={5}
+              defaultRating={1}
               size={20}
               onFinishRating={handleRating}
             />
           </View>
-          <TouchableOpacity
-            style={[
-              styles.addToCartBtn,
-              {
-                width: 80,
-                justifyContent: "center",
-                alignItems: "center",
-                marginRight: 15,
-              },
-            ]}
-            onPress={handleReview}
+          <View
+            style={{ flexDirection: "row", justifyContent: "space-around" }}
           >
-            <Text style={{ color: "#fff", fontSize: 20, fontWeight: "700" }}>
-              Submit
-            </Text>
-          </TouchableOpacity>
+            <TouchableOpacity
+              style={[
+                styles.addToCartBtn,
+                {
+                  width: 80,
+                  justifyContent: "center",
+                  alignItems: "center",
+                  marginRight: 15,
+                },
+              ]}
+              onPress={handleReview}
+            >
+              <Text style={{ color: "#fff", fontSize: 20, fontWeight: "700" }}>
+                Submit
+              </Text>
+            </TouchableOpacity>
+            <TouchableOpacity
+              style={[
+                styles.addToCartBtn,
+                {
+                  width: 80,
+                  justifyContent: "center",
+                  alignItems: "center",
+                  marginRight: 15,
+                },
+              ]}
+              onPress={() => setModalVisible(false)}
+            >
+              <Text style={{ color: "#fff", fontSize: 20, fontWeight: "700" }}>
+                Cancel
+              </Text>
+            </TouchableOpacity>
+          </View>
         </View>
       </Modal>
     </>
@@ -128,24 +192,24 @@ const OrderMediumCard = (props) => {
 const styles = StyleSheet.create({
   itemView: {
     flexDirection: "row",
-    width: "90%",
+    width: "95%",
     alignSelf: "center",
     backgroundColor: "#fff",
     elevation: 4,
     marginTop: 10,
     borderRadius: 10,
-    height: 100,
+    height: "auto",
     marginBottom: 10,
     alignItems: "center",
   },
   itemImage: {
-    width: 90,
-    height: 90,
+    width: 130,
+    height: 130,
     borderRadius: 10,
     margin: 5,
   },
   nameView: {
-    width: "30%",
+    width: "60%",
     margin: 10,
     //backgroundColor: "red",
   },
@@ -183,6 +247,12 @@ const styles = StyleSheet.create({
     padding: 10,
     borderRadius: 10,
   },
+  addToRateBtn: {
+    backgroundColor: Colors.DEFAULT_WHITE,
+    padding: 1,
+    // color: Colors.DEFAULT_GREEN,
+    // borderRadius: 10,
+  },
   modalContainer: {
     flex: 1,
     backgroundColor: "rgba(0, 0, 0, 0.5)",
@@ -201,6 +271,33 @@ const styles = StyleSheet.create({
   ratingContainer: {
     alignItems: "center",
     marginVertical: 20,
+  },
+  cartAcceptButton: {
+    backgroundColor: Colors.DEFAULT_GREEN,
+    flexDirection: "row",
+
+    height: Display.setHeight(4),
+    width: Display.setWidth(28),
+    justifyContent: "center",
+    alignItems: "center",
+    borderRadius: 8,
+  },
+  cartRejectButton: {
+    backgroundColor: Colors.DEFAULT_GREY,
+    flexDirection: "row",
+    marginLeft: 5,
+    height: Display.setHeight(4),
+    width: Display.setWidth(28),
+    justifyContent: "center",
+    alignItems: "center",
+    borderRadius: 8,
+  },
+  cartButtonText: {
+    color: Colors.DEFAULT_WHITE,
+    fontSize: 18,
+    lineHeight: 16 * 1.5,
+    fontFamily: "Poppins_500Medium",
+    padding: 3,
   },
 });
 
