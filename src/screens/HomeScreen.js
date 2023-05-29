@@ -37,6 +37,7 @@ import { useFocusEffect } from "@react-navigation/native";
 import Animated, { color } from "react-native-reanimated";
 import BottomSheet from "reanimated-bottom-sheet";
 import * as Location from "expo-location";
+import { axiosInstance } from "../utils/api/axiosInstance";
 // import {request, PERMISSIONS} from 'react-native-permissions';
 // import Geolocation from 'react-native-geolocation-service';
 // import { Alert } from "react-native-web";
@@ -45,6 +46,7 @@ import * as Location from "expo-location";
 const HomeScreen = ({ navigation }) => {
   const [foodType, setFoodType] = useState("Free Food");
   const [foodSearch, setFoodSearch] = useState(true);
+  const [notification, setNotification] = useState([]);
   const [fontsLoaded] = useFonts({
     Poppins_500Medium,
     Poppins_700Bold,
@@ -136,11 +138,27 @@ const HomeScreen = ({ navigation }) => {
       </TouchableOpacity>
     </View>
   );
+  const getNotification = async () => {
+    try {
+      const response = await axiosInstance.get(
+        "notifications/" + state.auth.user.email
+      );
+      console.log(response.data, "notification screen");
+      setNotification(response.data.notification);
+      console.log(notification, "notification screen from state ");
+    } catch (error) {
+      console.log(error);
+    }
+  };
 
   useEffect(() => {
     console.log(foodSearch);
     FetchFoodByType();
   }, [foodType, foodSearch]);
+
+  useEffect(() => {
+    getNotification();
+  }, []);
 
   useFocusEffect(
     useCallback(() => {
@@ -197,7 +215,9 @@ const HomeScreen = ({ navigation }) => {
                 onPress={() => navigation.navigate("NotificationScreen")}
               />
               <View style={styles.alertBadge}>
-                <Text style={styles.alertBadgeText}>12</Text>
+                <Text style={styles.alertBadgeText}>
+                  {notification.length > 0 ? notification.length : 0}
+                </Text>
               </View>
             </View>
             <View style={styles.searchContainer}>
@@ -292,7 +312,12 @@ const HomeScreen = ({ navigation }) => {
             </View>
           ) : (
             <FlatList
-              style={{ flex: 1, zIndex: -1, paddingTop: 55 }}
+              style={{
+                flex: 1,
+                zIndex: -1,
+                marginTop: Display.setHeight(6),
+                //marginVertical: 10,
+              }}
               data={state.food.foodlist}
               renderItem={({ item }) => <FoodItem post={item} />}
               //
