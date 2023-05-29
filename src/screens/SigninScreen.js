@@ -153,7 +153,8 @@ const SigninScreen = ({ navigation }) => {
         <StatusBar
           barStyle={"dark-content"}
           backgroundColor={Colors.DEFAULT_WHITE}
-          translucent></StatusBar>
+          translucent
+        ></StatusBar>
         <Separator height={StatusBar.currentHeight} />
         <View style={styles.headerContainer}>
           <IonIcons
@@ -170,9 +171,8 @@ const SigninScreen = ({ navigation }) => {
           Enter Your Username and Password and Enjoy Having Food
         </Text>
         <View
-          style={
-            isFieldInError("email") ? styles.error : styles.inputContainer
-          }>
+          style={isFieldInError("email") ? styles.error : styles.inputContainer}
+        >
           <View style={styles.inputSubContainer}>
             <Feather
               name="user"
@@ -199,7 +199,8 @@ const SigninScreen = ({ navigation }) => {
         <View
           style={
             isFieldInError("password") ? styles.error : styles.inputContainer
-          }>
+          }
+        >
           <View style={styles.inputSubContainer}>
             <Feather
               name="lock"
@@ -245,7 +246,8 @@ const SigninScreen = ({ navigation }) => {
           </View>
           <Text
             onPress={() => navigation.navigate("ForgotPasswordScreen")}
-            style={styles.forgotPasswordText}>
+            style={styles.forgotPasswordText}
+          >
             Forgot Password
           </Text>
         </View>
@@ -264,7 +266,8 @@ const SigninScreen = ({ navigation }) => {
               dispatch(reset());
               navigation.navigate("SignupScreen");
             }}
-            style={styles.signupText}>
+            style={styles.signupText}
+          >
             Sign Up
           </Text>
         </View>
