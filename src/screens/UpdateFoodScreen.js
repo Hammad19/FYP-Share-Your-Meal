@@ -37,8 +37,8 @@ import AntDesign from "react-native-vector-icons/AntDesign";
 import { Avatar } from "react-native-paper";
 import { updateuserlisting } from "../store/slices/userlistingSlice";
 
-const UpdateFoodScreen = ({ navigation,route }) => {
-    const {post}=route.params;
+const UpdateFoodScreen = ({ navigation, route }) => {
+  const { post } = route.params;
 
   const dispatch = useDispatch();
   const state = useSelector((state) => state);
@@ -168,8 +168,8 @@ const UpdateFoodScreen = ({ navigation,route }) => {
   }, [foodName, foodPrice, foodQuantity, foodDescription, foodCategory]);
 
   useEffect(() => {
-    setValue(post.is_free == true?"Free Food":"Paid Food")
-    setValue1(post.food_category)
+    setValue(post.is_free == true ? "Free Food" : "Paid Food");
+    setValue1(post.food_category);
     setfoodImage(post.food_image);
     setfoodName(post.food_name);
     setfoodPrice(post.food_price.toString());
@@ -177,8 +177,7 @@ const UpdateFoodScreen = ({ navigation,route }) => {
     setfoodDescription(post.food_description);
     setfoodCategory(post.food_category);
     setFoodType(value);
-
-  },[] );
+  }, []);
 
   const validateField = () => {
     if (fieldname == "foodName") {
@@ -216,11 +215,15 @@ const UpdateFoodScreen = ({ navigation,route }) => {
 
   const handleUpdateFood = () => {
     setError(false);
-    if(foodType == "Free Food")
-    {
+    if (foodType == "Free Food") {
       validate({
         foodName: { required: true, minlength: 2, maxlength: 30 },
-        foodPrice: { required: true, minlength: 1, maxlength: 10, numbers: true },
+        foodPrice: {
+          required: true,
+          minlength: 1,
+          maxlength: 10,
+          numbers: true,
+        },
         foodQuantity: {
           required: true,
           minlength: 1,
@@ -230,9 +233,7 @@ const UpdateFoodScreen = ({ navigation,route }) => {
         foodDescription: { required: true, minlength: 20, maxlength: 300 },
         foodCategory: { required: true },
       });
-    }
-    else if(foodType == "Paid Food")
-    {
+    } else if (foodType == "Paid Food") {
       setfoodPrice("0");
       validate({
         foodName: { required: true, minlength: 2, maxlength: 30 },
@@ -256,7 +257,7 @@ const UpdateFoodScreen = ({ navigation,route }) => {
     validateNull();
 
     let requestBody = {
-        _id : post._id,
+      _id: post._id,
       food_name: foodName,
       food_description: foodDescription,
       food_price: foodPrice,
@@ -276,15 +277,11 @@ const UpdateFoodScreen = ({ navigation,route }) => {
       foodCategory.length > 0
     ) {
       //dispattch the action and then print the state
-     // dispatch(addFood(requestBody));
+      // dispatch(addFood(requestBody));
       dispatch(updateuserlisting(requestBody));
       // Alert.alert(state.food.message);
     }
   };
-
-
- 
-
 
   useEffect(() => {
     if (state.userlisting.error.message == "Food updated successfully") {
@@ -373,10 +370,8 @@ const UpdateFoodScreen = ({ navigation,route }) => {
               style={{ marginRight: 10 }}
             />
             <TextInput
-
               //disable this feild when food type is free
               editable={value == "Free Food" ? false : true}
-
               onChangeText={(text) => {
                 setError(true);
                 setFieldName("foodPrice");
@@ -384,8 +379,6 @@ const UpdateFoodScreen = ({ navigation,route }) => {
               }}
               // onEndEditing={() => }
               value={foodPrice.toString()}
-              
-
               placeholder="Food Price"
               placeholderTextColor={Colors.DEFAULT_GREY}
               selectionColor={Colors.DEFAULT_GREY}
@@ -464,18 +457,14 @@ const UpdateFoodScreen = ({ navigation,route }) => {
           dropDownContainerStyle={styles.dropdowncontainer1style}
           labelStyle={styles.dropdownstyles}
           placeholder="Select Food Type"
-          
           onSelectItem={(item) => {
             // setError(true);
             // setFieldName("accounttype");
             // console.log(item.value);
             setFoodType(item.value);
-            if(item.value == "Free Food")
-            {
+            if (item.value == "Free Food") {
               setfoodPrice("0");
-            }
-            else
-            {
+            } else {
               setfoodPrice("");
             }
           }}
