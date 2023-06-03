@@ -15,20 +15,13 @@ import { Colors, Fonts } from "../content";
 import { Display } from "../utils";
 import { useValidation } from "react-native-form-validator";
 
-
-import {
-  useFonts,
-  Poppins_500Medium,
-} from "@expo-google-fonts/poppins";
-import { useSelector,useDispatch } from "react-redux";
+import { useFonts, Poppins_500Medium } from "@expo-google-fonts/poppins";
+import { useSelector, useDispatch } from "react-redux";
 import { useState } from "react";
 import { useEffect } from "react";
 import { resetPassword, resetstatus, sendOtp } from "../store/slices/authSlice";
 
-
-const ChangePasswordScreen = ({navigation}) => {
-
-  
+const ChangePasswordScreen = ({ navigation }) => {
   const state = useSelector((state) => state);
   const dispatch = useDispatch();
   const [email, setEmail] = useState("");
@@ -39,7 +32,6 @@ const ChangePasswordScreen = ({navigation}) => {
   const [isAllValuesNull, setisAllValuesNull] = useState(false);
   const [fieldname, setFieldName] = useState("");
   const [error, setError] = useState("");
-
 
   const {
     validate,
@@ -52,24 +44,22 @@ const ChangePasswordScreen = ({navigation}) => {
   });
   const validateField = () => {
     if (fieldname == "password") {
-        validate({ password: { minlength: 8, maxlength: 16, required: true } });
-      }
-    else if (fieldname == "confirmPassword") {
-        validate({
-          confirmPassword: {
-            equalPassword: password,
-            minlength: 8,
-            maxlength: 16,
-            required: true,
-          },
-        });
-      }
+      validate({ password: { minlength: 8, maxlength: 16, required: true } });
+    } else if (fieldname == "confirmPassword") {
+      validate({
+        confirmPassword: {
+          equalPassword: password,
+          minlength: 8,
+          maxlength: 16,
+          required: true,
+        },
+      });
+    }
   };
 
   useEffect(() => {
     validateField();
   }, [password, confirmPassword]);
-
 
   const validateNull = () => {
     if (password?.length < 1 || confirmPassword?.length < 1) {
@@ -89,19 +79,18 @@ const ChangePasswordScreen = ({navigation}) => {
   }
 
   const HandleOnPress = () => {
-
     setError(false);
 
     validate({
-        password: { minlength: 8, maxlength: 16, required: true },
-        confirmPassword: {
-          equalPassword: password,
-          minlength: 8,
-          maxlength: 16,
-          required: true,
-        },
-        });
-    
+      password: { minlength: 8, maxlength: 16, required: true },
+      confirmPassword: {
+        equalPassword: password,
+        minlength: 8,
+        maxlength: 16,
+        required: true,
+      },
+    });
+
     setTimeout(() => {
       setisAllValuesNull(false);
     }, 2000);
@@ -109,32 +98,28 @@ const ChangePasswordScreen = ({navigation}) => {
     validateNull();
 
     let requestBody = {
-        email: state.auth.verificationemail,
-        otp: state.auth.otp,
-        password,
-        confirm_password: confirmPassword,
+      email: state.auth.verificationemail,
+      otp: state.auth.otp,
+      password,
+      confirm_password: confirmPassword,
     };
 
-    if (isFormValid() && password.length > 0 && confirmPassword.length > 0)
-    {
-        dispatch(resetPassword(requestBody)).then(() => {setcheckchanged(!checkchanged)});
+    if (isFormValid() && password.length > 0 && confirmPassword.length > 0) {
+      dispatch(resetPassword(requestBody)).then(() => {
+        setcheckchanged(!checkchanged);
+      });
     }
   };
 
   useEffect(() => {
     NavigateToHome();
-  }, [checkchanged])
-  
+  }, [checkchanged]);
 
   const NavigateToHome = () => {
-    
-    if(state.auth.isPasswordChanged)
-    {
-      Alert.alert("Success", state.auth.error.message );
-      navigation.navigate("SignInScreen");
-    }
-    else if(state.auth.error.status == "resetpassworderror")
-    {
+    if (state.auth.isPasswordChanged) {
+      Alert.alert("Success", state.auth.error.message);
+      navigation.navigate("SigninScreen");
+    } else if (state.auth.error.status == "resetpassworderror") {
       Alert.alert("Error", state.auth.error.message);
     }
   };
@@ -156,14 +141,16 @@ const ChangePasswordScreen = ({navigation}) => {
             name="chevron-back-outline"
             size={30}
             onPress={() => {
-                dispatch(resetstatus());
-                navigation.goBack()}}
+              dispatch(resetstatus());
+              navigation.goBack();
+            }}
           />
           <Text style={styles.headerTitle}>Change Password</Text>
         </View>
         <Text style={styles.title}>Change Password</Text>
         <Text style={styles.content}>
-          Enter your New Password, so that we can help you to recover your Account.
+          Enter your New Password, so that we can help you to recover your
+          Account.
         </Text>
         <View
           style={
@@ -246,7 +233,7 @@ const ChangePasswordScreen = ({navigation}) => {
             All fields are required
           </Text>
         ) : null}
-        <TouchableOpacity  style={styles.signinButton} onPress= {HandleOnPress} >
+        <TouchableOpacity style={styles.signinButton} onPress={HandleOnPress}>
           <Text style={styles.signinButtonText}>Change Password</Text>
         </TouchableOpacity>
       </View>
@@ -267,14 +254,14 @@ const styles = StyleSheet.create({
   },
   headerTitle: {
     fontSize: 20,
-    fontFamily: 'Poppins_500Medium',
+    fontFamily: "Poppins_500Medium",
     lineHeight: 20 * 1.4,
     width: Display.setWidth(80),
     textAlign: "center",
   },
   title: {
     fontSize: 20,
-    fontFamily: 'Poppins_500Medium',
+    fontFamily: "Poppins_500Medium",
     lineHeight: 20 * 1.4,
     marginTop: 50,
     marginBottom: 10,
@@ -282,7 +269,7 @@ const styles = StyleSheet.create({
   },
   content: {
     fontSize: 20,
-    fontFamily: 'Poppins_500Medium',
+    fontFamily: "Poppins_500Medium",
     marginTop: 10,
     marginBottom: 20,
     marginHorizontal: 20,
@@ -321,7 +308,7 @@ const styles = StyleSheet.create({
     fontSize: 18,
     lineHeight: 18 * 1.4,
     color: Colors.DEFAULT_WHITE,
-    fontFamily: 'Poppins_500Medium',
+    fontFamily: "Poppins_500Medium",
   },
 
   error: {

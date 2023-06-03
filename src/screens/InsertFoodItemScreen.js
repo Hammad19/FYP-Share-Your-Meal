@@ -99,8 +99,6 @@ const InsertFoodItemScreen = ({ navigation }) => {
 
   //convert base64 to image file
 
-  var base64Img;
-
   const setImage = async () => {
     let options = {
       mediaType: "photo",

@@ -30,11 +30,15 @@ import * as ImagePicker from "expo-image-picker";
 import { useValidation } from "react-native-form-validator";
 import CountryFlag from "react-native-country-flag";
 import MaterialIcons from "react-native-vector-icons/MaterialIcons";
+import { axiosInstance } from "../utils/api/axiosInstance";
+import axios from "axios";
+import { useSelector } from "react-redux";
 // import ImagePicker from 'react-native-image-crop-picker';
 
 const EditProfileScreen = ({ navigation }) => {
   const [foodImage, setfoodImage] = useState(null);
   const [imageToSend, setImageToSend] = useState(null);
+  const [fieldname, setFieldName] = useState("");
 
   //FirstName
   const [firstName, setFirstName] = useState("");
@@ -102,6 +106,60 @@ const EditProfileScreen = ({ navigation }) => {
       } else {
         Alert.alert("You Cancelled an Image");
       }
+    }
+  };
+  const state = useSelector((state) => state);
+
+  const updateProfileAction = () => {
+    setError(false);
+
+    // console.log(isFormValid());
+    // setTimeout(() => {
+    //   setisAllValuesNull(false);
+    // }, 2000);
+
+    // validateNull();
+
+    if (firstName.length > 0 && lastName.length > 0) {
+      var name = foodImage.split("/").pop();
+      console.log("name", name);
+      var type = "image/" + name.split(".").pop();
+      console.log("type", type);
+      //dispattch the action and then print the state
+      const formData = new FormData();
+
+      formData.append("profileImg", {
+        uri: foodImage,
+        type: type,
+        name: name,
+      });
+      axios
+        .post("http://192.168.10.25:8080/api/images/food-image", formData, {
+          headers: { "Content-Type": "multipart/form-data" },
+        })
+        .then((response) => {
+          let requestBody = {
+            email: state.auth.user.email,
+            first_name: firstName,
+            last_name: lastName,
+            user_avatar: response.data.userCreated.profileImg,
+          };
+          axiosInstance
+            .post("users/updateprofile", requestBody)
+            .then((response) => {
+              console.log(response.data);
+              if (response.data.success) {
+                Alert.alert("Success", response.data.message);
+                navigation.goBack();
+              }
+            })
+            .catch((err) => console.log(err));
+        })
+        .catch((err) => console.log(err));
+
+      // Alert.alert(state.food.message);
+    } else {
+      console.log("sfsdsd");
     }
   };
 
@@ -174,13 +232,22 @@ const EditProfileScreen = ({ navigation }) => {
   // const bs = React.createRef();
   // const fall = new Animated.Value(1);
 
+  function ShowError(textfieldname) {
+    return (
+      isFieldInError(textfieldname) && (
+        <Text style={{ color: "red", fontSize: 12, marginLeft: 25 }}>
+          {getErrorsInField(textfieldname)[0]}
+        </Text>
+      )
+    );
+  }
+
   return (
     <ScrollView style={styles.container}>
       <StatusBar
         barStyle={"dark-content"}
         backgroundColor={Colors.DEFAULT_WHITE}
-        translucent
-      ></StatusBar>
+        translucent></StatusBar>
       <Separator height={StatusBar.currentHeight} />
       <View style={styles.headerContainer}>
         <IonIcons
@@ -195,8 +262,7 @@ const EditProfileScreen = ({ navigation }) => {
       <View style={styles.inputImageContainer}>
         <TouchableHighlight
           underlayColor="rgba(0,0,0,0)"
-          onPress={() => setImagee()}
-        >
+          onPress={() => setImagee()}>
           {foodImage == null ? (
             <View style={styles.inputImageSubContainer}>
               <IonIcons name="image-outline" size={50} color="grey" />
@@ -211,8 +277,7 @@ const EditProfileScreen = ({ navigation }) => {
       <View
         style={
           isFieldInError("firstName") ? styles.error : styles.inputContainer
-        }
-      >
+        }>
         <View style={styles.inputSubContainer}>
           <Feather
             name="user"
@@ -242,8 +307,7 @@ const EditProfileScreen = ({ navigation }) => {
       <View
         style={
           isFieldInError("lastName") ? styles.error : styles.inputContainer
-        }
-      >
+        }>
         <View style={styles.inputSubContainer}>
           <Feather
             name="user"
@@ -270,7 +334,9 @@ const EditProfileScreen = ({ navigation }) => {
       {error && ShowError("lastName")}
       <Separator height={15} />
 
-      <TouchableOpacity style={styles.signinButton}>
+      <TouchableOpacity
+        onPress={updateProfileAction}
+        style={styles.signinButton}>
         <Text style={styles.signinButtonText}>Update Profile</Text>
       </TouchableOpacity>
     </ScrollView>

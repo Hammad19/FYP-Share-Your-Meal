@@ -22,10 +22,9 @@ import IonIcons from "react-native-vector-icons/Ionicons";
 import MaterialIcons from "react-native-vector-icons/MaterialIcons";
 import Feather from "react-native-vector-icons/Feather";
 import { TextInput } from "react-native-gesture-handler";
-import ImagePicker from "expo-image-picker";
-import expoImagePicker from "expo-image-picker";
-import { launchImageLibrary } from "react-native-image-picker";
+import * as ImagePicker from "expo-image-picker";
 import { PermissionsAndroid } from "react-native";
+
 import { addFood } from "../store/slices/foodSlice";
 
 import {
@@ -36,6 +35,7 @@ import {
 import AntDesign from "react-native-vector-icons/AntDesign";
 import { Avatar } from "react-native-paper";
 import { updateuserlisting } from "../store/slices/userlistingSlice";
+import axios from "axios";
 
 const UpdateFoodScreen = ({ navigation, route }) => {
   const { post } = route.params;
@@ -60,7 +60,7 @@ const UpdateFoodScreen = ({ navigation, route }) => {
     { label: "Giveaway", value: "Free Food" },
     { label: "Sell", value: "Paid Food" },
   ]);
-
+  const [imageToSend, setImageToSend] = useState(null);
   const [open1, setOpen1] = useState(false);
   const [value1, setValue1] = useState();
   const [items1, setItems1] = useState([
@@ -108,27 +108,26 @@ const UpdateFoodScreen = ({ navigation, route }) => {
       quality: 1,
       includeBase64: true,
     };
+
     let isCameraPermitted = await requestExternalWritePermission();
     if (isCameraPermitted) {
-      launchImageLibrary(options, (response) => {
-        console.log("Response = ", response.assets[0].uri);
-        if (response.didCancel) {
-          alert("User cancelled image picker");
-          return;
-        } else if (response.errorCode == "camera_unavailable") {
-          alert("Camera not available on device");
-          return;
-        } else if (response.errorCode == "permission") {
-          alert("Permission not satisfied");
-          return;
-        } else if (response.errorCode == "others") {
-          alert(response.errorMessage);
-          return;
-        }
-        setfoodImage(response.assets[0].uri);
-      });
+      let result = await ImagePicker.launchImageLibraryAsync({
+        mediaTypes: ImagePicker.MediaTypeOptions.All,
+        allowsEditing: true,
+        aspect: [4, 3],
+        quality: 1,
+        base64: true,
+      }).catch((error) => console.log(error));
+
+      if (!result.cancelled) {
+        setImageToSend(result);
+        setfoodImage(result.uri);
+      } else {
+        Alert.alert("You Cancelled an Image");
+      }
     }
   };
+
   const {
     validate,
     isFieldInError,
@@ -256,18 +255,6 @@ const UpdateFoodScreen = ({ navigation, route }) => {
 
     validateNull();
 
-    let requestBody = {
-      _id: post._id,
-      food_name: foodName,
-      food_description: foodDescription,
-      food_price: foodPrice,
-      food_image: foodImage,
-      food_category: foodCategory,
-      food_quantity: foodQuantity,
-      food_shared_by: state.auth.user.email,
-      is_free: value == "Free Food" ? true : false,
-    };
-
     if (
       isFormValid() &&
       foodName.length > 0 &&
@@ -276,9 +263,39 @@ const UpdateFoodScreen = ({ navigation, route }) => {
       foodQuantity.length > 0 &&
       foodCategory.length > 0
     ) {
+      var name = foodImage.split("/").pop();
+      console.log("name", name);
+      var type = "image/" + name.split(".").pop();
+      console.log("type", type);
       //dispattch the action and then print the state
-      // dispatch(addFood(requestBody));
-      dispatch(updateuserlisting(requestBody));
+      const formData = new FormData();
+
+      formData.append("profileImg", {
+        uri: foodImage,
+        type: type,
+        name: name,
+      });
+      axios
+        .post("http://192.168.10.25:8080/api/images/food-image", formData, {
+          headers: { "Content-Type": "multipart/form-data" },
+        })
+        .then((response) => {
+          let requestBody = {
+            _id: post._id,
+            food_name: foodName,
+            food_description: foodDescription,
+            food_price: foodPrice,
+            food_image: response.data.userCreated.profileImg,
+            food_category: foodCategory,
+            food_quantity: foodQuantity,
+            food_shared_by: state.auth.user.email,
+            is_free: value == "Free Food" ? true : false,
+            phone_number: state.auth.user.phone_number,
+          };
+          dispatch(updateuserlisting(requestBody));
+        })
+        .catch((err) => console.log(err));
+
       // Alert.alert(state.food.message);
     }
   };
@@ -296,8 +313,7 @@ const UpdateFoodScreen = ({ navigation, route }) => {
         <StatusBar
           barStyle={"dark-content"}
           backgroundColor={Colors.DEFAULT_WHITE}
-          translucent
-        ></StatusBar>
+          translucent></StatusBar>
         <Separator height={StatusBar.currentHeight} />
         <View style={styles.headerContainer}>
           <IonIcons
@@ -312,8 +328,7 @@ const UpdateFoodScreen = ({ navigation, route }) => {
         <View style={styles.inputImageContainer}>
           <TouchableHighlight
             underlayColor="rgba(0,0,0,0)"
-            onPress={() => setImage()}
-          >
+            onPress={() => setImage()}>
             {foodImage == null ? (
               <View style={styles.inputImageSubContainer}>
                 <IonIcons name="image-outline" size={50} color="grey" />
@@ -331,8 +346,7 @@ const UpdateFoodScreen = ({ navigation, route }) => {
         <View
           style={
             isFieldInError("foodName") ? styles.error : styles.inputContainer
-          }
-        >
+          }>
           <View style={styles.inputSubContainer}>
             <IonIcons
               name="md-fast-food-outline"
@@ -360,8 +374,7 @@ const UpdateFoodScreen = ({ navigation, route }) => {
         <View
           style={
             isFieldInError("foodPrice") ? styles.error : styles.inputContainer
-          }
-        >
+          }>
           <View style={styles.inputSubContainer}>
             <IonIcons
               name="pricetags-outline"
@@ -393,8 +406,7 @@ const UpdateFoodScreen = ({ navigation, route }) => {
             isFieldInError("foodDescription")
               ? styles.error
               : styles.inputContainer
-          }
-        >
+          }>
           <View style={styles.inputSubContainer}>
             <MaterialIcons
               name="details"
@@ -500,8 +512,7 @@ const UpdateFoodScreen = ({ navigation, route }) => {
         ) : null}
         <TouchableOpacity
           onPress={handleUpdateFood}
-          style={styles.signinButton}
-        >
+          style={styles.signinButton}>
           <Text style={styles.signinButtonText}>Update Food</Text>
         </TouchableOpacity>
       </ScrollView>
