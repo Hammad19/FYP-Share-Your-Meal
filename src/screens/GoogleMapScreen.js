@@ -33,15 +33,15 @@ const styles = StyleSheet.create({
     flex: 1,
     padding: 10,
     paddingTop: 20,
-    // backgroundColor: Colors.DEFAULT_GREEN,
-    // backgroundColor: "red",
+    //  backgroundColor: Colors.DEFAULT_GREEN,
+    backgroundColor: "red",
     marginTop: 30,
     width: Display.setWidth(100),
     height: Display.setHeight(10),
   },
   map: {
     ...StyleSheet.absoluteFillObject,
-    marginTop: 100,
+    marginTop: 200,
   },
   signinButton: {
     backgroundColor: Colors.DEFAULT_GREEN,
@@ -140,7 +140,7 @@ const GoogleMapScreen = ({ navigation }) => {
   };
 
   const getUserLocation = () => {
-    Geocoder.init("AIzaSyCJxL86Z7TURNorRd1wnZ0ZvnN4Mc4Xfic"); // use a valid API key
+    Geocoder.init("AIzaSyD7yeIwcSVjo56iT0chVGt7mzgD58hln3E"); // use a valid API key
 
     Geocoder.from(coordinate.latitude, coordinate.longitude)
       .then((json) => {
@@ -157,12 +157,12 @@ const GoogleMapScreen = ({ navigation }) => {
       <View style={styles.container}>
         <View style={styles.searchContainer}>
           <GooglePlacesAutocomplete
-            //styles={{ width: 50 }}
+            styles={{ zindex: 1 }}
             placeholder="Search"
-            // query={{
-            //   key: GOOGLE_PLACES_API_KEY,
-            //   language: "en", // language of the results
-            // }}
+            query={{
+              key: "AIzaSyD7yeIwcSVjo56iT0chVGt7mzgD58hln3E",
+              language: "en", // language of the results
+            }}
             onPress={(data, details = null) => console.log(data)}
             onFail={(error) => console.error(error)}
             requestUrl={{
@@ -193,8 +193,7 @@ const GoogleMapScreen = ({ navigation }) => {
           }}
           onMapReady={() => {
             setMarginBottom({ marginBottom: 0 });
-          }}
-        >
+          }}>
           <Marker
             coordinate={{
               latitude: coordinate.latitude,

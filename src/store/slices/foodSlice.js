@@ -248,6 +248,7 @@ const foodSlice = createSlice({
       console.log(action);
     });
     builder.addCase(getFilteredFood.fulfilled, (state, action) => {
+      console.log(action.payload);
       state.foodlist = action.payload.food.reverse();
     });
     builder.addCase(getFilteredFood.rejected, (state, action) => {

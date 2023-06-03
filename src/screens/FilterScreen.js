@@ -53,7 +53,7 @@ const Filter = ({ route, navigation }) => {
       food_quantity: quantity,
       food_price: price,
       food_rating: rating,
-      food_type: free,
+      is_free: free,
     };
     try {
       dispatch(getFilteredFood(requestBody));
@@ -67,8 +67,7 @@ const Filter = ({ route, navigation }) => {
       <StatusBar
         barStyle={"dark-content"}
         backgroundColor="transparent"
-        translucent
-      ></StatusBar>
+        translucent></StatusBar>
       <Separator height={StatusBar.currentHeight} />
       <View style={styles.headerContainer}>
         <IonIcons
@@ -111,8 +110,7 @@ const Filter = ({ route, navigation }) => {
                         ? Colors.DEFAULT_YELLOW
                         : Colors.DEFAULT_GREY,
                   },
-                ]}
-              >
+                ]}>
                 <Text
                   style={[
                     styles.subtitle,
@@ -122,36 +120,33 @@ const Filter = ({ route, navigation }) => {
                           ? Colors.DEFAULT_YELLOW
                           : Colors.DEFAULT_GREY,
                     },
-                  ]}
-                >
+                  ]}>
                   All
                 </Text>
               </TouchableOpacity>
               <TouchableOpacity
                 onPress={() => {
-                  setCuisines("desi food");
+                  setCuisines("Desi Food");
                 }}
                 style={[
                   styles.category,
                   {
                     borderColor:
-                      cuisines === "desi food"
+                      cuisines === "Desi Food"
                         ? Colors.DEFAULT_YELLOW
                         : Colors.DEFAULT_GREY,
                   },
-                ]}
-              >
+                ]}>
                 <Text
                   style={[
                     styles.subtitle,
                     {
                       color:
-                        cuisines === "desi food"
+                        cuisines === "Desi Food"
                           ? Colors.DEFAULT_YELLOW
                           : Colors.DEFAULT_GREY,
                     },
-                  ]}
-                >
+                  ]}>
                   Desi Food
                 </Text>
               </TouchableOpacity>
@@ -167,8 +162,7 @@ const Filter = ({ route, navigation }) => {
                         ? Colors.DEFAULT_YELLOW
                         : Colors.DEFAULT_GREY,
                   },
-                ]}
-              >
+                ]}>
                 <Text
                   style={[
                     styles.subtitle,
@@ -178,8 +172,7 @@ const Filter = ({ route, navigation }) => {
                           ? Colors.DEFAULT_YELLOW
                           : Colors.DEFAULT_GREY,
                     },
-                  ]}
-                >
+                  ]}>
                   Burger
                 </Text>
               </TouchableOpacity>
@@ -195,8 +188,7 @@ const Filter = ({ route, navigation }) => {
                         ? Colors.DEFAULT_YELLOW
                         : Colors.DEFAULT_GREY,
                   },
-                ]}
-              >
+                ]}>
                 <Text
                   style={[
                     styles.subtitle,
@@ -206,8 +198,7 @@ const Filter = ({ route, navigation }) => {
                           ? Colors.DEFAULT_YELLOW
                           : Colors.DEFAULT_GREY,
                     },
-                  ]}
-                >
+                  ]}>
                   Chineese
                 </Text>
               </TouchableOpacity>
@@ -223,8 +214,7 @@ const Filter = ({ route, navigation }) => {
                         ? Colors.DEFAULT_YELLOW
                         : Colors.DEFAULT_GREY,
                   },
-                ]}
-              >
+                ]}>
                 <Text
                   style={[
                     styles.subtitle,
@@ -234,8 +224,7 @@ const Filter = ({ route, navigation }) => {
                           ? Colors.DEFAULT_YELLOW
                           : Colors.DEFAULT_GREY,
                     },
-                  ]}
-                >
+                  ]}>
                   Fast Food
                 </Text>
               </TouchableOpacity>
@@ -251,8 +240,7 @@ const Filter = ({ route, navigation }) => {
                         ? Colors.DEFAULT_YELLOW
                         : Colors.DEFAULT_GREY,
                   },
-                ]}
-              >
+                ]}>
                 <Text
                   style={[
                     styles.subtitle,
@@ -262,8 +250,7 @@ const Filter = ({ route, navigation }) => {
                           ? Colors.DEFAULT_YELLOW
                           : Colors.DEFAULT_GREY,
                     },
-                  ]}
-                >
+                  ]}>
                   Sea Food
                 </Text>
               </TouchableOpacity>
@@ -284,8 +271,7 @@ const Filter = ({ route, navigation }) => {
                         ? Colors.DEFAULT_YELLOW
                         : Colors.DEFAULT_GREY,
                   },
-                ]}
-              >
+                ]}>
                 <Text
                   style={[
                     styles.subtitle,
@@ -295,8 +281,7 @@ const Filter = ({ route, navigation }) => {
                           ? Colors.DEFAULT_YELLOW
                           : Colors.DEFAULT_GREY,
                     },
-                  ]}
-                >
+                  ]}>
                   Under 300Rs
                 </Text>
               </TouchableOpacity>
@@ -312,8 +297,7 @@ const Filter = ({ route, navigation }) => {
                         ? Colors.DEFAULT_YELLOW
                         : Colors.DEFAULT_GREY,
                   },
-                ]}
-              >
+                ]}>
                 <Text
                   style={[
                     styles.subtitle,
@@ -323,8 +307,7 @@ const Filter = ({ route, navigation }) => {
                           ? Colors.DEFAULT_YELLOW
                           : Colors.DEFAULT_GREY,
                     },
-                  ]}
-                >
+                  ]}>
                   Under 600Rs
                 </Text>
               </TouchableOpacity>
@@ -340,8 +323,7 @@ const Filter = ({ route, navigation }) => {
                         ? Colors.DEFAULT_YELLOW
                         : Colors.DEFAULT_GREY,
                   },
-                ]}
-              >
+                ]}>
                 <Text
                   style={[
                     styles.subtitle,
@@ -351,8 +333,7 @@ const Filter = ({ route, navigation }) => {
                           ? Colors.DEFAULT_YELLOW
                           : Colors.DEFAULT_GREY,
                     },
-                  ]}
-                >
+                  ]}>
                   Under 1000Rs
                 </Text>
               </TouchableOpacity>
@@ -368,8 +349,7 @@ const Filter = ({ route, navigation }) => {
                         ? Colors.DEFAULT_YELLOW
                         : Colors.DEFAULT_GREY,
                   },
-                ]}
-              >
+                ]}>
                 <Text
                   style={[
                     styles.subtitle,
@@ -379,8 +359,7 @@ const Filter = ({ route, navigation }) => {
                           ? Colors.DEFAULT_YELLOW
                           : Colors.DEFAULT_GREY,
                     },
-                  ]}
-                >
+                  ]}>
                   Under 2000Rs
                 </Text>
               </TouchableOpacity>
@@ -396,8 +375,7 @@ const Filter = ({ route, navigation }) => {
                         ? Colors.DEFAULT_YELLOW
                         : Colors.DEFAULT_GREY,
                   },
-                ]}
-              >
+                ]}>
                 <Text
                   style={[
                     styles.subtitle,
@@ -407,8 +385,7 @@ const Filter = ({ route, navigation }) => {
                           ? Colors.DEFAULT_YELLOW
                           : Colors.DEFAULT_GREY,
                     },
-                  ]}
-                >
+                  ]}>
                   Under 5000Rs
                 </Text>
               </TouchableOpacity>
@@ -429,8 +406,7 @@ const Filter = ({ route, navigation }) => {
                         ? Colors.DEFAULT_YELLOW
                         : Colors.DEFAULT_GREY,
                   },
-                ]}
-              >
+                ]}>
                 <Text
                   style={[
                     styles.subtitle,
@@ -440,8 +416,7 @@ const Filter = ({ route, navigation }) => {
                           ? Colors.DEFAULT_YELLOW
                           : Colors.DEFAULT_GREY,
                     },
-                  ]}
-                >
+                  ]}>
                   Above 1.0
                 </Text>
               </TouchableOpacity>
@@ -457,8 +432,7 @@ const Filter = ({ route, navigation }) => {
                         ? Colors.DEFAULT_YELLOW
                         : Colors.DEFAULT_GREY,
                   },
-                ]}
-              >
+                ]}>
                 <Text
                   style={[
                     styles.subtitle,
@@ -468,8 +442,7 @@ const Filter = ({ route, navigation }) => {
                           ? Colors.DEFAULT_YELLOW
                           : Colors.DEFAULT_GREY,
                     },
-                  ]}
-                >
+                  ]}>
                   Above 2.0
                 </Text>
               </TouchableOpacity>
@@ -485,8 +458,7 @@ const Filter = ({ route, navigation }) => {
                         ? Colors.DEFAULT_YELLOW
                         : Colors.DEFAULT_GREY,
                   },
-                ]}
-              >
+                ]}>
                 <Text
                   style={[
                     styles.subtitle,
@@ -496,8 +468,7 @@ const Filter = ({ route, navigation }) => {
                           ? Colors.DEFAULT_YELLOW
                           : Colors.DEFAULT_GREY,
                     },
-                  ]}
-                >
+                  ]}>
                   Above 3.0
                 </Text>
               </TouchableOpacity>
@@ -513,8 +484,7 @@ const Filter = ({ route, navigation }) => {
                         ? Colors.DEFAULT_YELLOW
                         : Colors.DEFAULT_GREY,
                   },
-                ]}
-              >
+                ]}>
                 <Text
                   style={[
                     styles.subtitle,
@@ -524,8 +494,7 @@ const Filter = ({ route, navigation }) => {
                           ? Colors.DEFAULT_YELLOW
                           : Colors.DEFAULT_GREY,
                     },
-                  ]}
-                >
+                  ]}>
                   Above 4.0
                 </Text>
               </TouchableOpacity>
@@ -541,8 +510,7 @@ const Filter = ({ route, navigation }) => {
                         ? Colors.DEFAULT_YELLOW
                         : Colors.DEFAULT_GREY,
                   },
-                ]}
-              >
+                ]}>
                 <Text
                   style={[
                     styles.subtitle,
@@ -552,8 +520,7 @@ const Filter = ({ route, navigation }) => {
                           ? Colors.DEFAULT_YELLOW
                           : Colors.DEFAULT_GREY,
                     },
-                  ]}
-                >
+                  ]}>
                   Above 5.0
                 </Text>
               </TouchableOpacity>
@@ -567,8 +534,7 @@ const Filter = ({ route, navigation }) => {
               onPress={() => {
                 setFree(!free);
               }}
-              style={styles.rowFilter}
-            >
+              style={styles.rowFilter}>
               <Text style={styles.text}>Free Food</Text>
               {free && (
                 <Icon name="check" size={20} color={Colors.DEFAULT_YELLOW} />
