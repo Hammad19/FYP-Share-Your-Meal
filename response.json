@@ -1,0 +1,43 @@
+{
+    "description": "Gulfishan Society Shah Faisal Colony, Karachi, Pakistan",
+    "matched_substrings": [
+        {
+            "length": 17,
+            "offset": 0
+        }
+    ],
+    "place_id": "ChIJlbilnPU5sz4RQGi7uu8Kc3Y",
+    "reference": "ChIJlbilnPU5sz4RQGi7uu8Kc3Y",
+    "structured_formatting": {
+        "main_text": "Gulfishan Society Shah Faisal Colony",
+        "main_text_matched_substrings": [
+            [Object
+            ]
+        ],
+        "secondary_text": "Karachi, Pakistan"
+    },
+    "terms": [
+        {
+            "offset": 0,
+            "value": "Gulfishan Society"
+        },
+        {
+            "offset": 18,
+            "value": "Shah Faisal Colony"
+        },
+        {
+            "offset": 38,
+            "value": "Karachi"
+        },
+        {
+            "offset": 47,
+            "value": "Pakistan"
+        }
+    ],
+    "types": [
+        "sublocality_level_2",
+        "sublocality",
+        "political",
+        "geocode"
+    ]
+} detail

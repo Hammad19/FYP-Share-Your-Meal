@@ -21,6 +21,7 @@ import { navigateToCustomTabNavigator } from "../utils/authservice";
 import { GooglePlacesAutocomplete } from "react-native-google-places-autocomplete";
 
 import * as Location from "expo-location";
+import axios from "axios";
 const styles = StyleSheet.create({
   container: {
     ...StyleSheet.absoluteFillObject,
@@ -151,6 +152,30 @@ const GoogleMapScreen = ({ navigation }) => {
       .catch((error) => console.warn(error));
   };
 
+  const fetchCoordinates = async (data, detail) => {
+    try {
+      const placeId = detail.place_id;
+      const apiKey = "AIzaSyD7yeIwcSVjo56iT0chVGt7mzgD58hln3E"; // Replace with your actual API key
+
+      const response = await axios.get(
+        `https://maps.googleapis.com/maps/api/geocode/json?place_id=${placeId}&key=${apiKey}`
+      );
+
+      console.log(response);
+      if (response.data.status === "OK") {
+        const { lat, lng } = response.data.results[0].geometry.location;
+        setCoordinate({
+          latitude: lat,
+          longitude: lng,
+        });
+      } else {
+        console.log("Error occurred while retrieving coordinates.");
+      }
+    } catch (error) {
+      console.log("Error occurred while making the API request:", error);
+    }
+  };
+
   enableLatestRenderer();
   return (
     <>
@@ -163,12 +188,16 @@ const GoogleMapScreen = ({ navigation }) => {
               key: "AIzaSyD7yeIwcSVjo56iT0chVGt7mzgD58hln3E",
               language: "en", // language of the results
             }}
-            onPress={(data, details = null) => console.log(data)}
+            onPress={(data, details = null) => {
+              console.log(details, "detail");
+
+              fetchCoordinates(data, details);
+            }}
             onFail={(error) => console.error(error)}
-            requestUrl={{
-              url: "https://cors-anywhere.herokuapp.com/https://maps.googleapis.com/maps/api",
-              useOnPlatform: "web",
-            }} // this in only required for use on the web. See https://git.io/JflFv more for details.
+            // requestUrl={{
+            //   url: "https://cors-anywhere.herokuapp.com/https://maps.googleapis.com/maps/api",
+            //   useOnPlatform: "web",
+            // }} // this in only required for use on the web. See https://git.io/JflFv more for details.
           />
         </View>
 
