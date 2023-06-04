@@ -188,6 +188,31 @@ export const sendOtpforEmailVerification = createAsyncThunk(
   }
 );
 
+//update profile
+export const updateProfile = createAsyncThunk(
+  API_ENDPOINTS.USER_UPDATE,
+  async (requestBody, thunkAPI) => {
+    try {
+      const result = await addData(API_ENDPOINTS.USER_UPDATE, requestBody);
+      if (result.success == true) {
+        // console.log("result", result);
+        return result;
+      } else {
+        console.log(result, "<-- result");
+        return thunkAPI.rejectWithValue({
+          status: "error",
+          message: result.message,
+        });
+      }
+    } catch (e) {
+      return thunkAPI.rejectWithValue({
+        status: "error",
+        message: "Unable to update profile",
+      });
+    }
+  }
+);
+
 const initialState = {
   user: {},
   verificationemail: "",
@@ -332,6 +357,19 @@ const authSlice = createSlice({
         state.user = action.payload.user;
         state.token = action.payload.token;
         console.log(state, "<-- state userlogin fulfilled");
+      }),
+      //update profile
+      builder.addCase(updateProfile.fulfilled, (state, action) => {
+        state.error.status = "profileupdated";
+        state.user = action.payload.user;
+        console.log(state, "<-- state updateprofile fulfilled");
+      }),
+      //rejected case
+
+      builder.addCase(updateProfile.rejected, (state, action) => {
+        state.error.status = "profileupdateerror";
+        state.error.message = action.payload.message;
+        console.log(state, "<-- state updateprofile rejected");
       }),
       builder.addCase(addLocation.fulfilled, (state, action) => {
         console.log("<-- Location success");

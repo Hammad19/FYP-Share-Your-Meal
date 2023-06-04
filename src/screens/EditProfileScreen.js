@@ -32,7 +32,9 @@ import CountryFlag from "react-native-country-flag";
 import MaterialIcons from "react-native-vector-icons/MaterialIcons";
 import { axiosInstance } from "../utils/api/axiosInstance";
 import axios from "axios";
-import { useSelector } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
+import { updateProfile } from "../store/slices/authSlice";
+import { useEffect } from "react";
 // import ImagePicker from 'react-native-image-crop-picker';
 
 const EditProfileScreen = ({ navigation }) => {
@@ -53,6 +55,17 @@ const EditProfileScreen = ({ navigation }) => {
   const [selectedCountry, setSelectedCountry] = useState(
     CountryCode.find((country) => country.name === "Pakistan")
   );
+
+  //add useeffect and set food image
+  useEffect(() => {
+    if (state.auth.user.user_avatar != null) {
+      setfoodImage(state.auth.user.user_avatar);
+
+      setFirstName(state.auth.user.first_name);
+
+      setLastName(state.auth.user.last_name);
+    }
+  }, []);
 
   const [inputsContainerY, setInputsContainerY] = useState(0);
   const [isDropdownOpen, setIsDropdownOpen] = useState(false);
@@ -110,6 +123,7 @@ const EditProfileScreen = ({ navigation }) => {
   };
   const state = useSelector((state) => state);
 
+  const dispatch = useDispatch();
   const updateProfileAction = () => {
     setError(false);
 
@@ -144,16 +158,10 @@ const EditProfileScreen = ({ navigation }) => {
             last_name: lastName,
             user_avatar: response.data.userCreated.profileImg,
           };
-          axiosInstance
-            .post("users/updateprofile", requestBody)
-            .then((response) => {
-              console.log(response.data);
-              if (response.data.success) {
-                Alert.alert("Success", response.data.message);
-                navigation.goBack();
-              }
-            })
-            .catch((err) => console.log(err));
+
+          dispatch(updateProfile(requestBody));
+          Alert.alert("Profile Updated Successfully");
+          navigation.navigate("ProfileScreen");
         })
         .catch((err) => console.log(err));
 
