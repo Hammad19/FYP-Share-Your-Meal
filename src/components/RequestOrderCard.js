@@ -18,6 +18,7 @@ import { axiosInstance } from "../utils/api/axiosInstance";
 
 const RequestOrderCard = (props) => {
   const reviews = ["Worst", "Bad", "Average", "Good", "Excellent"];
+  const [requestedOrders, setRequestedOrders] = useState([]);
   const handleRating = (value) => {
     setRating(value); // Update the state variable with the selected rating value
   };
@@ -91,6 +92,28 @@ const RequestOrderCard = (props) => {
         }
       });
   };
+  // handlePicked button
+  const handlePickedButton = () => {
+    axiosInstance
+      .put("/orders/orderpickedup", {
+        order_id: props.order._id,
+        //order_food_id: props.order.order_food_id,
+        // order_quantity: props.order.order_quantity,
+        order_shared_by: props.order.order_shared_by,
+      })
+      .then((res) => {
+        console.log(res.data, "order picked");
+        FetchRequestedOrders();
+        alert("Order Picked");
+      })
+      .catch((err) => {
+        console.log(err.response.data, "order not picked");
+        if (err.response.data.success === false) {
+          alert(err.response.data.message);
+        }
+      });
+  };
+
   const FetchRequestedOrders = async () => {
     try {
       const response = await axiosInstance.get(
@@ -140,7 +163,13 @@ const RequestOrderCard = (props) => {
           >
             <TouchableOpacity
               style={styles.cartAcceptButton}
-              onPress={() => handleAcceptButton()}
+              onPress={() => {
+                if (props.order.order_status === "placed") {
+                  handlePickedButton();
+                } else {
+                  handleAcceptButton();
+                }
+              }}
               activeOpacity={0.8}
             >
               <Text style={styles.cartButtonText}>
@@ -149,7 +178,7 @@ const RequestOrderCard = (props) => {
                   size={24}
                   color="white"
                 />
-                Accept
+                {props.order.order_status === "placed" ? "Picked" : "Accept"}
               </Text>
             </TouchableOpacity>
             <TouchableOpacity
