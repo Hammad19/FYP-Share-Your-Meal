@@ -98,7 +98,8 @@ const OrderMediumCard = (props) => {
             {/* <Text style={styles.priceText}>{"$" + item.data.discountPrice}</Text> */}
             <Text style={styles.priceText}>{props.order.created_at}</Text>
           </View>
-          {props.order.is_active == true ? (
+          {props.order.is_active == false &&
+          props.order.order_status === "placed" ? (
             <View
               style={{
                 flexDirection: "row",
@@ -111,20 +112,25 @@ const OrderMediumCard = (props) => {
                 onPress={() => setModalVisible(true)}
                 activeOpacity={0.8}
               >
-                <Text style={styles.cartButtonText}>
-                  <AntDesign name="star" size={20} color="white" />
-                  Rate
-                </Text>
+                <AntDesign name="star" size={18} color="white" />
+                <Text style={styles.cartButtonText}>Rate your food</Text>
               </TouchableOpacity>
+            </View>
+          ) : props.order.is_active == true ? (
+            <View
+              style={{
+                flexDirection: "row",
+                justifyContent: "space-between",
+                marginTop: 10,
+              }}
+            >
               <TouchableOpacity
                 style={styles.cartRejectButton}
                 onPress={() => handleCancelButton()}
                 activeOpacity={0.8}
               >
-                <Text style={styles.cartButtonText}>
-                  <AntDesign name="closecircle" size={20} color="white" />
-                  Cancel
-                </Text>
+                <AntDesign name="closecircle" size={18} color="white" />
+                <Text style={styles.cartButtonText}>Cancel your request</Text>
               </TouchableOpacity>
             </View>
           ) : null}
@@ -277,17 +283,16 @@ const styles = StyleSheet.create({
     flexDirection: "row",
 
     height: Display.setHeight(4),
-    width: Display.setWidth(28),
+    width: Display.setWidth(55),
     justifyContent: "center",
     alignItems: "center",
     borderRadius: 8,
   },
   cartRejectButton: {
-    backgroundColor: Colors.DEFAULT_GREY,
+    backgroundColor: Colors.DEFAULT_YELLOW,
     flexDirection: "row",
-    marginLeft: 5,
     height: Display.setHeight(4),
-    width: Display.setWidth(28),
+    width: Display.setWidth(55),
     justifyContent: "center",
     alignItems: "center",
     borderRadius: 8,
