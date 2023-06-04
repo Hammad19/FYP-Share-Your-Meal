@@ -125,13 +125,15 @@ const HomeScreen = ({ navigation }) => {
           style={styles.panelButtonTitle}
           onPress={() => {
             NavigateToGoogleMap();
-          }}>
+          }}
+        >
           + Add location
         </Text>
       </TouchableOpacity>
       <TouchableOpacity
         style={styles.panelButton}
-        onPress={() => bs.current.snapTo(0)}>
+        onPress={() => bs.current.snapTo(0)}
+      >
         <Text style={styles.panelButtonTitle}>Confirm</Text>
       </TouchableOpacity>
     </View>
@@ -252,10 +254,12 @@ const HomeScreen = ({ navigation }) => {
                   alignItems: "center",
                   justifyContent: "space-evenly",
                   width: Display.setWidth(100),
-                }}>
+                }}
+              >
                 <TouchableOpacity
                   onPress={() => setFoodType("Free Food")}
-                  style={styles.category()}>
+                  style={styles.category()}
+                >
                   <Ionicons
                     name={
                       foodType == "Free Food"
@@ -275,7 +279,8 @@ const HomeScreen = ({ navigation }) => {
                 </TouchableOpacity>
                 <TouchableOpacity
                   onPress={() => setFoodType("Paid Food")}
-                  style={styles.category()}>
+                  style={styles.category()}
+                >
                   <MaterialCommunityIcons
                     name={foodType == "Paid Food" ? "food" : "food-outline"}
                     size={35}
@@ -299,7 +304,8 @@ const HomeScreen = ({ navigation }) => {
                 flex: 1,
                 justifyContent: "center",
                 alignItems: "center",
-              }}>
+              }}
+            >
               <Text style={{ fontSize: 20, color: Colors.DEFAULT_GREY }}>
                 No Food Available
               </Text>
@@ -420,13 +426,13 @@ const styles = StyleSheet.create({
     opacity: isActive ? 1 : 0.5,
   }),
   panel: {
-    padding: 20,
+    padding: Display.setWidth(6),
     backgroundColor: "#FFFFFF",
-    paddingTop: 20,
+    // paddingTop: Display.setHeight(3),
     // borderTopLeftRadius: 20,
     // borderTopRightRadius: 20,
-    // shadowColor: '#000000',
-    // shadowOffset: {width: 0, height: 0},
+    // shadowColor: "#000000",
+    // shadowOffset: { width: 0, height: 0 },
     // shadowRadius: 5,
     // shadowOpacity: 0.4,
   },
