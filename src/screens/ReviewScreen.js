@@ -89,11 +89,12 @@ const ReviewScreen = ({ navigation }) => {
         `reviews/` + state.auth.user.email
       );
       setReviews(response.data.reviews);
-      console.log(reviews, "reviews");
+      console.log(reviews, "reviews data");
     } catch (error) {
       console.log(error);
     }
   };
+
   //get user name where email = response.data.reviews.ratedBy_email
   const getUserName = async (email) => {
     try {
