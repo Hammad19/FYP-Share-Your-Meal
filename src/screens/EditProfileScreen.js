@@ -134,7 +134,7 @@ const EditProfileScreen = ({ navigation }) => {
         name: name,
       });
       axios
-        .post("http://192.168.10.25:8080/api/images/food-image", formData, {
+        .post("http://192.168.10.10:8080/api/images/food-image", formData, {
           headers: { "Content-Type": "multipart/form-data" },
         })
         .then((response) => {
@@ -247,7 +247,8 @@ const EditProfileScreen = ({ navigation }) => {
       <StatusBar
         barStyle={"dark-content"}
         backgroundColor={Colors.DEFAULT_WHITE}
-        translucent></StatusBar>
+        translucent
+      ></StatusBar>
       <Separator height={StatusBar.currentHeight} />
       <View style={styles.headerContainer}>
         <IonIcons
@@ -262,7 +263,8 @@ const EditProfileScreen = ({ navigation }) => {
       <View style={styles.inputImageContainer}>
         <TouchableHighlight
           underlayColor="rgba(0,0,0,0)"
-          onPress={() => setImagee()}>
+          onPress={() => setImagee()}
+        >
           {foodImage == null ? (
             <View style={styles.inputImageSubContainer}>
               <IonIcons name="image-outline" size={50} color="grey" />
@@ -277,7 +279,8 @@ const EditProfileScreen = ({ navigation }) => {
       <View
         style={
           isFieldInError("firstName") ? styles.error : styles.inputContainer
-        }>
+        }
+      >
         <View style={styles.inputSubContainer}>
           <Feather
             name="user"
@@ -307,7 +310,8 @@ const EditProfileScreen = ({ navigation }) => {
       <View
         style={
           isFieldInError("lastName") ? styles.error : styles.inputContainer
-        }>
+        }
+      >
         <View style={styles.inputSubContainer}>
           <Feather
             name="user"
@@ -336,7 +340,8 @@ const EditProfileScreen = ({ navigation }) => {
 
       <TouchableOpacity
         onPress={updateProfileAction}
-        style={styles.signinButton}>
+        style={styles.signinButton}
+      >
         <Text style={styles.signinButtonText}>Update Profile</Text>
       </TouchableOpacity>
     </ScrollView>
