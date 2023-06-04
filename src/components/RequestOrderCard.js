@@ -121,7 +121,9 @@ const RequestOrderCard = (props) => {
         <View style={styles.nameView}>
           <Text style={styles.nameText}>{props.order.order_name}</Text>
           <Text style={styles.priceText}>{props.order.ordered_by}</Text>
-          <Text style={styles.priceText}>{props.order.order_description}</Text>
+          <Text style={styles.priceText}>
+            Status : {props.order.order_status}
+          </Text>
           <Text style={styles.priceText}>
             Quantity :{props.order.order_quantity}
           </Text>
