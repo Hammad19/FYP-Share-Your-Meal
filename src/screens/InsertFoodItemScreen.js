@@ -38,7 +38,7 @@ import axios from "axios";
 const InsertFoodItemScreen = ({ navigation }) => {
   const dispatch = useDispatch();
   const state = useSelector((state) => state);
-  const [imageToSend, setImageToSend] = useState(null);
+  // const [imageToSend, setImageToSend] = useState(null);
   const [foodName, setfoodName] = useState("");
   const [foodPrice, setfoodPrice] = useState(0);
   const [foodQuantity, setfoodQuantity] = useState("");
@@ -117,7 +117,6 @@ const InsertFoodItemScreen = ({ navigation }) => {
       }).catch((error) => console.log(error));
 
       if (!result.cancelled) {
-        setImageToSend(result);
         setfoodImage(result.uri);
       } else {
         Alert.alert("You Cancelled an Image");

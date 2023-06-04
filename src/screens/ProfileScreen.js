@@ -43,8 +43,7 @@ const ProfileScreen = ({ navigation }) => {
           zIndex: 999,
           marginTop: 20,
           marginRight: 20,
-        }}
-      >
+        }}>
         <MaterialCommunityIcons.Button
           name="account-edit"
           size={30}
@@ -57,7 +56,7 @@ const ProfileScreen = ({ navigation }) => {
         <View style={{ flexDirection: "row", marginTop: 15 }}>
           <Avatar.Image
             source={{
-              uri: "https://api.adorable.io/avatars/80/abott@adorable.png",
+              uri: auth.user.user_avatar,
             }}
             size={80}
           />
@@ -69,8 +68,7 @@ const ProfileScreen = ({ navigation }) => {
                   marginTop: 15,
                   marginBottom: 5,
                 },
-              ]}
-            >
+              ]}>
               {auth.user.first_name}
             </Title>
             <Caption style={styles.caption}>{auth.user.accounttype}</Caption>
@@ -82,13 +80,13 @@ const ProfileScreen = ({ navigation }) => {
         <View style={styles.row}>
           <Icon name="map-marker-radius" color="#777777" size={20} />
           <Text style={{ color: "#777777", marginLeft: 20 }}>
-            Pakistan, Karachi
+            {auth.user.location_name}
           </Text>
         </View>
         <View style={styles.row}>
           <Icon name="phone" color="#777777" size={20} />
           <Text style={{ color: "#777777", marginLeft: 20 }}>
-            +923112793726
+            {auth.user.phone_number}
           </Text>
         </View>
         <View style={styles.row}>
@@ -107,8 +105,7 @@ const ProfileScreen = ({ navigation }) => {
               borderRightColor: "#dddddd",
               borderRightWidth: 1,
             },
-          ]}
-        >
+          ]}>
           <Title>15</Title>
           <Caption>Requests</Caption>
         </View>
@@ -161,8 +158,7 @@ const ProfileScreen = ({ navigation }) => {
         <TouchableRipple
           onPress={() => {
             navigation.navigate("SigninScreen");
-          }}
-        >
+          }}>
           <View style={styles.menuItem}>
             <Icon name="exit-to-app" color={Colors.DEFAULT_GREEN} size={25} />
             <Text style={styles.menuItemText}>Sign Out</Text>
