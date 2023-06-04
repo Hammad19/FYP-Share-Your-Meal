@@ -27,22 +27,24 @@ const styles = StyleSheet.create({
     ...StyleSheet.absoluteFillObject,
     justifyContent: "flex-end",
     alignItems: "center",
+    //zIndex: 2,
     //flex: 1,
   },
   searchContainer: {
-    //zIndex: 1,
+    zIndex: 0,
     flex: 1,
     padding: 10,
-    paddingTop: 20,
-    //  backgroundColor: Colors.DEFAULT_GREEN,
-    backgroundColor: "red",
-    marginTop: 30,
+    paddingTop: Display.setHeight(5),
+    //backgroundColor: Colors.DEFAULT_GREEN,
+    backgroundColor: "transparent",
+    //marginTop: 30,
     width: Display.setWidth(100),
-    height: Display.setHeight(10),
+    // height: "100%",
   },
   map: {
     ...StyleSheet.absoluteFillObject,
-    marginTop: 200,
+    marginTop: 100,
+    // zIndex: -2,
   },
   signinButton: {
     backgroundColor: Colors.DEFAULT_GREEN,
@@ -200,10 +202,9 @@ const GoogleMapScreen = ({ navigation }) => {
             // }} // this in only required for use on the web. See https://git.io/JflFv more for details.
           />
         </View>
-
         <MapView
           provider={PROVIDER_GOOGLE} // remove if not using Google Maps
-          style={[styles.map, { marginBottom: marginBottom.marginBottom }]}
+          style={[styles.map]}
           region={{
             latitude: coordinate.latitude,
             longitude: coordinate.longitude,
@@ -222,7 +223,8 @@ const GoogleMapScreen = ({ navigation }) => {
           }}
           onMapReady={() => {
             setMarginBottom({ marginBottom: 0 });
-          }}>
+          }}
+        >
           <Marker
             coordinate={{
               latitude: coordinate.latitude,
