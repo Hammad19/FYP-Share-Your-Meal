@@ -10,6 +10,8 @@ import RequestOrderCard from "../components/RequestOrderCard";
 import { useFocusEffect } from "@react-navigation/native";
 import { Dimensions } from "react-native";
 import { Display } from "../utils";
+import { StatusBar } from "react-native";
+import IonIcons from "react-native-vector-icons/Ionicons";
 //import { ScrollView } from "react-native-web";
 
 const OrderHistoryScreen = ({ navigation }) => {
@@ -84,8 +86,24 @@ const OrderHistoryScreen = ({ navigation }) => {
   const buttons = ["ACTIVE", "INACTIVE", "Your Orders"];
   return (
     //create two tabs active and inactive
+
     <ScrollView>
       <View style={styles.container}>
+        <StatusBar
+          barStyle={"dark-content"}
+          backgroundColor={Colors.DEFAULT_WHITE}
+          translucent
+        ></StatusBar>
+        <View style={styles.headerContainer}>
+          <IonIcons
+            name="chevron-back-outline"
+            size={30}
+            onPress={() => {
+              navigation.goBack();
+            }}
+          />
+          <Text style={styles.headertitle}>Order</Text>
+        </View>
         <ButtonGroup
           buttons={buttons}
           containerStyle={{ height: 40, marginTop: 10 }}
@@ -173,5 +191,18 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     marginTop: 40,
+  },
+  headerContainer: {
+    flexDirection: "row",
+    alignItems: "center",
+    paddingVertical: 10,
+    paddingHorizontal: 20,
+  },
+  headertitle: {
+    fontSize: 20,
+    fontFamily: "Poppins_500Medium",
+    lineHeight: 20 * 1.4,
+    width: Display.setWidth(80),
+    textAlign: "center",
   },
 });
