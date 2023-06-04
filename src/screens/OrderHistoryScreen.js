@@ -2,13 +2,15 @@ import axios from "axios";
 import React, { useEffect, useState } from "react";
 import { useSelector } from "react-redux";
 import { axiosInstance } from "../utils/api/axiosInstance";
-import { StyleSheet, View, Text } from "react-native";
+import { StyleSheet, View, Text, ScrollView } from "react-native";
 import { Colors } from "../content";
 import { ButtonGroup } from "react-native-elements";
 import OrderMediumCard from "../components/OrderMediumCard";
 import RequestOrderCard from "../components/RequestOrderCard";
 import { useFocusEffect } from "@react-navigation/native";
 import { Dimensions } from "react-native";
+import { Display } from "../utils";
+//import { ScrollView } from "react-native-web";
 
 const OrderHistoryScreen = ({ navigation }) => {
   const [orders, setOrders] = useState([]);
@@ -82,58 +84,86 @@ const OrderHistoryScreen = ({ navigation }) => {
   const buttons = ["ACTIVE", "INACTIVE", "Your Orders"];
   return (
     //create two tabs active and inactive
-    <View style={styles.container}>
-      <ButtonGroup
-        buttons={buttons}
-        containerStyle={{ height: 40, marginTop: 10 }}
-        buttonContainerStyle={{ backgroundColor: Colors.DEFAULT_GREEN }}
-        textStyle={{ color: "#fff" }}
-        onPress={(index) => {
-          filterByType(index);
-        }}
-      />
-      {type === "ACTIVE" ? (
-        activeOrders.length === 0 ? (
+    <ScrollView>
+      <View style={styles.container}>
+        <ButtonGroup
+          buttons={buttons}
+          containerStyle={{ height: 40, marginTop: 10 }}
+          buttonContainerStyle={{ backgroundColor: Colors.DEFAULT_GREEN }}
+          textStyle={{ color: "#fff" }}
+          onPress={(index) => {
+            filterByType(index);
+          }}
+        />
+        {type === "ACTIVE" ? (
+          activeOrders.length === 0 ? (
+            <View
+              style={{
+                flex: 1,
+                justifyContent: "center",
+                alignItems: "center",
+              }}
+            >
+              <Text
+                style={{
+                  fontSize: 20,
+                  fontWeight: "bold",
+                  marginTop: Display.setHeight(40),
+                }}
+              >
+                No Active Orders
+              </Text>
+            </View>
+          ) : (
+            activeOrders?.map((order, key) => {
+              return <OrderMediumCard order={order} />;
+            })
+          )
+        ) : type === "INACTIVE" ? (
+          pastOrders.length === 0 ? (
+            <View
+              style={{
+                flex: 1,
+                justifyContent: "center",
+                alignItems: "center",
+              }}
+            >
+              <Text
+                style={{
+                  fontSize: 20,
+                  fontWeight: "bold",
+                  marginTop: Display.setHeight(40),
+                }}
+              >
+                No Past Orders
+              </Text>
+            </View>
+          ) : (
+            pastOrders?.map((order, key) => {
+              return <OrderMediumCard order={order} />;
+            })
+          )
+        ) : requestedOrders.length === 0 ? (
           <View
             style={{ flex: 1, justifyContent: "center", alignItems: "center" }}
           >
-            <Text style={{ fontSize: 20, fontWeight: "bold" }}>
-              No Active Orders
+            <Text
+              style={{
+                fontSize: 20,
+                fontWeight: "bold",
+                marginTop: Display.setHeight(40),
+              }}
+            >
+              you don't have any order request
             </Text>
           </View>
         ) : (
-          activeOrders?.map((order, key) => {
-            return <OrderMediumCard order={order} />;
+          requestedOrders?.map((order, key) => {
+            return <RequestOrderCard order={order} />;
           })
-        )
-      ) : type === "INACTIVE" ? (
-        pastOrders.length === 0 ? (
-          <View
-            style={{ flex: 1, justifyContent: "center", alignItems: "center" }}
-          >
-            <Text style={{ fontSize: 20, fontWeight: "bold" }}>
-              No Past Orders
-            </Text>
-          </View>
-        ) : (
-          pastOrders?.map((order, key) => {
-            return <OrderMediumCard order={order} />;
-          })
-        )
-      ) : requestedOrders.length === 0 ? (
-        <View
-          style={{ flex: 1, justifyContent: "center", alignItems: "center" }}
-        >
-          <Text style={{ fontSize: 20, fontWeight: "bold" }}>
-            you don't have any order request
-          </Text>
-        </View>
-      ) : (
-        requestedOrders?.map((order, key) => {
-          return <RequestOrderCard order={order} />;
-        })
-      )}
-    </View>
+        )}
+      </View>
+    </ScrollView>
   );
 };
 
