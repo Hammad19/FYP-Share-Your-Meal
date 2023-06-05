@@ -276,7 +276,7 @@ const UpdateFoodScreen = ({ navigation, route }) => {
         name: name,
       });
       axios
-        .post("http://192.168.10.25:8080/api/images/food-image", formData, {
+        .post("http://192.168.18.40:8080/api/images/food-image", formData, {
           headers: { "Content-Type": "multipart/form-data" },
         })
         .then((response) => {

@@ -116,8 +116,7 @@ const ReviewScreen = ({ navigation }) => {
           <StatusBar
             barStyle={"dark-content"}
             backgroundColor="transparent"
-            translucent
-          ></StatusBar>
+            translucent></StatusBar>
           <Separator height={StatusBar.currentHeight} />
           <View style={styles.headerContainer}>
             <IonIcons
@@ -142,7 +141,7 @@ const ReviewScreen = ({ navigation }) => {
                     <Image
                       style={styles.HeaderLeftImage}
                       source={{
-                        uri: "https://picsum.photos/200/300?random=1",
+                        uri: item.ratedBy_avatar,
                       }}
                     />
                   </View>
@@ -153,12 +152,10 @@ const ReviewScreen = ({ navigation }) => {
                       paddingRight: 15,
                       width: Display.setWidth(80),
                       justifyContent: "space-between",
-                    }}
-                  >
+                    }}>
                     <View style={{}}>
                       <Text
-                        style={{ fontSize: 15, color: Colors.DEFAULT_GREEN }}
-                      >
+                        style={{ fontSize: 15, color: Colors.DEFAULT_GREEN }}>
                         {item.ratedBy_email}
                       </Text>
                       <Text style={{ fontSize: 15, color: Colors.DARK_FOUR }}>
@@ -176,8 +173,7 @@ const ReviewScreen = ({ navigation }) => {
                         ))} */}
                       </Text>
                       <Text
-                        style={{ fontSize: 15, color: Colors.DEFAULT_GREEN }}
-                      >
+                        style={{ fontSize: 15, color: Colors.DEFAULT_GREEN }}>
                         {item.createdAt}
                       </Text>
                     </View>

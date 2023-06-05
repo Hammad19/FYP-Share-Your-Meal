@@ -277,7 +277,7 @@ const InsertFoodItemScreen = ({ navigation }) => {
         name: name,
       });
       axios
-        .post("http://192.168.10.10:8080/api/images/food-image", formData, {
+        .post("http://192.168.18.40:8080/api/images/food-image", formData, {
           headers: { "Content-Type": "multipart/form-data" },
         })
         .then((res) => {
@@ -314,8 +314,7 @@ const InsertFoodItemScreen = ({ navigation }) => {
         <StatusBar
           barStyle={"dark-content"}
           backgroundColor={Colors.DEFAULT_WHITE}
-          translucent
-        ></StatusBar>
+          translucent></StatusBar>
         <Separator height={StatusBar.currentHeight} />
         <View style={styles.headerContainer}>
           <IonIcons
@@ -330,8 +329,7 @@ const InsertFoodItemScreen = ({ navigation }) => {
         <View style={styles.inputImageContainer}>
           <TouchableHighlight
             underlayColor="rgba(0,0,0,0)"
-            onPress={() => setImage()}
-          >
+            onPress={() => setImage()}>
             {foodImage == null ? (
               <View style={styles.inputImageSubContainer}>
                 <IonIcons name="image-outline" size={50} color="grey" />
@@ -374,8 +372,7 @@ const InsertFoodItemScreen = ({ navigation }) => {
         <View
           style={
             isFieldInError("foodName") ? styles.error : styles.inputContainer
-          }
-        >
+          }>
           <View style={styles.inputSubContainer}>
             <IonIcons
               name="md-fast-food-outline"
@@ -407,8 +404,7 @@ const InsertFoodItemScreen = ({ navigation }) => {
             isFieldInError("foodDescription")
               ? styles.error
               : styles.inputContainer
-          }
-        >
+          }>
           <View style={styles.inputSubContainer}>
             <MaterialIcons
               name="details"
@@ -463,8 +459,7 @@ const InsertFoodItemScreen = ({ navigation }) => {
         <View
           style={
             isFieldInError("foodPrice") ? styles.error : styles.inputContainer
-          }
-        >
+          }>
           <View style={styles.inputSubContainer}>
             <IonIcons
               name="pricetags-outline"

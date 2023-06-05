@@ -253,26 +253,6 @@ const SigninScreen = ({ navigation }) => {
           </Text>
         </View>
         <Text style={styles.orText}>OR</Text>
-        <TouchableOpacity style={styles.facebookButton}>
-          <View style={styles.socialButtonsContainer}>
-            <View style={styles.signinButtonLogoContainer}>
-              <Image style={styles.signinButtonLogo} source={Images.FACEBOOK} />
-            </View>
-            <Text style={styles.socialSigninButtonText}>
-              Connect with FaceBook
-            </Text>
-          </View>
-        </TouchableOpacity>
-        <TouchableOpacity style={styles.googleButton}>
-          <View style={styles.socialButtonsContainer}>
-            <View style={styles.signinButtonLogoContainer}>
-              <Image style={styles.signinButtonLogo} source={Images.GOOGLE} />
-            </View>
-            <Text style={styles.socialSigninButtonText}>
-              Connect with Google
-            </Text>
-          </View>
-        </TouchableOpacity>
       </View>
     )
   );

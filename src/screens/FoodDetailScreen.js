@@ -229,8 +229,7 @@ const FoodDetailScreen = ({ route, navigation }) => {
           <Text style={styles.title}>{post.food_name}</Text>
           <TouchableOpacity
             onPress={openWhatsAppChat}
-            style={styles.whatsappButton}
-          >
+            style={styles.whatsappButton}>
             <Icon name="whatsapp" size={30} color="#25D366" />
           </TouchableOpacity>
         </View>
@@ -250,7 +249,7 @@ const FoodDetailScreen = ({ route, navigation }) => {
             <Image
               style={styles.avatar}
               source={{
-                uri: "https://preview.keenthemes.com/metronic-v4/theme/assets/pages/media/profile/people19.png",
+                uri: post.food_shared_by_avatar,
               }}
             />
           </View>
@@ -279,8 +278,7 @@ const FoodDetailScreen = ({ route, navigation }) => {
           onPress={() => {
             OrderFood(post, itemCount);
           }}
-          activeOpacity={0.8}
-        >
+          activeOpacity={0.8}>
           <Text style={styles.cartButtonText}>
             {post.is_free ? "Request" : "Order"}
           </Text>

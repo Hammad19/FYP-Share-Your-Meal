@@ -144,16 +144,6 @@ const ProfileScreen = ({ navigation }) => {
             <Text style={styles.menuItemText}>Support</Text>
           </View>
         </TouchableRipple>
-        <TouchableRipple onPress={() => {}}>
-          <View style={styles.menuItem}>
-            <Icon
-              name="settings-outline"
-              color={Colors.DEFAULT_GREEN}
-              size={25}
-            />
-            <Text style={styles.menuItemText}>Settings</Text>
-          </View>
-        </TouchableRipple>
 
         <TouchableRipple
           onPress={() => {
