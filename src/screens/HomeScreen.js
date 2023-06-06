@@ -7,6 +7,7 @@ import {
   StatusBar,
   TextInput,
   Image,
+  Alert,
 } from "react-native";
 import React, { useCallback, useEffect, useState } from "react";
 import { Colors, Images } from "../content";
@@ -246,56 +247,62 @@ const HomeScreen = ({ navigation }) => {
               />
             </View>
             <View></View>
-            {state.auth.user.accounttype === "User" && (
-              <View
-                style={{
-                  top: 20,
-                  flexDirection: "row",
-                  alignItems: "center",
-                  justifyContent: "space-evenly",
-                  width: Display.setWidth(100),
-                }}
+
+            <View
+              style={{
+                top: 20,
+                flexDirection: "row",
+                alignItems: "center",
+                justifyContent: "space-evenly",
+                width: Display.setWidth(100),
+              }}
+            >
+              <TouchableOpacity
+                onPress={() => setFoodType("Free Food")}
+                style={styles.category()}
               >
-                <TouchableOpacity
-                  onPress={() => setFoodType("Free Food")}
-                  style={styles.category()}
-                >
-                  <Ionicons
-                    name={
-                      foodType == "Free Food"
-                        ? "fast-food"
-                        : "fast-food-outline"
-                    }
-                    size={35}
-                    color={
-                      foodType == "Free Food"
-                        ? Colors.DEFAULT_WHITE
-                        : Colors.DEFAULT_GREY
-                    }
-                  />
-                  <Text style={styles.categoryText(foodType === "Free Food")}>
-                    FREE
-                  </Text>
-                </TouchableOpacity>
-                <TouchableOpacity
-                  onPress={() => setFoodType("Paid Food")}
-                  style={styles.category()}
-                >
-                  <MaterialCommunityIcons
-                    name={foodType == "Paid Food" ? "food" : "food-outline"}
-                    size={35}
-                    color={
-                      foodType == "Paid Food"
-                        ? Colors.DEFAULT_WHITE
-                        : Colors.DEFAULT_GREY
-                    }
-                  />
-                  <Text style={styles.categoryText(foodType === "Paid Food")}>
-                    Order
-                  </Text>
-                </TouchableOpacity>
-              </View>
-            )}
+                <Ionicons
+                  name={
+                    foodType == "Free Food" ? "fast-food" : "fast-food-outline"
+                  }
+                  size={35}
+                  color={
+                    foodType == "Free Food"
+                      ? Colors.DEFAULT_WHITE
+                      : Colors.DEFAULT_GREY
+                  }
+                />
+                <Text style={styles.categoryText(foodType === "Free Food")}>
+                  FREE
+                </Text>
+              </TouchableOpacity>
+              <TouchableOpacity
+                onPress={() => {
+                  if (state.auth.user.accounttype !== "User") {
+                    Alert.alert(
+                      "Access Denied",
+                      "Your are not a Standard User you are Charitable Organization"
+                    );
+                  } else {
+                    setFoodType("Paid Food");
+                  }
+                }}
+                style={styles.category()}
+              >
+                <MaterialCommunityIcons
+                  name={foodType == "Paid Food" ? "food" : "food-outline"}
+                  size={35}
+                  color={
+                    foodType == "Paid Food"
+                      ? Colors.DEFAULT_WHITE
+                      : Colors.DEFAULT_GREY
+                  }
+                />
+                <Text style={styles.categoryText(foodType === "Paid Food")}>
+                  Order
+                </Text>
+              </TouchableOpacity>
+            </View>
           </View>
 
           {state.food.foodlist.length === 0 ? (
@@ -339,7 +346,7 @@ const styles = StyleSheet.create({
   },
   backgroundCurvedContainer: {
     backgroundColor: Colors.DEFAULT_GREEN,
-    height: 1685,
+    height: Display.setHeight(203),
     position: "absolute",
     top: -1 * (1700 - 240),
     width: 1700,
