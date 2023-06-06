@@ -74,18 +74,14 @@ export default function CustomTabNavigator() {
           // You can return any component that you like here!
           return <Ionicons name={iconName} size={26} color={color} />;
         },
-      })}>
+      })}
+    >
       <Tab.Screen name={homeName} component={HomeTabNavigator} />
-      {state.auth.user.accounttype === "User" ? (
-        <Tab.Screen name={settingsName} component={AddFoodNavigator} />
-      ) : (
-        <></>
-      )}
-      {state.auth.user.accounttype === "User" ? (
-        <Tab.Screen name={ordersName} component={OrderHistoryScreen} />
-      ) : (
-        <></>
-      )}
+
+      <Tab.Screen name={settingsName} component={AddFoodNavigator} />
+
+      <Tab.Screen name={ordersName} component={OrderHistoryScreen} />
+
       <Tab.Screen name={profileName} component={ProfileNavigator} />
     </Tab.Navigator>
   );
