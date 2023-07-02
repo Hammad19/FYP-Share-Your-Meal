@@ -1,6 +1,6 @@
 import axios from "axios";
 
-export const BASE_URL = "http://192.168.18.40:8080/api/";
+export const BASE_URL = "https://share-your-meal-api.cyclic.app/api/";
 
 export const axiosInstance = axios.create({
   baseURL: BASE_URL,

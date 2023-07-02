@@ -276,9 +276,13 @@ const UpdateFoodScreen = ({ navigation, route }) => {
         name: name,
       });
       axios
-        .post("http://192.168.43.79:8080/api/images/food-image", formData, {
-          headers: { "Content-Type": "multipart/form-data" },
-        })
+        .post(
+          "https://share-your-meal-api.cyclic.app/api/images/food-image",
+          formData,
+          {
+            headers: { "Content-Type": "multipart/form-data" },
+          }
+        )
         .then((response) => {
           let requestBody = {
             _id: post._id,
@@ -313,8 +317,7 @@ const UpdateFoodScreen = ({ navigation, route }) => {
         <StatusBar
           barStyle={"dark-content"}
           backgroundColor={Colors.DEFAULT_WHITE}
-          translucent
-        ></StatusBar>
+          translucent></StatusBar>
         <Separator height={StatusBar.currentHeight} />
         <View style={styles.headerContainer}>
           <IonIcons
@@ -329,8 +332,7 @@ const UpdateFoodScreen = ({ navigation, route }) => {
         <View style={styles.inputImageContainer}>
           <TouchableHighlight
             underlayColor="rgba(0,0,0,0)"
-            onPress={() => setImage()}
-          >
+            onPress={() => setImage()}>
             {foodImage == null ? (
               <View style={styles.inputImageSubContainer}>
                 <IonIcons name="image-outline" size={50} color="grey" />
@@ -348,8 +350,7 @@ const UpdateFoodScreen = ({ navigation, route }) => {
         <View
           style={
             isFieldInError("foodName") ? styles.error : styles.inputContainer
-          }
-        >
+          }>
           <View style={styles.inputSubContainer}>
             <IonIcons
               name="md-fast-food-outline"
@@ -377,8 +378,7 @@ const UpdateFoodScreen = ({ navigation, route }) => {
         <View
           style={
             isFieldInError("foodPrice") ? styles.error : styles.inputContainer
-          }
-        >
+          }>
           <View style={styles.inputSubContainer}>
             <IonIcons
               name="pricetags-outline"
@@ -410,8 +410,7 @@ const UpdateFoodScreen = ({ navigation, route }) => {
             isFieldInError("foodDescription")
               ? styles.error
               : styles.inputContainer
-          }
-        >
+          }>
           <View style={styles.inputSubContainer}>
             <MaterialIcons
               name="details"
@@ -517,8 +516,7 @@ const UpdateFoodScreen = ({ navigation, route }) => {
         ) : null}
         <TouchableOpacity
           onPress={handleUpdateFood}
-          style={styles.signinButton}
-        >
+          style={styles.signinButton}>
           <Text style={styles.signinButtonText}>Update Food</Text>
         </TouchableOpacity>
       </ScrollView>

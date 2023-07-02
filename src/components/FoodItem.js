@@ -49,7 +49,12 @@ const Post = (props) => {
     <>
       <Pressable onPress={goToPostPage} style={styles.container}>
         {/* Image  */}
-        <Image style={styles.image} source={{ uri: post.food_image }} />
+        <Image
+          style={styles.image}
+          source={{
+            uri: "http://192.168.18.40:8080/publicpetimages/67035db9-bbef-4c4b-a5f5-24dcc98029be-b344dcf1-faec-4198-8e90-6553617f18d2.jpeg",
+          }}
+        />
 
         <View style={styles.details}>
           <Text style={styles.detailText}>
@@ -92,13 +97,11 @@ const Post = (props) => {
               flexDirection: "row",
               justifyContent: "space-between",
               marginTop: 10,
-            }}
-          >
+            }}>
             <TouchableOpacity
               style={styles.cartButton}
               onPress={() => handleEditButton()}
-              activeOpacity={0.8}
-            >
+              activeOpacity={0.8}>
               <Text style={styles.cartButtonText}>
                 <Icon name="edit" size={18}></Icon>Edit Post
               </Text>
@@ -106,8 +109,7 @@ const Post = (props) => {
             <TouchableOpacity
               style={styles.cartButton}
               onPress={() => deleteFood(post._id)}
-              activeOpacity={0.8}
-            >
+              activeOpacity={0.8}>
               <Text style={styles.cartButtonText}>
                 <MaterialIcons name="delete" size={20} />
                 Delete post
