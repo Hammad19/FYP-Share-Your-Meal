@@ -148,9 +148,13 @@ const EditProfileScreen = ({ navigation }) => {
         name: name,
       });
       axios
-        .post("http://192.168.43.79:8080/api/images/food-image", formData, {
-          headers: { "Content-Type": "multipart/form-data" },
-        })
+        .post(
+          "https://share-your-meal-api.cyclic.app/api/images/food-image",
+          formData,
+          {
+            headers: { "Content-Type": "multipart/form-data" },
+          }
+        )
         .then((response) => {
           let requestBody = {
             email: state.auth.user.email,
