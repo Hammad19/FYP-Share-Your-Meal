@@ -22,6 +22,7 @@ import { GooglePlacesAutocomplete } from "react-native-google-places-autocomplet
 
 import * as Location from "expo-location";
 import axios from "axios";
+import { useToast } from "react-native-toast-notifications";
 const styles = StyleSheet.create({
   container: {
     ...StyleSheet.absoluteFillObject,
@@ -65,6 +66,7 @@ const styles = StyleSheet.create({
   },
 });
 const GoogleMapScreen = ({ navigation }) => {
+  const toast = useToast();
   const [address, setAddress] = React.useState("");
   const state = useSelector((state) => state);
   const [coordinate, setCoordinate] = React.useState({
@@ -88,7 +90,14 @@ const GoogleMapScreen = ({ navigation }) => {
     dispatch(addLocation(requestBody)).then((res) => {
       if (res.payload.success) {
         console.log(res.payload.success, "success");
-        alert(res.payload.message);
+
+        toast.show(res.payload.message, {
+          type: "success",
+          placement: "top",
+          duration: 4000,
+          offset: 30,
+          animationType: "zoom-in",
+        });
         navigation.navigate("HomeScreen");
       }
     });
@@ -223,8 +232,7 @@ const GoogleMapScreen = ({ navigation }) => {
           }}
           onMapReady={() => {
             setMarginBottom({ marginBottom: 0 });
-          }}
-        >
+          }}>
           <Marker
             coordinate={{
               latitude: coordinate.latitude,
