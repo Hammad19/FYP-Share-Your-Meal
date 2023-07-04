@@ -5,7 +5,6 @@ import {
   View,
   Image,
   StatusBar,
-  Alert,
 } from "react-native";
 import React, { useState } from "react";
 import IonIcons from "react-native-vector-icons/Ionicons";
@@ -26,7 +25,11 @@ import { reset, userLogin } from "../store/slices/authSlice";
 import { useValidation } from "react-native-form-validator";
 import { navigateToCustomTabNavigator } from "../utils/authservice";
 
+import Toast from "react-native-toast-message";
+import { useToast } from "react-native-toast-notifications";
+
 const SigninScreen = ({ navigation }) => {
+  const toast = useToast();
   const [isPasswordShown, setisPasswordShown] = useState(false);
   let [fontsLoaded] = useFonts({
     Poppins_500Medium,
@@ -82,13 +85,25 @@ const SigninScreen = ({ navigation }) => {
   const NavigatetoHome = () => {
     if (state.auth.isLoggedIn) {
       if (state.auth.user.emailVerified) {
-        Alert.alert("Success", "User Logged in Successfully ");
+        toast.show("User Logged in Successfully ", {
+          type: "success",
+          placement: "top",
+          duration: 4000,
+          offset: 30,
+          animationType: "zoom-in",
+        });
         navigateToCustomTabNavigator(navigation);
       } else {
         navigation.navigate("EmailVerificationScreen");
       }
     } else if (state.auth.error.status == "loginerror") {
-      Alert.alert("Error", state.auth.error.message);
+      toast.show(state.auth.error.message, {
+        type: "danger",
+        placement: "top",
+        duration: 4000,
+        offset: 30,
+        animationType: "zoom-in",
+      });
     }
   };
 
@@ -133,127 +148,130 @@ const SigninScreen = ({ navigation }) => {
 
   return (
     fontsLoaded && (
-      <View style={styles.container}>
-        <StatusBar
-          barStyle={"dark-content"}
-          backgroundColor={Colors.DEFAULT_WHITE}
-          translucent></StatusBar>
-        <Separator height={StatusBar.currentHeight} />
-        <View style={styles.headerContainer}>
-          <IonIcons
-            name="chevron-back-outline"
-            size={30}
-            onPress={() => {
-              navigation.goBack();
-            }}
-          />
-          <Text style={styles.headertitle}>Sign In</Text>
-        </View>
-        <Text style={styles.title}>Welcome</Text>
-        <Text style={styles.content}>
-          Enter Your Username and Password and Enjoy Having Food
-        </Text>
-        <View
-          style={
-            isFieldInError("email") ? styles.error : styles.inputContainer
-          }>
-          <View style={styles.inputSubContainer}>
-            <Feather
-              name="user"
-              size={22}
-              color={Colors.DEFAULT_GREY}
-              style={{ marginRight: 10 }}
-            />
-            <TextInput
-              onChangeText={(text) => {
-                setError(true);
-                setFieldName("email");
-                setEmail(text);
-              }}
-              value={email}
-              placeholder="Email"
-              placeholderTextColor={Colors.DEFAULT_GREY}
-              selectionColor={Colors.DEFAULT_GREY}
-              style={styles.inputText}
-            />
-          </View>
-        </View>
-        {error && ShowError("email")}
-        <Separator height={15} />
-        <View
-          style={
-            isFieldInError("password") ? styles.error : styles.inputContainer
-          }>
-          <View style={styles.inputSubContainer}>
-            <Feather
-              name="lock"
-              size={22}
-              color={Colors.DEFAULT_GREY}
-              style={{ marginRight: 10 }}
-            />
-            <TextInput
-              onChangeText={(password) => {
-                setError(true);
-                setFieldName("password");
-                setPassword(password);
-              }}
-              // onFocus={(password) => {
-              //   setError(true);
-              //   setFieldName("password");
-              //   setPassword(password)
-              //   }}
-              value={password}
-              secureTextEntry={isPasswordShown ? false : true}
-              placeholder="Password"
-              placeholderTextColor={Colors.DEFAULT_GREY}
-              selectionColor={Colors.DEFAULT_GREY}
-              style={styles.inputText}
-            />
-            <Feather
+      <>
+        <Toast />
+
+        <View style={styles.container}>
+          <StatusBar
+            barStyle={"dark-content"}
+            backgroundColor={Colors.DEFAULT_WHITE}
+            translucent></StatusBar>
+          <Separator height={StatusBar.currentHeight} />
+          <View style={styles.headerContainer}>
+            <IonIcons
+              name="chevron-back-outline"
+              size={30}
               onPress={() => {
-                setisPasswordShown(!isPasswordShown);
+                navigation.goBack();
               }}
-              name={isPasswordShown ? "eye" : "eye-off"}
-              size={22}
-              color={Colors.DEFAULT_GREY}
-              style={{ marginRight: 10 }}
             />
+            <Text style={styles.headertitle}>Sign In</Text>
+          </View>
+          <Text style={styles.title}>Welcome</Text>
+          <Text style={styles.content}>
+            Enter Your Username and Password and Enjoy Having Food
+          </Text>
+          <View
+            style={
+              isFieldInError("email") ? styles.error : styles.inputContainer
+            }>
+            <View style={styles.inputSubContainer}>
+              <Feather
+                name="user"
+                size={22}
+                color={Colors.DEFAULT_GREY}
+                style={{ marginRight: 10 }}
+              />
+              <TextInput
+                onChangeText={(text) => {
+                  setError(true);
+                  setFieldName("email");
+                  setEmail(text);
+                }}
+                value={email}
+                placeholder="Email"
+                placeholderTextColor={Colors.DEFAULT_GREY}
+                selectionColor={Colors.DEFAULT_GREY}
+                style={styles.inputText}
+              />
+            </View>
+          </View>
+          {error && ShowError("email")}
+          <Separator height={15} />
+          <View
+            style={
+              isFieldInError("password") ? styles.error : styles.inputContainer
+            }>
+            <View style={styles.inputSubContainer}>
+              <Feather
+                name="lock"
+                size={22}
+                color={Colors.DEFAULT_GREY}
+                style={{ marginRight: 10 }}
+              />
+              <TextInput
+                onChangeText={(password) => {
+                  setError(true);
+                  setFieldName("password");
+                  setPassword(password);
+                }}
+                // onFocus={(password) => {
+                //   setError(true);
+                //   setFieldName("password");
+                //   setPassword(password)
+                //   }}
+                value={password}
+                secureTextEntry={isPasswordShown ? false : true}
+                placeholder="Password"
+                placeholderTextColor={Colors.DEFAULT_GREY}
+                selectionColor={Colors.DEFAULT_GREY}
+                style={styles.inputText}
+              />
+              <Feather
+                onPress={() => {
+                  setisPasswordShown(!isPasswordShown);
+                }}
+                name={isPasswordShown ? "eye" : "eye-off"}
+                size={22}
+                color={Colors.DEFAULT_GREY}
+                style={{ marginRight: 10 }}
+              />
+            </View>
+          </View>
+          {error && ShowError("password")}
+          <Text></Text>
+          <View style={styles.forgotPasswordContainer}>
+            <View style={styles.toggleContainer}>
+              <ToggleButton size={0.5} />
+              <Text style={styles.rememberMeText}>Remember Me</Text>
+            </View>
+            <Text
+              onPress={() => navigation.navigate("ForgotPasswordScreen")}
+              style={styles.forgotPasswordText}>
+              Forgot Password
+            </Text>
+          </View>
+          {isAllValuesNull ? (
+            <Text style={{ color: "red", fontSize: 15, marginLeft: 25 }}>
+              All fields are required
+            </Text>
+          ) : null}
+          <TouchableOpacity onPress={Login} style={styles.signinButton}>
+            <Text style={styles.signinButtonText}>Sign In</Text>
+          </TouchableOpacity>
+          <View style={styles.signupContainer}>
+            <Text style={styles.accountText}>Don't have an Account ?</Text>
+            <Text
+              onPress={() => {
+                dispatch(reset());
+                navigation.navigate("SignupScreen");
+              }}
+              style={styles.signupText}>
+              Sign Up
+            </Text>
           </View>
         </View>
-        {error && ShowError("password")}
-        <Text></Text>
-        <View style={styles.forgotPasswordContainer}>
-          <View style={styles.toggleContainer}>
-            <ToggleButton size={0.5} />
-            <Text style={styles.rememberMeText}>Remember Me</Text>
-          </View>
-          <Text
-            onPress={() => navigation.navigate("ForgotPasswordScreen")}
-            style={styles.forgotPasswordText}>
-            Forgot Password
-          </Text>
-        </View>
-        {isAllValuesNull ? (
-          <Text style={{ color: "red", fontSize: 15, marginLeft: 25 }}>
-            All fields are required
-          </Text>
-        ) : null}
-        <TouchableOpacity onPress={Login} style={styles.signinButton}>
-          <Text style={styles.signinButtonText}>Sign In</Text>
-        </TouchableOpacity>
-        <View style={styles.signupContainer}>
-          <Text style={styles.accountText}>Don't have an Account ?</Text>
-          <Text
-            onPress={() => {
-              dispatch(reset());
-              navigation.navigate("SignupScreen");
-            }}
-            style={styles.signupText}>
-            Sign Up
-          </Text>
-        </View>
-        <Text style={styles.orText}>OR</Text>
-      </View>
+      </>
     )
   );
 };

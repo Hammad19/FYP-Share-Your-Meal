@@ -69,14 +69,14 @@ const NotificationScreen = ({ navigation }) => {
       console.log(error);
     }
   };
-  useEffect(() => {
-    //timer for every 20 seconds
-    getNotification();
-    // const interval = setInterval(() => {
-    //   getNotification();
-    // }, 20000);
-    // return () => clearInterval(interval);
-  }, []);
+
+  // useEffect(() => {
+  //   const interval = setInterval(() => {
+  //     getNotification();
+  //   }, 2000);
+  //   return () => clearInterval(interval);
+  // }, []);
+
   //get food image where notification._id
   //fake data for notification
   const data = [
@@ -109,8 +109,7 @@ const NotificationScreen = ({ navigation }) => {
           <StatusBar
             barStyle={"dark-content"}
             backgroundColor="transparent"
-            translucent
-          ></StatusBar>
+            translucent></StatusBar>
           <Separator height={StatusBar.currentHeight} />
           <View style={styles.headerContainer}>
             <IonIcons
@@ -143,12 +142,10 @@ const NotificationScreen = ({ navigation }) => {
                       paddingLeft: 10,
                       width: Display.setWidth(80),
                       justifyContent: "space-between",
-                    }}
-                  >
+                    }}>
                     <View style={{}}>
                       <Text
-                        style={{ fontSize: 15, color: Colors.DEFAULT_GREEN }}
-                      >
+                        style={{ fontSize: 15, color: Colors.DEFAULT_GREEN }}>
                         {item.title}
                       </Text>
                       <Text style={{ fontSize: 15, color: Colors.DARK_FOUR }}>

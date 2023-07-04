@@ -28,9 +28,11 @@ import { Display } from "../utils";
 import IonIcons from "react-native-vector-icons/Ionicons";
 import MaterialIcons from "react-native-vector-icons/MaterialIcons";
 import CountryFlag from "react-native-country-flag";
+import { useToast } from "react-native-toast-notifications";
 
 const getDropdownStyle = (y) => ({ ...styles.countryDropdown, top: y + 60 });
 const SignupScreen = ({ navigation }) => {
+  const toast = useToast();
   const [email, setEmail] = useState("");
   const [userName, setUserName] = useState("");
   const [password, setPassword] = useState("");
@@ -116,9 +118,23 @@ const SignupScreen = ({ navigation }) => {
 
   const NavigatetoSignInScreen = () => {
     if (state.auth.error.status == "error") {
-      Alert.alert("Error", state.auth.error.message);
+      toast.show(state.auth.error.message, {
+        type: "danger",
+        placement: "top",
+        duration: 4000,
+        offset: 30,
+        animationType: "zoom-in",
+      });
     } else if (state.auth.error.status == "signupsuccess") {
-      Alert.alert("Success", "Account Created Successfully Please Login");
+      Alert.alert("Success");
+      toast.show("Account Created Successfully Please Login", {
+        type: "success",
+        placement: "top",
+        duration: 4000,
+        offset: 30,
+        animationType: "zoom-in",
+      });
+      //Alert.alert("Error");
       navigation.navigate("SigninScreen");
     }
   };
@@ -224,8 +240,7 @@ const SignupScreen = ({ navigation }) => {
         <StatusBar
           barStyle={"dark-content"}
           backgroundColor={Colors.DEFAULT_WHITE}
-          translucent
-        ></StatusBar>
+          translucent></StatusBar>
         <Separator height={StatusBar.currentHeight} />
         <View style={styles.headerContainer}>
           <IonIcons
@@ -245,8 +260,7 @@ const SignupScreen = ({ navigation }) => {
         <View
           style={
             isFieldInError("userName") ? styles.error : styles.inputContainer
-          }
-        >
+          }>
           <View style={styles.inputSubContainer}>
             <Feather
               name="user"
@@ -273,8 +287,9 @@ const SignupScreen = ({ navigation }) => {
         {error && ShowError("userName")}
         <Separator height={15} />
         <View
-          style={isFieldInError("email") ? styles.error : styles.inputContainer}
-        >
+          style={
+            isFieldInError("email") ? styles.error : styles.inputContainer
+          }>
           <View style={styles.inputSubContainer}>
             <Feather
               name="mail"
@@ -302,8 +317,7 @@ const SignupScreen = ({ navigation }) => {
         <View
           style={
             isFieldInError("password") ? styles.error : styles.inputContainer
-          }
-        >
+          }>
           <View style={styles.inputSubContainer}>
             <Feather
               name="lock"
@@ -331,7 +345,7 @@ const SignupScreen = ({ navigation }) => {
               name={isPasswordShown ? "eye" : "eye-off"}
               size={22}
               color={Colors.DEFAULT_GREY}
-              style={{ marginRight: 100 }}
+              style={{ marginRight: 10 }}
             />
           </View>
         </View>
@@ -342,8 +356,7 @@ const SignupScreen = ({ navigation }) => {
             isFieldInError("confirmPassword")
               ? styles.error
               : styles.inputContainer
-          }
-        >
+          }>
           <View style={styles.inputSubContainer}>
             <Feather
               name="lock"
@@ -384,12 +397,10 @@ const SignupScreen = ({ navigation }) => {
             nativeEvent: {
               layout: { y },
             },
-          }) => setInputsContainerY(y)}
-        >
+          }) => setInputsContainerY(y)}>
           <TouchableOpacity
             style={styles.countryListContainer}
-            onPress={() => setIsDropdownOpen(!isDropdownOpen)}
-          >
+            onPress={() => setIsDropdownOpen(!isDropdownOpen)}>
             <CountryFlag
               isoCode={selectedCountry.code}
               size={12}
@@ -422,8 +433,7 @@ const SignupScreen = ({ navigation }) => {
               nativeEvent: {
                 layout: { x, y, height, width },
               },
-            }) => setDropdownLayout({ x, y, height, width })}
-          >
+            }) => setDropdownLayout({ x, y, height, width })}>
             <FlatList
               data={CountryCode}
               keyExtractor={(item) => item.code}

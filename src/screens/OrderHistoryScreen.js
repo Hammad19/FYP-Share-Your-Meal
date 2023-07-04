@@ -22,6 +22,14 @@ const OrderHistoryScreen = ({ navigation }) => {
   const state = useSelector((state) => state);
   const [type, setType] = useState("ACTIVE");
 
+  // useEffect(() => {
+  //   const interval = setInterval(() => {
+  //     FetchData();
+  //     FetchRequestedOrders();
+  //   }, 2000);
+  //   return () => clearInterval(interval);
+  // }, []);
+
   // Get the device height
   const deviceHeight = Dimensions.get("window").height;
 
@@ -66,13 +74,6 @@ const OrderHistoryScreen = ({ navigation }) => {
     }
   };
 
-  useFocusEffect(
-    React.useCallback(() => {
-      FetchData();
-      FetchRequestedOrders();
-    }, [])
-  );
-
   const filterByType = (index) => {
     if (index === 0) {
       setType("ACTIVE");
@@ -92,8 +93,7 @@ const OrderHistoryScreen = ({ navigation }) => {
         <StatusBar
           barStyle={"dark-content"}
           backgroundColor={Colors.DEFAULT_WHITE}
-          translucent
-        ></StatusBar>
+          translucent></StatusBar>
         <View style={styles.headerContainer}>
           <IonIcons
             name="chevron-back-outline"
@@ -120,15 +120,13 @@ const OrderHistoryScreen = ({ navigation }) => {
                 flex: 1,
                 justifyContent: "center",
                 alignItems: "center",
-              }}
-            >
+              }}>
               <Text
                 style={{
                   fontSize: 20,
                   fontWeight: "bold",
                   marginTop: Display.setHeight(40),
-                }}
-              >
+                }}>
                 No Active Orders
               </Text>
             </View>
@@ -144,15 +142,13 @@ const OrderHistoryScreen = ({ navigation }) => {
                 flex: 1,
                 justifyContent: "center",
                 alignItems: "center",
-              }}
-            >
+              }}>
               <Text
                 style={{
                   fontSize: 20,
                   fontWeight: "bold",
                   marginTop: Display.setHeight(40),
-                }}
-              >
+                }}>
                 No Past Orders
               </Text>
             </View>
@@ -163,15 +159,13 @@ const OrderHistoryScreen = ({ navigation }) => {
           )
         ) : requestedOrders.length === 0 ? (
           <View
-            style={{ flex: 1, justifyContent: "center", alignItems: "center" }}
-          >
+            style={{ flex: 1, justifyContent: "center", alignItems: "center" }}>
             <Text
               style={{
                 fontSize: 20,
                 fontWeight: "bold",
                 marginTop: Display.setHeight(40),
-              }}
-            >
+              }}>
               you don't have any order request
             </Text>
           </View>

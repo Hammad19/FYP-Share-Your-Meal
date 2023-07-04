@@ -2,7 +2,7 @@ import React from "react";
 import Navigators from "./src/navigators";
 import store from "./src/store/store";
 import { Provider } from "react-redux";
-
+import { ToastProvider } from "react-native-toast-notifications";
 const checkAutoLogin = async () => {
   const user = await AsyncStorage.getItem("user");
   if (user) {
@@ -14,6 +14,8 @@ const checkAutoLogin = async () => {
 
 export default () => (
   <Provider store={store}>
-    <Navigators />
+    <ToastProvider>
+      <Navigators />
+    </ToastProvider>
   </Provider>
 );

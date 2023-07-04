@@ -7,7 +7,6 @@ import {
   StatusBar,
   TextInput,
   Image,
-  Alert,
 } from "react-native";
 import React, { useCallback, useEffect, useState } from "react";
 import { Colors, Images } from "../content";
@@ -39,12 +38,14 @@ import Animated, { color } from "react-native-reanimated";
 import BottomSheet from "reanimated-bottom-sheet";
 import * as Location from "expo-location";
 import { axiosInstance } from "../utils/api/axiosInstance";
+import { useToast } from "react-native-toast-notifications";
 // import {request, PERMISSIONS} from 'react-native-permissions';
 // import Geolocation from 'react-native-geolocation-service';
-// import { Alert } from "react-native-web";
+
 //import { black } from "react-native-paper/lib/typescript/styles/colors";
 
 const HomeScreen = ({ navigation }) => {
+  const toast = useToast();
   const [foodType, setFoodType] = useState("Free Food");
   const [foodSearch, setFoodSearch] = useState(true);
   const [notification, setNotification] = useState([]);
@@ -83,7 +84,13 @@ const HomeScreen = ({ navigation }) => {
     if (grantedFurther.granted) {
       navigation.navigate("GoogleMapScreen");
     } else {
-      Alert.alert("Location Permission Denied");
+      toast.show("Location Permission Denied", {
+        type: "danger",
+        placement: "top",
+        duration: 4000,
+        offset: 30,
+        animationType: "zoom-in",
+      });
     }
   };
 
@@ -126,15 +133,13 @@ const HomeScreen = ({ navigation }) => {
           style={styles.panelButtonTitle}
           onPress={() => {
             NavigateToGoogleMap();
-          }}
-        >
+          }}>
           + Add location
         </Text>
       </TouchableOpacity>
       <TouchableOpacity
         style={styles.panelButton}
-        onPress={() => bs.current.snapTo(0)}
-      >
+        onPress={() => bs.current.snapTo(0)}>
         <Text style={styles.panelButtonTitle}>Confirm</Text>
       </TouchableOpacity>
     </View>
@@ -255,12 +260,10 @@ const HomeScreen = ({ navigation }) => {
                 alignItems: "center",
                 justifyContent: "space-evenly",
                 width: Display.setWidth(100),
-              }}
-            >
+              }}>
               <TouchableOpacity
                 onPress={() => setFoodType("Free Food")}
-                style={styles.category()}
-              >
+                style={styles.category()}>
                 <Ionicons
                   name={
                     foodType == "Free Food" ? "fast-food" : "fast-food-outline"
@@ -279,16 +282,21 @@ const HomeScreen = ({ navigation }) => {
               <TouchableOpacity
                 onPress={() => {
                   if (state.auth.user.accounttype !== "User") {
-                    Alert.alert(
-                      "Access Denied",
-                      "Your are not a Standard User you are Charitable Organization"
+                    toast.show(
+                      "Your are not a Standard User you are Charitable Organization",
+                      {
+                        type: "warning",
+                        placement: "top",
+                        duration: 4000,
+                        offset: 30,
+                        animationType: "zoom-in",
+                      }
                     );
                   } else {
                     setFoodType("Paid Food");
                   }
                 }}
-                style={styles.category()}
-              >
+                style={styles.category()}>
                 <MaterialCommunityIcons
                   name={foodType == "Paid Food" ? "food" : "food-outline"}
                   size={35}
@@ -311,8 +319,7 @@ const HomeScreen = ({ navigation }) => {
                 flex: 1,
                 justifyContent: "center",
                 alignItems: "center",
-              }}
-            >
+              }}>
               <Text style={{ fontSize: 20, color: Colors.DEFAULT_GREY }}>
                 No Food Available
               </Text>

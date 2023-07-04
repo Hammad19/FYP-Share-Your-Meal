@@ -26,7 +26,7 @@ import { TextInput } from "react-native-gesture-handler";
 import * as ImagePicker from "expo-image-picker";
 import { PermissionsAndroid } from "react-native";
 import { addFood } from "../store/slices/foodSlice";
-
+import * as Permissions from "expo-permissions";
 import {
   useFonts,
   Poppins_700Bold,
@@ -35,8 +35,10 @@ import {
 import AntDesign from "react-native-vector-icons/AntDesign";
 import { Avatar } from "react-native-paper";
 import axios from "axios";
+import { useToast } from "react-native-toast-notifications";
 
 const InsertFoodItemScreen = ({ navigation }) => {
+  const toast = useToast();
   const dispatch = useDispatch();
   const state = useSelector((state) => state);
   // const [imageToSend, setImageToSend] = useState(null);
@@ -73,11 +75,12 @@ const InsertFoodItemScreen = ({ navigation }) => {
     Poppins_500Medium,
     Poppins_700Bold,
   });
+
   const requestExternalWritePermission = async () => {
     if (Platform.OS === "android") {
       try {
         const granted = await PermissionsAndroid.request(
-          PermissionsAndroid.PERMISSIONS.WRITE_EXTERNAL_STORAGE,
+          PermissionsAndroid.PERMISSIONS.CAMERA,
           {
             title: "Share Your Meal App Camera Permission",
             message:
@@ -98,8 +101,6 @@ const InsertFoodItemScreen = ({ navigation }) => {
     } else return true;
   };
 
-  //convert base64 to image file
-
   const setImage = async () => {
     let options = {
       mediaType: "photo",
@@ -109,19 +110,68 @@ const InsertFoodItemScreen = ({ navigation }) => {
 
     let isCameraPermitted = await requestExternalWritePermission();
     if (isCameraPermitted) {
-      let result = await ImagePicker.launchImageLibraryAsync({
-        mediaTypes: ImagePicker.MediaTypeOptions.All,
-        allowsEditing: true,
-        aspect: [4, 3],
-        quality: 1,
-        base64: true,
-      }).catch((error) => console.log(error));
+      Alert.alert(
+        "Choose an option",
+        "Do you want to take a photo or pick from the library?",
+        [
+          {
+            text: "Cancel",
+            style: "cancel",
+          },
+          {
+            text: "Take Photo",
+            onPress: launchCamera,
+          },
+          {
+            text: "Pick from Gallery",
+            onPress: launchImageLibrary,
+          },
+        ]
+      );
+    }
+  };
 
-      if (!result.cancelled) {
-        setfoodImage(result.uri);
-      } else {
-        Alert.alert("You Cancelled an Image");
-      }
+  const launchCamera = async () => {
+    let result = await ImagePicker.launchCameraAsync({
+      mediaTypes: ImagePicker.MediaTypeOptions.Images,
+      allowsEditing: true,
+      aspect: [4, 3],
+      quality: 1,
+      base64: true,
+    }).catch((error) => console.log(error));
+
+    if (!result.cancelled) {
+      setfoodImage(result.uri);
+    } else {
+      toast.show("You Cancelled the Image", {
+        type: "danger",
+        placement: "top",
+        duration: 4000,
+        offset: 30,
+        animationType: "zoom-in",
+      });
+    }
+  };
+
+  const launchImageLibrary = async () => {
+    let result = await ImagePicker.launchImageLibraryAsync({
+      mediaTypes: ImagePicker.MediaTypeOptions.Images,
+      allowsEditing: true,
+      aspect: [4, 3],
+      quality: 1,
+      base64: true,
+    }).catch((error) => console.log(error));
+
+    if (!result.cancelled) {
+      setfoodImage(result.uri);
+    } else {
+      toast.show("You Cancelled the Image", {
+        type: "danger",
+        placement: "top",
+        duration: 4000,
+        offset: 30,
+        animationType: "zoom-in",
+      });
     }
   };
 
@@ -215,7 +265,13 @@ const InsertFoodItemScreen = ({ navigation }) => {
       state.auth.user.location_name == "" ||
       state.auth.user.location_name == null
     ) {
-      Alert.alert("Please Add Your Location First");
+      toast.show("Please Add Your Location First", {
+        type: "warning",
+        placement: "top",
+        duration: 4000,
+        offset: 30,
+        animationType: "zoom-in",
+      });
     }
 
     if (foodType == "Free Food") {
@@ -309,7 +365,13 @@ const InsertFoodItemScreen = ({ navigation }) => {
 
   useEffect(() => {
     if (state.food.error.message == "Food added successfully") {
-      Alert.alert("Success", state.food.error.message);
+      toast.show(state.food.error.message, {
+        type: "success",
+        placement: "top",
+        duration: 4000,
+        offset: 30,
+        animationType: "zoom-in",
+      });
       navigation.goBack();
     }
   }, [state.food.error.message]);
@@ -320,8 +382,7 @@ const InsertFoodItemScreen = ({ navigation }) => {
         <StatusBar
           barStyle={"dark-content"}
           backgroundColor={Colors.DEFAULT_WHITE}
-          translucent
-        ></StatusBar>
+          translucent></StatusBar>
         <Separator height={StatusBar.currentHeight} />
         <View style={styles.headerContainer}>
           <IonIcons
@@ -336,8 +397,7 @@ const InsertFoodItemScreen = ({ navigation }) => {
         <View style={styles.inputImageContainer}>
           <TouchableHighlight
             underlayColor="rgba(0,0,0,0)"
-            onPress={() => setImage()}
-          >
+            onPress={() => setImage()}>
             {foodImage == null ? (
               <View style={styles.inputImageSubContainer}>
                 <IonIcons name="image-outline" size={50} color="grey" />
@@ -380,8 +440,7 @@ const InsertFoodItemScreen = ({ navigation }) => {
         <View
           style={
             isFieldInError("foodName") ? styles.error : styles.inputContainer
-          }
-        >
+          }>
           <View style={styles.inputSubContainer}>
             <IonIcons
               name="md-fast-food-outline"
@@ -413,8 +472,7 @@ const InsertFoodItemScreen = ({ navigation }) => {
             isFieldInError("foodDescription")
               ? styles.error
               : styles.inputContainer
-          }
-        >
+          }>
           <View style={styles.inputSubContainer}>
             <MaterialIcons
               name="details"
@@ -469,8 +527,7 @@ const InsertFoodItemScreen = ({ navigation }) => {
         <View
           style={
             isFieldInError("foodPrice") ? styles.error : styles.inputContainer
-          }
-        >
+          }>
           <View style={styles.inputSubContainer}>
             <IonIcons
               name="pricetags-outline"
@@ -530,7 +587,10 @@ const InsertFoodItemScreen = ({ navigation }) => {
             All fields are required
           </Text>
         ) : null}
-        <TouchableOpacity onPress={handleonPress} style={styles.signinButton}>
+        <TouchableOpacity
+          disabled={state.food.isloading}
+          onPress={handleonPress}
+          style={styles.signinButton}>
           {state.food.isLoading ? (
             <ActivityIndicator size="small" color={Colors.DEFAULT_WHITE} />
           ) : (

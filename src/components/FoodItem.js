@@ -8,6 +8,7 @@ import {
   TouchableOpacity,
   Alert,
 } from "react-native";
+import moment from "moment/moment";
 import { useNavigation } from "@react-navigation/native";
 import { Entypo as Icon, MaterialIcons } from "@expo/vector-icons";
 import { Colors } from "../content";
@@ -41,6 +42,11 @@ const Post = (props) => {
     let requestBody = { _id: id };
     dispatch(deleteuserlisting(requestBody));
     Alert.alert("Success", "Food Item Deleted Successfully");
+  };
+
+  const formatDate = (date) => {
+    const formattedDate = moment(date).format("dddd h:mm A, MMMM D");
+    return formattedDate;
   };
 
   // get rewies by user id
@@ -97,13 +103,11 @@ const Post = (props) => {
               flexDirection: "row",
               justifyContent: "space-between",
               marginTop: 10,
-            }}
-          >
+            }}>
             <TouchableOpacity
               style={styles.cartButton}
               onPress={() => handleEditButton()}
-              activeOpacity={0.8}
-            >
+              activeOpacity={0.8}>
               <Text style={styles.cartButtonText}>
                 <Icon name="edit" size={18}></Icon>Edit Post
               </Text>
@@ -111,8 +115,7 @@ const Post = (props) => {
             <TouchableOpacity
               style={styles.cartButton}
               onPress={() => deleteFood(post._id)}
-              activeOpacity={0.8}
-            >
+              activeOpacity={0.8}>
               <Text style={styles.cartButtonText}>
                 <MaterialIcons name="delete" size={20} />
                 Delete post

@@ -74,7 +74,7 @@ const EditProfileScreen = ({ navigation }) => {
     if (Platform.OS === "android") {
       try {
         const granted = await PermissionsAndroid.request(
-          PermissionsAndroid.PERMISSIONS.WRITE_EXTERNAL_STORAGE,
+          PermissionsAndroid.PERMISSIONS.CAMERA,
           {
             title: "Share Your Meal App Camera Permission",
             message:
@@ -95,7 +95,7 @@ const EditProfileScreen = ({ navigation }) => {
     } else return true;
   };
 
-  const setImagee = async () => {
+  const setImage = async () => {
     let options = {
       mediaType: "photo",
       quality: 1,
@@ -104,21 +104,56 @@ const EditProfileScreen = ({ navigation }) => {
 
     let isCameraPermitted = await requestExternalWritePermission();
     if (isCameraPermitted) {
-      let result = await ImagePicker.launchImageLibraryAsync({
-        //let cameraResult = await ImagePicker.launchCameraAsync({
-        mediaTypes: ImagePicker.MediaTypeOptions.All,
-        allowsEditing: true,
-        aspect: [4, 3],
-        quality: 1,
-        base64: true,
-      }).catch((error) => console.log(error));
+      Alert.alert(
+        "Choose an option",
+        "Do you want to take a photo or pick from the library?",
+        [
+          {
+            text: "Cancel",
+            style: "cancel",
+          },
+          {
+            text: "Take Photo",
+            onPress: launchCamera,
+          },
+          {
+            text: "Pick from Gallery",
+            onPress: launchImageLibrary,
+          },
+        ]
+      );
+    }
+  };
 
-      if (!result.cancelled) {
-        setImageToSend(result);
-        setfoodImage(result.uri);
-      } else {
-        Alert.alert("You Cancelled an Image");
-      }
+  const launchCamera = async () => {
+    let result = await ImagePicker.launchCameraAsync({
+      mediaTypes: ImagePicker.MediaTypeOptions.Images,
+      allowsEditing: true,
+      aspect: [4, 3],
+      quality: 1,
+      base64: true,
+    }).catch((error) => console.log(error));
+
+    if (!result.cancelled) {
+      setfoodImage(result.uri);
+    } else {
+      Alert.alert("You Cancelled the Image");
+    }
+  };
+
+  const launchImageLibrary = async () => {
+    let result = await ImagePicker.launchImageLibraryAsync({
+      mediaTypes: ImagePicker.MediaTypeOptions.Images,
+      allowsEditing: true,
+      aspect: [4, 3],
+      quality: 1,
+      base64: true,
+    }).catch((error) => console.log(error));
+
+    if (!result.cancelled) {
+      setfoodImage(result.uri);
+    } else {
+      Alert.alert("You Cancelled the Image");
     }
   };
   const state = useSelector((state) => state);
@@ -203,7 +238,7 @@ const EditProfileScreen = ({ navigation }) => {
   // }
 
   const choosePhotoFromLibrary = () => {
-    setImagee();
+    setImage();
   };
 
   // const renderInner = () => (
@@ -259,8 +294,7 @@ const EditProfileScreen = ({ navigation }) => {
       <StatusBar
         barStyle={"dark-content"}
         backgroundColor={Colors.DEFAULT_WHITE}
-        translucent
-      ></StatusBar>
+        translucent></StatusBar>
       <Separator height={StatusBar.currentHeight} />
       <View style={styles.headerContainer}>
         <IonIcons
@@ -275,8 +309,7 @@ const EditProfileScreen = ({ navigation }) => {
       <View style={styles.inputImageContainer}>
         <TouchableHighlight
           underlayColor="rgba(0,0,0,0)"
-          onPress={() => setImagee()}
-        >
+          onPress={() => setImage()}>
           {foodImage == null ? (
             <View style={styles.inputImageSubContainer}>
               <IonIcons name="image-outline" size={50} color="grey" />
@@ -291,8 +324,7 @@ const EditProfileScreen = ({ navigation }) => {
       <View
         style={
           isFieldInError("firstName") ? styles.error : styles.inputContainer
-        }
-      >
+        }>
         <View style={styles.inputSubContainer}>
           <Feather
             name="user"
@@ -322,8 +354,7 @@ const EditProfileScreen = ({ navigation }) => {
       <View
         style={
           isFieldInError("lastName") ? styles.error : styles.inputContainer
-        }
-      >
+        }>
         <View style={styles.inputSubContainer}>
           <Feather
             name="user"
@@ -352,8 +383,7 @@ const EditProfileScreen = ({ navigation }) => {
 
       <TouchableOpacity
         onPress={updateProfileAction}
-        style={styles.signinButton}
-      >
+        style={styles.signinButton}>
         <Text style={styles.signinButtonText}>Update Profile</Text>
       </TouchableOpacity>
     </ScrollView>

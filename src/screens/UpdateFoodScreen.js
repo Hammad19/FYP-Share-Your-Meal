@@ -36,8 +36,10 @@ import AntDesign from "react-native-vector-icons/AntDesign";
 import { Avatar } from "react-native-paper";
 import { updateuserlisting } from "../store/slices/userlistingSlice";
 import axios from "axios";
+import { useToast } from "react-native-toast-notifications";
 
 const UpdateFoodScreen = ({ navigation, route }) => {
+  const toast = useToast();
   const { post } = route.params;
 
   const dispatch = useDispatch();
@@ -84,10 +86,15 @@ const UpdateFoodScreen = ({ navigation, route }) => {
     if (Platform.OS === "android") {
       try {
         const granted = await PermissionsAndroid.request(
-          PermissionsAndroid.PERMISSIONS.WRITE_EXTERNAL_STORAGE,
+          PermissionsAndroid.PERMISSIONS.CAMERA,
           {
-            title: "External Storage Write Permission",
-            message: "App needs write permission",
+            title: "Share Your Meal App Camera Permission",
+            message:
+              "App needs access to your camera " +
+              "so you can upload awesome food.",
+            buttonNeutral: "Ask Me Later",
+            buttonNegative: "Cancel",
+            buttonPositive: "OK",
           }
         );
         // If WRITE_EXTERNAL_STORAGE Permission is granted
@@ -97,9 +104,7 @@ const UpdateFoodScreen = ({ navigation, route }) => {
         alert("Write permission err", err);
       }
       return false;
-    } else {
-      return true;
-    }
+    } else return true;
   };
 
   const setImage = async () => {
@@ -111,20 +116,68 @@ const UpdateFoodScreen = ({ navigation, route }) => {
 
     let isCameraPermitted = await requestExternalWritePermission();
     if (isCameraPermitted) {
-      let result = await ImagePicker.launchImageLibraryAsync({
-        mediaTypes: ImagePicker.MediaTypeOptions.All,
-        allowsEditing: true,
-        aspect: [4, 3],
-        quality: 1,
-        base64: true,
-      }).catch((error) => console.log(error));
+      Alert.alert(
+        "Choose an option",
+        "Do you want to take a photo or pick from the library?",
+        [
+          {
+            text: "Cancel",
+            style: "cancel",
+          },
+          {
+            text: "Take Photo",
+            onPress: launchCamera,
+          },
+          {
+            text: "Pick from Gallery",
+            onPress: launchImageLibrary,
+          },
+        ]
+      );
+    }
+  };
 
-      if (!result.cancelled) {
-        setImageToSend(result);
-        setfoodImage(result.uri);
-      } else {
-        Alert.alert("You Cancelled an Image");
-      }
+  const launchCamera = async () => {
+    let result = await ImagePicker.launchCameraAsync({
+      mediaTypes: ImagePicker.MediaTypeOptions.Images,
+      allowsEditing: true,
+      aspect: [4, 3],
+      quality: 1,
+      base64: true,
+    }).catch((error) => console.log(error));
+
+    if (!result.cancelled) {
+      setfoodImage(result.uri);
+    } else {
+      toast.show("You Cancelled the Image", {
+        type: "danger",
+        placement: "top",
+        duration: 4000,
+        offset: 30,
+        animationType: "zoom-in",
+      });
+    }
+  };
+
+  const launchImageLibrary = async () => {
+    let result = await ImagePicker.launchImageLibraryAsync({
+      mediaTypes: ImagePicker.MediaTypeOptions.Images,
+      allowsEditing: true,
+      aspect: [4, 3],
+      quality: 1,
+      base64: true,
+    }).catch((error) => console.log(error));
+
+    if (!result.cancelled) {
+      setfoodImage(result.uri);
+    } else {
+      toast.show("You Cancelled the Image", {
+        type: "danger",
+        placement: "top",
+        duration: 4000,
+        offset: 30,
+        animationType: "zoom-in",
+      });
     }
   };
 
@@ -299,14 +352,18 @@ const UpdateFoodScreen = ({ navigation, route }) => {
           dispatch(updateuserlisting(requestBody));
         })
         .catch((err) => console.log(err));
-
-      // Alert.alert(state.food.message);
     }
   };
 
   useEffect(() => {
     if (state.userlisting.error.message == "Food updated successfully") {
-      Alert.alert("Success", state.userlisting.error.message);
+      toast.show(state.userlisting.error.message, {
+        type: "success",
+        placement: "top",
+        duration: 4000,
+        offset: 30,
+        animationType: "zoom-in",
+      });
       navigation.goBack();
     }
   }, [state.userlisting.error.message]);

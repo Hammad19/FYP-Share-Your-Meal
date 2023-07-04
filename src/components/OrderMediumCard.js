@@ -20,6 +20,7 @@ import {
   Ionicons,
   AntDesign,
 } from "@expo/vector-icons";
+import moment from "moment/moment";
 const OrderMediumCard = (props) => {
   const reviews = ["Worst", "Bad", "Average", "Good", "Excellent"];
   const handleRating = (value) => {
@@ -53,6 +54,10 @@ const OrderMediumCard = (props) => {
       });
   };
 
+  const formatDate = (date) => {
+    const formattedDate = moment(date).format("dddd h:mm A, MMMM D");
+    return formattedDate;
+  };
   // handlecancel button
   const handleCancelButton = () => {
     axiosInstance
@@ -96,7 +101,9 @@ const OrderMediumCard = (props) => {
           </Text>
           <View style={styles.priceView}>
             {/* <Text style={styles.priceText}>{"$" + item.data.discountPrice}</Text> */}
-            <Text style={styles.priceText}>{props.order.created_at}</Text>
+            <Text style={styles.priceText}>
+              {formatDate(props.order.created_at)}
+            </Text>
           </View>
           {props.order.is_active == false &&
           props.order.order_status === "placed" ? (
@@ -105,13 +112,11 @@ const OrderMediumCard = (props) => {
                 flexDirection: "row",
                 justifyContent: "space-between",
                 marginTop: 10,
-              }}
-            >
+              }}>
               <TouchableOpacity
                 style={styles.cartAcceptButton}
                 onPress={() => setModalVisible(true)}
-                activeOpacity={0.8}
-              >
+                activeOpacity={0.8}>
                 <AntDesign name="star" size={18} color="white" />
                 <Text style={styles.cartButtonText}>Rate your food</Text>
               </TouchableOpacity>
@@ -122,13 +127,11 @@ const OrderMediumCard = (props) => {
                 flexDirection: "row",
                 justifyContent: "space-between",
                 marginTop: 10,
-              }}
-            >
+              }}>
               <TouchableOpacity
                 style={styles.cartRejectButton}
                 onPress={() => handleCancelButton()}
-                activeOpacity={0.8}
-              >
+                activeOpacity={0.8}>
                 <AntDesign name="closecircle" size={18} color="white" />
                 <Text style={styles.cartButtonText}>Cancel your request</Text>
               </TouchableOpacity>
@@ -140,8 +143,7 @@ const OrderMediumCard = (props) => {
         visible={modalVisible}
         animationType="fade"
         transparent={true}
-        onRequestClose={() => setModalVisible(false)}
-      >
+        onRequestClose={() => setModalVisible(false)}>
         <View style={styles.modalContainer}>
           <Text style={styles.modalTitle}>Rate the Food</Text>
           <View style={styles.ratingContainer}>
@@ -154,8 +156,7 @@ const OrderMediumCard = (props) => {
             />
           </View>
           <View
-            style={{ flexDirection: "row", justifyContent: "space-around" }}
-          >
+            style={{ flexDirection: "row", justifyContent: "space-around" }}>
             <TouchableOpacity
               style={[
                 styles.addToCartBtn,
@@ -166,8 +167,7 @@ const OrderMediumCard = (props) => {
                   marginRight: 15,
                 },
               ]}
-              onPress={handleReview}
-            >
+              onPress={handleReview}>
               <Text style={{ color: "#fff", fontSize: 20, fontWeight: "700" }}>
                 Submit
               </Text>
@@ -182,8 +182,7 @@ const OrderMediumCard = (props) => {
                   marginRight: 15,
                 },
               ]}
-              onPress={() => setModalVisible(false)}
-            >
+              onPress={() => setModalVisible(false)}>
               <Text style={{ color: "#fff", fontSize: 20, fontWeight: "700" }}>
                 Cancel
               </Text>

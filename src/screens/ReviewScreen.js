@@ -9,6 +9,7 @@ import {
 } from "react-native";
 import React, { useCallback, useEffect, useState } from "react";
 import { Colors } from "../content";
+import moment from "moment/moment";
 
 import {
   useFonts,
@@ -59,29 +60,10 @@ const ReviewScreen = ({ navigation }) => {
   }, [state.userlisting.isupdated]);
 
   //fake data for notification
-  const data = [
-    {
-      id: 1,
-      title: "New Message",
-      time: "10:00 AM",
-      description: "You have a new message from John Doe.",
-      image: "https://picsum.photos/200/300?random=1",
-    },
-    {
-      id: 2,
-      title: "Reminder",
-      time: "11:00 AM",
-      description: "Don't forget to attend the meeting at 2 PM.",
-      image: "https://picsum.photos/200/300?random=2",
-    },
-    {
-      id: 3,
-      title: "Notification",
-      time: "12:00 PM",
-      description: "You have a new notification.",
-      image: "https://picsum.photos/200/300?random=3",
-    },
-  ];
+  const formatDate = (date) => {
+    const formattedDate = moment(date).format("dddd h:mm A, MMMM D");
+    return formattedDate;
+  };
   //get reviews by user id
   const getReviews = async () => {
     try {
@@ -162,7 +144,7 @@ const ReviewScreen = ({ navigation }) => {
                         Comment : {item.review}
                       </Text>
                       <Text style={{ fontSize: 15, color: Colors.DARK_FOUR }}>
-                        Raiting : {item.rating}
+                        Rating : {item.rating}
                         {/* {[...Array(item.rating)].map((_, index) => (
                           <Icon
                             key={index}
@@ -174,7 +156,7 @@ const ReviewScreen = ({ navigation }) => {
                       </Text>
                       <Text
                         style={{ fontSize: 15, color: Colors.DEFAULT_GREEN }}>
-                        {item.createdAt}
+                        {formatDate(item.createdAt)}
                       </Text>
                     </View>
 

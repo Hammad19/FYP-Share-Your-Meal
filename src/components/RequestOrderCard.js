@@ -15,7 +15,7 @@ import { Display } from "../utils";
 import { Rating, AirbnbRating } from "react-native-ratings";
 import { useState } from "react";
 import { axiosInstance } from "../utils/api/axiosInstance";
-
+import moment from "moment/moment";
 const RequestOrderCard = (props) => {
   const reviews = ["Worst", "Bad", "Average", "Good", "Excellent"];
   const [requestedOrders, setRequestedOrders] = useState([]);
@@ -114,6 +114,11 @@ const RequestOrderCard = (props) => {
       });
   };
 
+  const formatDate = (date) => {
+    const formattedDate = moment(date).format("dddd h:mm A, MMMM D");
+    return formattedDate;
+  };
+
   const FetchRequestedOrders = async () => {
     try {
       const response = await axiosInstance.get(
@@ -150,47 +155,69 @@ const RequestOrderCard = (props) => {
           <Text style={styles.priceText}>
             Quantity :{props.order.order_quantity}
           </Text>
+
+          <Text style={styles.priceText}>
+            {props.order.is_free === true ? (
+              <Text style={styles.priceText}>Free</Text>
+            ) : (
+              <Text style={styles.priceText}>
+                Price: {props.order.order_price} RS
+              </Text>
+            )}
+          </Text>
           <View style={styles.priceView}>
             {/* <Text style={styles.priceText}>{"$" + item.data.discountPrice}</Text> */}
-            <Text style={styles.priceText}>{props.order.created_at}</Text>
+            <Text style={styles.priceText}>
+              {formatDate(props.order.createdAt)}
+            </Text>
           </View>
           <View
             style={{
               flexDirection: "row",
               justifyContent: "space-between",
               marginTop: 10,
-            }}
-          >
-            <TouchableOpacity
-              style={styles.cartAcceptButton}
-              onPress={() => {
-                if (props.order.order_status === "placed") {
-                  handlePickedButton();
-                } else {
-                  handleAcceptButton();
-                }
-              }}
-              activeOpacity={0.8}
-            >
-              <Text style={styles.cartButtonText}>
-                <Ionicons
-                  name="checkmark-done-circle"
-                  size={24}
-                  color="white"
-                />
-                {props.order.order_status === "placed" ? "Picked" : "Accept"}
+            }}>
+            {props.order.is_pickup === true ? (
+              <Text
+                style={{
+                  color: "green",
+                }}>
+                Your Food has been Picked
               </Text>
-            </TouchableOpacity>
-            <TouchableOpacity
-              style={styles.cartRejectButton}
-              onPress={() => handleRejectButton()}
-              activeOpacity={0.8}
-            >
-              <Text style={styles.cartButtonText}>
-                <MaterialIcons name="delete" size={20} />
-                Reject
-              </Text>
-            </TouchableOpacity>
+            ) : (
+              <>
+                <TouchableOpacity
+                  style={styles.cartAcceptButton}
+                  onPress={() => {
+                    if (props.order.order_status === "placed") {
+                      handlePickedButton();
+                    } else {
+                      handleAcceptButton();
+                    }
+                  }}
+                  activeOpacity={0.8}>
+                  <Text style={styles.cartButtonText}>
+                    <Ionicons
+                      name="checkmark-done-circle"
+                      size={24}
+                      color="white"
+                    />
+                    {props.order.order_status === "placed"
+                      ? "Picked"
+                      : "Accept"}
+                  </Text>
+                </TouchableOpacity>
+                <TouchableOpacity
+                  style={styles.cartRejectButton}
+                  onPress={() => handleRejectButton()}
+                  activeOpacity={0.8}>
+                  <Text style={styles.cartButtonText}>
+                    <MaterialIcons name="delete" size={20} />
+                    Reject
+                  </Text>
+                </TouchableOpacity>
+              </>
+            )}
           </View>
         </View>
       </View>
