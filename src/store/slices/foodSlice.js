@@ -174,6 +174,7 @@ const initialState = {
     status: "idle",
     message: "",
   },
+  isLoading: false,
 };
 
 const foodSlice = createSlice({
@@ -199,19 +200,33 @@ const foodSlice = createSlice({
       state.error.status = "success";
       state.error.message = action.payload.message;
       state.food.isAdded = true;
+      state.isLoading = false;
+
       console.log(action.payload.message, "<--food added fulfilled");
     }),
+      builder.addCase(addFood.pending, (state, action) => {
+        console.log(action.payload, "<-- action.payload food pending");
+        state.isLoading = true;
+      }),
       builder.addCase(addFood.rejected, (state, action) => {
         console.log(action.payload, "<-- action.payload food rejected");
+        state.isLoading = false;
       });
 
     builder.addCase(getFood.fulfilled, (state, action) => {
       state.foodlist = action.payload.food.reverse();
+      state.isLoading = false;
       console.log(state.foodlist, "<--food get fulfilled");
     }),
-      builder.addCase(getFood.rejected, (state, action) => {
-        console.log("<--food get rejected");
+      //getfood pending
+      builder.addCase(getFood.pending, (state, action) => {
+        console.log("<--food get pending");
+        state.isLoading = true;
       });
+    builder.addCase(getFood.rejected, (state, action) => {
+      console.log("<--food get rejected");
+      state.isLoading = false;
+    });
     builder.addCase(
       getfoodforcharitableorganization.fulfilled,
       (state, action) => {
@@ -221,8 +236,11 @@ const foodSlice = createSlice({
           state.foodlist,
           "<--food get for charitable organization fulfilled"
         );
+        state.isLoading = false;
       }
     );
+    //pending case for getfoodforcharitableorganization
+
     builder.addCase(
       getfoodforcharitableorganization.rejected,
       (state, action) => {
