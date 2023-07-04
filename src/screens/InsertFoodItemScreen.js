@@ -10,6 +10,7 @@ import {
   ScrollView,
   Alert,
   Image,
+  ActivityIndicator,
 } from "react-native";
 import { useValidation } from "react-native-form-validator";
 import DropDownPicker from "react-native-dropdown-picker";
@@ -168,6 +169,7 @@ const InsertFoodItemScreen = ({ navigation }) => {
 
   useEffect(() => {
     validateField();
+    console.log("loading", state.food.isLoading);
   }, [foodName, foodPrice, foodQuantity, foodDescription, foodCategory]);
 
   const validateField = () => {
@@ -318,7 +320,8 @@ const InsertFoodItemScreen = ({ navigation }) => {
         <StatusBar
           barStyle={"dark-content"}
           backgroundColor={Colors.DEFAULT_WHITE}
-          translucent></StatusBar>
+          translucent
+        ></StatusBar>
         <Separator height={StatusBar.currentHeight} />
         <View style={styles.headerContainer}>
           <IonIcons
@@ -333,7 +336,8 @@ const InsertFoodItemScreen = ({ navigation }) => {
         <View style={styles.inputImageContainer}>
           <TouchableHighlight
             underlayColor="rgba(0,0,0,0)"
-            onPress={() => setImage()}>
+            onPress={() => setImage()}
+          >
             {foodImage == null ? (
               <View style={styles.inputImageSubContainer}>
                 <IonIcons name="image-outline" size={50} color="grey" />
@@ -376,7 +380,8 @@ const InsertFoodItemScreen = ({ navigation }) => {
         <View
           style={
             isFieldInError("foodName") ? styles.error : styles.inputContainer
-          }>
+          }
+        >
           <View style={styles.inputSubContainer}>
             <IonIcons
               name="md-fast-food-outline"
@@ -408,7 +413,8 @@ const InsertFoodItemScreen = ({ navigation }) => {
             isFieldInError("foodDescription")
               ? styles.error
               : styles.inputContainer
-          }>
+          }
+        >
           <View style={styles.inputSubContainer}>
             <MaterialIcons
               name="details"
@@ -463,7 +469,8 @@ const InsertFoodItemScreen = ({ navigation }) => {
         <View
           style={
             isFieldInError("foodPrice") ? styles.error : styles.inputContainer
-          }>
+          }
+        >
           <View style={styles.inputSubContainer}>
             <IonIcons
               name="pricetags-outline"
@@ -524,7 +531,11 @@ const InsertFoodItemScreen = ({ navigation }) => {
           </Text>
         ) : null}
         <TouchableOpacity onPress={handleonPress} style={styles.signinButton}>
-          <Text style={styles.signinButtonText}>Upload Food</Text>
+          {state.food.isLoading ? (
+            <ActivityIndicator size="small" color={Colors.DEFAULT_WHITE} />
+          ) : (
+            <Text style={styles.signinButtonText}>Upload Food</Text>
+          )}
         </TouchableOpacity>
       </ScrollView>
     </>
