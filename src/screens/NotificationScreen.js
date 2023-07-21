@@ -55,6 +55,7 @@ const NotificationScreen = ({ navigation }) => {
 
   useEffect(() => {
     dispatch(getlistingsofUser(requestBody));
+    getNotification();
   }, [state.userlisting.isupdated]);
   // get notification by user email
   const getNotification = async () => {
@@ -109,7 +110,8 @@ const NotificationScreen = ({ navigation }) => {
           <StatusBar
             barStyle={"dark-content"}
             backgroundColor="transparent"
-            translucent></StatusBar>
+            translucent
+          ></StatusBar>
           <Separator height={StatusBar.currentHeight} />
           <View style={styles.headerContainer}>
             <IonIcons
@@ -139,16 +141,29 @@ const NotificationScreen = ({ navigation }) => {
                   <View
                     style={{
                       flexDirection: "row",
+                      //backgroundColor: "#fff",
                       paddingLeft: 10,
-                      width: Display.setWidth(80),
+                      width: Display.setWidth(75),
                       justifyContent: "space-between",
-                    }}>
-                    <View style={{}}>
+                    }}
+                  >
+                    <View>
                       <Text
-                        style={{ fontSize: 15, color: Colors.DEFAULT_GREEN }}>
+                        style={{
+                          fontSize: 15,
+                          color: Colors.DEFAULT_GREEN,
+                          //width: Display.setWidth(40),
+                        }}
+                      >
                         {item.title}
                       </Text>
-                      <Text style={{ fontSize: 15, color: Colors.DARK_FOUR }}>
+                      <Text
+                        style={{
+                          fontSize: 15,
+                          color: Colors.DARK_FOUR,
+                          width: Display.setWidth(65),
+                        }}
+                      >
                         {item.message}
                       </Text>
                     </View>
@@ -198,7 +213,7 @@ const styles = StyleSheet.create({
   },
   innerContainer: {
     flex: 1,
-    width: "100%",
+    width: Display.setWidth(100),
     height: "100%",
     padding: 15,
     backgroundColor: "#e5e5e5",
